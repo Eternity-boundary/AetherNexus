@@ -1,6 +1,6 @@
 # AetherNexus
 
-使用 **WinUI 3 + C++/WinRT + C++20** 的 Windows 原生用戶端。目前提供 Platform 風格的左側導覽、Dashboard 統計卡片與圖表，其餘功能頁先提供佔位畫面。所有數值均為明確標示的離線示範資料，尚未連接 API。
+使用 **WinUI 3 + C++/WinRT + C++23** 的 Windows 原生用戶端。目前提供 Platform 風格的左側導覽、Dashboard 統計卡片與圖表，其餘功能頁先提供佔位畫面。所有數值均為明確標示的離線示範資料，尚未連接 API。
 
 ## 目錄
 
