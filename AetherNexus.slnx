@@ -1,0 +1,10 @@
+<Solution>
+  <Configurations>
+    <Platform Name="ARM64" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="src/AetherNexus/AetherNexus.vcxproj" Id="bde30c5e-af14-45d5-af0a-6037dcacd214">
+    <Deploy />
+  </Project>
+</Solution>

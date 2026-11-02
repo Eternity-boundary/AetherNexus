@@ -1,0 +1,26 @@
+# Visual Studio and local settings
+.vs/
+*.user
+*.suo
+*.VC.db
+*.VC.VC.opendb
+
+# Dependencies and build output
+packages/
+artifacts/
+**/Generated Files/
+**/x64/
+**/ARM64/
+**/Win32/
+**/Debug/
+**/Release/
+**/AppPackages/
+**/ipch/
+
+# Local credentials and signing material
+.env
+.env.*
+!.env.example
+*.pfx
+*.p12
+*.key

@@ -1,0 +1,18 @@
+extensions: .cpp .h .hpp .cx.x idl
+// Copyright (c) %CurrentYear% Skylight Software Organization.
+// Created by EternityBoundary on %CurrentMonth%,%CurrentDay% %CreationYear%.
+// All rights reserved.
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// File: %FileName%
+// Project: %Project%
+extensions: .xaml
+<!--
+Copyright (c) %CurrentYear% Skylight Software Organization.
+Created by Eternity-boundary on %CurrentMonth%,%CurrentDay% %CreationYear%.
+All rights reserved.
+SPDX-License-Identifier: GPL-3.0-only
+
+File: %FileName%
+Project: %Project%
+ -->

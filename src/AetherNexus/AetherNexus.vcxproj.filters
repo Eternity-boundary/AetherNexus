@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Views\MainWindow.xaml"><Filter>Views</Filter></Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Midl Include="Views\MainWindow.idl"><Filter>Views</Filter></Midl>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="App.xaml.cpp" />
+    <ClCompile Include="Views\MainWindow.xaml.cpp"><Filter>Views</Filter></ClCompile>
+    <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="Models\UsageSnapshot.h"><Filter>Models</Filter></ClInclude>
+    <ClInclude Include="ViewModels\DashboardViewModel.h"><Filter>ViewModels</Filter></ClInclude>
+    <ClInclude Include="Views\Charts.h"><Filter>Views</Filter></ClInclude>
+    <ClInclude Include="Views\DashboardPage.xaml.h"><Filter>Views</Filter></ClInclude>
+    <ClInclude Include="Views\PlaceholderPage.xaml.h"><Filter>Views</Filter></ClInclude>
+    <ClCompile Include="ViewModels\DashboardViewModel.cpp"><Filter>ViewModels</Filter></ClCompile>
+    <ClCompile Include="Views\Charts.cpp"><Filter>Views</Filter></ClCompile>
+    <ClCompile Include="Views\DashboardPage.xaml.cpp"><Filter>Views</Filter></ClCompile>
+    <ClCompile Include="Views\PlaceholderPage.xaml.cpp"><Filter>Views</Filter></ClCompile>
+    <Page Include="Views\DashboardPage.xaml"><Filter>Views</Filter></Page>
+    <Page Include="Views\PlaceholderPage.xaml"><Filter>Views</Filter></Page>
+    <Page Include="Resources\Styles\DashboardStyles.xaml"><Filter>Resources\Styles</Filter></Page>
+    <Midl Include="Views\DashboardPage.idl"><Filter>Views</Filter></Midl>
+    <Midl Include="Views\PlaceholderPage.idl"><Filter>Views</Filter></Midl>
+    <PRIResource Include="Strings\zh-TW\Resources.resw"><Filter>Strings\zh-TW</Filter></PRIResource>
+    <ClInclude Include="App.xaml.h" />
+    <ClInclude Include="Views\MainWindow.xaml.h"><Filter>Views</Filter></ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\Wide310x150Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\StoreLogo.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square150x150Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square44x44Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\SplashScreen.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\LockScreenLogo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{bde30c5e-af14-45d5-af0a-6037dcacd214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Views" />
+    <Filter Include="ViewModels" />
+    <Filter Include="Models" />
+    <Filter Include="Services" />
+    <Filter Include="Infrastructure" />
+    <Filter Include="Resources" />
+    <Filter Include="Resources\Styles" />
+    <Filter Include="Strings" />
+    <Filter Include="Strings\zh-TW" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="app.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="ViewModels\README.md"><Filter>ViewModels</Filter></None>
+    <None Include="Models\README.md"><Filter>Models</Filter></None>
+    <None Include="Services\README.md"><Filter>Services</Filter></None>
+    <None Include="Infrastructure\README.md"><Filter>Infrastructure</Filter></None>
+    <None Include="Resources\Styles\README.md"><Filter>Resources\Styles</Filter></None>
+    <None Include="Strings\zh-TW\README.md"><Filter>Strings\zh-TW</Filter></None>
+  </ItemGroup>
+</Project>

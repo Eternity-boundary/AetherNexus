@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="AppSubtitle.Text" xml:space="preserve"><value>Platform 用戶端</value></data>
+  <data name="WorkspaceStatus.Text" xml:space="preserve"><value>離線預覽 · 尚未連接</value></data>
+  <data name="DashboardIntro.Text" xml:space="preserve"><value>掌握模型活動、Token 用量與支出，讓每一次請求都有跡可循。</value></data>
+  <data name="RangePicker.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>統計日期範圍</value></data>
+  <data name="LastSevenDays.Content" xml:space="preserve"><value>最近 7 天</value></data>
+  <data name="LastThirtyDays.Content" xml:space="preserve"><value>最近 30 天</value></data>
+  <data name="PreviewRefresh.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>重新整理示範資料</value></data>
+  <data name="PreviewRefresh.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve"><value>重新整理示範資料</value></data>
+  <data name="DemoNotice.Title" xml:space="preserve"><value>示範資料</value></data>
+  <data name="DemoNotice.Message" xml:space="preserve"><value>目前顯示離線預覽數值與趨勢，尚未連接 OpenAI 帳戶。</value></data>
+  <data name="TotalTokens.Text" xml:space="preserve"><value>Token 總用量</value></data>
+  <data name="InputLegend.Text" xml:space="preserve"><value>輸入</value></data>
+  <data name="OutputLegend.Text" xml:space="preserve"><value>輸出</value></data>
+  <data name="RequestsPerDay.Text" xml:space="preserve"><value>每日文字模型請求</value></data>
+  <data name="CacheRatio.Text" xml:space="preserve"><value>提示詞快取比例</value></data>
+  <data name="CacheDefinition.Text" xml:space="preserve"><value>快取輸入 Token ÷ 輸入 Token</value></data>
+  <data name="MonthSpend.Text" xml:space="preserve"><value>本月支出</value></data>
+  <data name="LocalBudget.Text" xml:space="preserve"><value>本機參考預算 · $100.00 USD</value></data>
+  <data name="SpendDefinition.Text" xml:space="preserve"><value>本月至今 · USD · 不受上方日期範圍影響</value></data>
+  <data name="TodayTokens.Text" xml:space="preserve"><value>今日 Token 用量</value></data>
+  <data name="TodayDefinition.Text" xml:space="preserve"><value>以輸入與輸出用量，觀察今天的模型活動。</value></data>
+  <data name="TodayPeriod.Text" xml:space="preserve"><value>UTC 今日 · 不受上方日期範圍影響</value></data>
+  <data name="TotalRequests.Text" xml:space="preserve"><value>請求總數</value></data>
+  <data name="RequestScope.Text" xml:space="preserve"><value>目前範圍：Responses 與 Chat Completions</value></data>
+  <data name="PreviewStatus.Text" xml:space="preserve"><value>離線預覽</value></data>
+  <data name="PreviewRefreshed" xml:space="preserve"><value>示範資料已更新</value></data>
+  <data name="DataScopeTitle.Text" xml:space="preserve"><value>關於資料範圍</value></data>
+  <data name="DataScopeBody.Text" xml:space="preserve"><value>未來可透過 Admin Key 讀取組織用量與支出；一般專案權杖只能彙整本機已記錄的請求，不能代表整個組織。本機參考預算並非官方限額。</value></data>
+  <data name="PlaceholderTitle.Text" xml:space="preserve"><value>頁面準備中</value></data>
+  <data name="PlaceholderBody.Text" xml:space="preserve"><value>此功能已保留導覽位置，將在後續版本加入。你可以從左側返回 Dashboard，查看目前的介面預覽。</value></data>
+</root>

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+Copyright (c) 2026 Skylight Software Organization.
+Created by Eternity-boundary on 11,3 2026.
+All rights reserved.
+SPDX-License-Identifier: GPL-3.0-only
+
+File: MainWindow.xaml
+Project: AetherNexus
+ -->
+
+<Window
+    x:Class="AetherNexus.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:AetherNexus"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="AetherNexus"
+    mc:Ignorable="d">
+
+    <Grid
+        x:Name="Root"
+        ActualThemeChanged="OnThemeChanged"
+        Loaded="OnRootLoaded">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid
+            x:Name="TitleBarDragRegion"
+            Margin="16,0,160,0"
+            Background="Transparent">
+            <StackPanel
+                VerticalAlignment="Center"
+                Orientation="Horizontal"
+                Spacing="12">
+                <FontIcon
+                    FontSize="18"
+                    Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                    Glyph="&#xE8A5;" />
+                <TextBlock
+                    x:Name="WindowTitle"
+                    Style="{StaticResource BodyStrongTextBlockStyle}"
+                    Text="AetherNexus" />
+                <TextBlock
+                    x:Uid="AppSubtitle"
+                    VerticalAlignment="Center"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    Style="{StaticResource CaptionTextBlockStyle}" />
+            </StackPanel>
+        </Grid>
+        <NavigationView
+            x:Name="Navigation"
+            Grid.Row="1"
+            AlwaysShowHeader="False"
+            AutomationProperties.AutomationId="MainNavigation"
+            CompactModeThresholdWidth="640"
+            ExpandedModeThresholdWidth="1150"
+            IsBackButtonVisible="Collapsed"
+            IsTitleBarAutoPaddingEnabled="False"
+            OpenPaneLength="232"
+            SelectionChanged="OnNavigationSelectionChanged">
+            <NavigationView.PaneHeader>
+                <StackPanel Margin="16,12,16,20" Spacing="4">
+                    <TextBlock
+                        CharacterSpacing="160"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        Style="{StaticResource CaptionTextBlockStyle}"
+                        Text="OPENAI" />
+                    <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Text="Personal workspace" />
+                    <TextBlock
+                        x:Uid="WorkspaceStatus"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        Style="{StaticResource CaptionTextBlockStyle}" />
+                </StackPanel>
+            </NavigationView.PaneHeader>
+            <NavigationView.MenuItems>
+                <NavigationViewItem
+                    x:Name="DashboardItem"
+                    AutomationProperties.AutomationId="NavDashboard"
+                    Content="Dashboard"
+                    Icon="Home"
+                    Tag="dashboard" />
+                <NavigationViewItemHeader Content="PLAYGROUND" />
+                <NavigationViewItem
+                    AutomationProperties.AutomationId="NavAgentBuilder"
+                    Content="Agent Builder"
+                    Icon="Link"
+                    Tag="agent-builder" />
+                <NavigationViewItem
+                    AutomationProperties.AutomationId="NavChat"
+                    Content="Chat"
+                    Icon="Message"
+                    Tag="chat" />
+                <NavigationViewItem
+                    AutomationProperties.AutomationId="NavImages"
+                    Content="Images"
+                    Icon="Pictures"
+                    Tag="images" />
+                <NavigationViewItem
+                    AutomationProperties.AutomationId="NavAudio"
+                    Content="Audio"
+                    Icon="Microphone"
+                    Tag="audio" />
+                <NavigationViewItem
+                    AutomationProperties.AutomationId="NavVideo"
+                    Content="Video"
+                    Icon="Video"
+                    Tag="video" />
+                <NavigationViewItemHeader Content="BUILD" />
+                <NavigationViewItem
+                    AutomationProperties.AutomationId="NavPrompts"
+                    Content="Prompts"
+                    Icon="Edit"
+                    Tag="prompts" />
+                <NavigationViewItem
+                    AutomationProperties.AutomationId="NavLogs"
+                    Content="Logs"
+                    Icon="Document"
+                    Tag="logs" />
+                <NavigationViewItem
+                    AutomationProperties.AutomationId="NavTraces"
+                    Content="Traces"
+                    Icon="Map"
+                    Tag="traces" />
+                <NavigationViewItem
+                    AutomationProperties.AutomationId="NavAssistants"
+                    Content="Assistants"
+                    Icon="People"
+                    Tag="assistants" />
+                <NavigationViewItem
+                    AutomationProperties.AutomationId="NavBatches"
+                    Content="Batches"
+                    Icon="Library"
+                    Tag="batches" />
+                <NavigationViewItem
+                    AutomationProperties.AutomationId="NavEvaluations"
+                    Content="Evaluations"
+                    Icon="Accept"
+                    Tag="evaluations" />
+                <NavigationViewItem
+                    AutomationProperties.AutomationId="NavFineTuning"
+                    Content="Fine-tuning"
+                    Icon="Repair"
+                    Tag="fine-tuning" />
+                <NavigationViewItem
+                    AutomationProperties.AutomationId="NavStorage"
+                    Content="Storage"
+                    Icon="Folder"
+                    Tag="storage" />
+                <NavigationViewItemHeader Content="MANAGE" />
+                <NavigationViewItem
+                    AutomationProperties.AutomationId="NavUsage"
+                    Content="Usage"
+                    Icon="Calendar"
+                    Tag="usage" />
+                <NavigationViewItem
+                    AutomationProperties.AutomationId="NavKeys"
+                    Content="API keys"
+                    Icon="Permissions"
+                    Tag="keys" />
+                <NavigationViewItem
+                    AutomationProperties.AutomationId="NavProjects"
+                    Content="Projects"
+                    Icon="AllApps"
+                    Tag="projects" />
+            </NavigationView.MenuItems>
+            <Frame x:Name="ContentFrame" IsTabStop="False" />
+        </NavigationView>
+    </Grid>
+</Window>
