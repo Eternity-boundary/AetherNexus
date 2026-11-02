@@ -12,7 +12,7 @@ Project: AetherNexus
 <Page x:Class="AetherNexus.DashboardPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      Loaded="OnLoaded" ActualThemeChanged="OnThemeChanged">
+      Loaded="OnLoaded" Unloaded="OnUnloaded" ActualThemeChanged="OnThemeChanged">
   <ScrollViewer HorizontalScrollBarVisibility="Disabled" HorizontalScrollMode="Disabled">
     <StackPanel x:Name="RootPanel" Margin="32,24,16,32" Spacing="24">
       <StackPanel Spacing="8" Margin="0,0,16,0">
@@ -27,12 +27,16 @@ Project: AetherNexus
           <ComboBoxItem x:Uid="LastSevenDays" />
           <ComboBoxItem x:Uid="LastThirtyDays" />
         </ComboBox>
-        <Button Grid.Column="1" x:Uid="PreviewRefresh" Click="OnRefresh"
-                AutomationProperties.AutomationId="RefreshPreview">
+        <Button x:Name="RefreshButton" Grid.Column="1" x:Uid="DashboardRefresh" Click="OnRefresh"
+                AutomationProperties.AutomationId="DashboardRefresh">
           <SymbolIcon Symbol="Refresh" />
         </Button>
       </Grid>
-      <InfoBar x:Uid="DemoNotice" IsOpen="True" IsClosable="False" Severity="Informational" Margin="0,0,16,0" />
+      <ProgressRing x:Name="LoadingRing" IsActive="False" Visibility="Collapsed" Width="24" Height="24"
+                    HorizontalAlignment="Left" AutomationProperties.AutomationId="DashboardLoading" />
+      <InfoBar x:Name="DataNotice" IsOpen="False" IsClosable="False" Margin="0,0,16,0" AutomationProperties.LiveSetting="Polite" />
+      <Button x:Name="SettingsGuidance" x:Uid="DashboardOpenSettings" Click="OnOpenSettings" Visibility="Collapsed"
+              HorizontalAlignment="Left" Style="{StaticResource AccentButtonStyle}" AutomationProperties.AutomationId="DashboardOpenSettings" />
       <Grid x:Name="CardsGrid" SizeChanged="OnCardsSizeChanged">
         <Grid.ColumnDefinitions><ColumnDefinition /><ColumnDefinition /><ColumnDefinition /></Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -89,9 +93,11 @@ Project: AetherNexus
               <TextBlock x:Name="SpendValue" Style="{StaticResource MetricValueStyle}" />
             </StackPanel>
             <StackPanel Grid.Row="1" VerticalAlignment="Bottom" Spacing="10">
-              <TextBlock x:Uid="LocalBudget" Style="{StaticResource SecondaryTextStyle}" />
-              <ProgressBar x:Name="BudgetProgress" Maximum="100" AutomationProperties.AutomationId="LocalBudgetProgress" />
-              <TextBlock x:Name="BudgetValue" Style="{StaticResource BodyStrongTextBlockStyle}" />
+              <FontIcon Glyph="&#xE787;" HorizontalAlignment="Left" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+              <TextBlock x:Uid="CostDataHint" Style="{StaticResource SecondaryTextStyle}" />
+              <TextBlock x:Uid="LocalBudgetLabel" Style="{StaticResource SecondaryTextStyle}" />
+              <ProgressBar x:Name="BudgetProgress" Maximum="100" Visibility="Collapsed" AutomationProperties.AutomationId="LocalBudgetProgress" />
+              <TextBlock x:Name="BudgetValue" Style="{StaticResource SecondaryTextStyle}" />
             </StackPanel>
             <TextBlock x:Uid="SpendDefinition" Grid.Row="2" Style="{StaticResource SecondaryTextStyle}" />
           </Grid>
@@ -125,7 +131,7 @@ Project: AetherNexus
       <Grid Margin="0,-12,16,0" ColumnSpacing="12">
         <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
         <TextBlock x:Name="DateRangeLabel" Style="{StaticResource SecondaryTextStyle}" />
-        <TextBlock x:Name="PreviewStatus" x:Uid="PreviewStatus" Grid.Column="1" Style="{StaticResource SecondaryTextStyle}"
+        <TextBlock x:Name="DataStatus" Grid.Column="1" Style="{StaticResource SecondaryTextStyle}"
                    AutomationProperties.LiveSetting="Polite" />
       </Grid>
       <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"

@@ -125,6 +125,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Services\ApiTypes.h" />
+    <ClInclude Include="Services\BudgetService.h" />
+    <ClInclude Include="Services\PlatformApiClient.h" />
+    <ClInclude Include="Services\WindowsHttpTransport.h" />
     <ClInclude Include="Infrastructure\CredentialStore.h" />
     <ClInclude Include="Services\ThemeService.h" />
     <ClInclude Include="Views\SettingsPage.xaml.h"><DependentUpon>SettingsPage.xaml</DependentUpon></ClInclude>
@@ -167,6 +171,10 @@
     <ClCompile Include="ViewModels\DashboardViewModel.cpp" />
     <ClCompile Include="Infrastructure\CredentialStore.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
     <ClCompile Include="Services\ThemeService.cpp" />
+    <ClCompile Include="Services\BudgetService.cpp" />
+    <ClCompile Include="Services\ApiTypes.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
+    <ClCompile Include="Services\PlatformApiClient.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
+    <ClCompile Include="Services\WindowsHttpTransport.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
     <ClCompile Include="Views\SettingsPage.xaml.cpp"><DependentUpon>SettingsPage.xaml</DependentUpon></ClCompile>
     <ClCompile Include="Views\Charts.cpp" />
     <ClCompile Include="Views\DashboardPage.xaml.cpp">

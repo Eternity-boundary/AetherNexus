@@ -9,6 +9,7 @@
 #include <string>
 #include <string_view>
 #include <vector>
+#include <memory>
 
 namespace AetherNexus::Infrastructure
 {
@@ -27,6 +28,7 @@ namespace AetherNexus::Infrastructure
         std::wstring_view View() const noexcept { return {m_value.data(), m_value.size()}; }
         void Clear() noexcept;
     private:
+        friend class CredentialStore;
         std::vector<wchar_t> m_value;
     };
 
@@ -38,6 +40,7 @@ namespace AetherNexus::Infrastructure
         explicit CredentialStore(std::wstring targetPrefix);
         static bool IsValidInput(std::wstring_view value) noexcept;
         bool Has(TokenKind kind) const;
+        std::unique_ptr<SecureToken> Read(TokenKind kind) const;
         void Save(TokenKind kind, std::wstring_view value) const;
         void Remove(TokenKind kind) const;
     private:

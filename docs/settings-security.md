@@ -4,7 +4,9 @@
 
 從左下角「設定」進入。主題提供跟隨系統、淺色及深色，即時套用整個主視窗、標題列與導航；偏好保存至 ApplicationData.LocalSettings 的 `Appearance.Theme`。選擇跟隨系統後，程式監聽 UISettings 色彩變更並回到系統偏好。Windows 對比主題由平台優先處理。
 
-一般 API Key 與 Admin Key 使用獨立儲存槽，分別支援新增、取代與移除。已存權杖不會回填、顯示片段或提供複製功能。取代與移除前顯示確認對話框，預設取消。移除只刪除本機副本，不撤銷遠端金鑰。本階段不進行 HTTP 請求、不驗證金鑰有效性，也不建立 OpenAI 金鑰；成功狀態明示「尚未驗證」。
+一般 API Key 與 Admin Key 使用獨立儲存槽，分別支援新增、取代與移除。已存權杖不會回填、顯示片段或提供複製功能。取代與移除前顯示確認對話框，預設取消。移除只刪除本機副本，不撤銷遠端金鑰。此設定頁不會額外發出驗證請求或建立 OpenAI 金鑰，儲存狀態明示「尚未驗證」；Dashboard 會在載入資料時使用已存的 Admin Key。
+
+本機每月參考預算預設停用；啟用後可設定 0.01 至 1,000,000,000 USD、最多兩位小數，按下「儲存預算設定」才保存。BudgetService 使用整數美分存於 LocalSettings 的 `Budget.MonthlyUsdCents`；它不會修改 OpenAI 的預算／額度，停用並儲存則移除本機設定。
 
 ## 安全邊界
 
@@ -20,7 +22,7 @@
 ## 驗證
 
 ```powershell
-pwsh -NoProfile -File ./scripts/Test-SettingsStorage.ps1
+pwsh -NoProfile -File ./tests/Test-SettingsStorage.ps1
 ```
 
 測試使用 `AetherNexus.Tests/<程序識別與時間>/` 獨立命名空間及明確的人工假權杖，結束後清理，不讀寫正式權杖槽。涵蓋：兩槽分離、Windows 保存層級、子程序讀回、單槽覆寫、拒絕空白／換行／NUL／非 ASCII／超長輸入且保持舊值、單槽刪除及重複刪除。沒有使用真實帳戶或發送 API 請求。

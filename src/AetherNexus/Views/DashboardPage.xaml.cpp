@@ -9,6 +9,9 @@
 #include "DashboardPage.xaml.h"
 #include "DashboardPage.g.cpp"
 #include "Charts.h"
+#include "Services/PlatformApiClient.h"
+#include "Services/WindowsHttpTransport.h"
+#include "Services/BudgetService.h"
 #include <winrt/Microsoft.Windows.ApplicationModel.Resources.h>
 #include <winrt/Microsoft.UI.Xaml.Automation.h>
 #include <algorithm>
@@ -20,34 +23,149 @@ namespace winrt::AetherNexus::implementation
     using namespace Controls;
     using VM = ::AetherNexus::ViewModels::DashboardViewModel;
 
-    void DashboardPage::OnLoaded(Windows::Foundation::IInspectable const&, RoutedEventArgs const&)
+    fire_and_forget DashboardPage::OnLoaded(Windows::Foundation::IInspectable const&, RoutedEventArgs const&)
     {
+        auto lifetime = get_strong();
         m_ready = true;
-        UpdatePreview();
+        co_await Reload();
     }
-    void DashboardPage::OnRangeChanged(Windows::Foundation::IInspectable const&, SelectionChangedEventArgs const&)
+    void DashboardPage::OnUnloaded(Windows::Foundation::IInspectable const&, RoutedEventArgs const&)
     {
-        if (m_ready) UpdatePreview();
+        m_ready = false;
+        ++m_requestVersion;
+        m_stop.request_stop();
     }
-    void DashboardPage::OnRefresh(Windows::Foundation::IInspectable const&, RoutedEventArgs const&)
+    fire_and_forget DashboardPage::OnRangeChanged(Windows::Foundation::IInspectable const&, SelectionChangedEventArgs const&)
     {
-        UpdatePreview();
-        Microsoft::Windows::ApplicationModel::Resources::ResourceLoader loader;
-        PreviewStatus().Text(loader.GetString(L"PreviewRefreshed"));
+        auto lifetime = get_strong();
+        if (m_ready) co_await Reload();
     }
-    void DashboardPage::UpdatePreview()
+    fire_and_forget DashboardPage::OnRefresh(Windows::Foundation::IInspectable const&, RoutedEventArgs const&)
     {
-        m_viewModel.SetRange(RangePicker().SelectedIndex() == 1 ? 30 : 7);
+        auto lifetime = get_strong();
+        if (m_ready) co_await Reload();
+    }
+    hstring DashboardPage::Text(wchar_t const* key) const
+    {
+        return Microsoft::Windows::ApplicationModel::Resources::ResourceLoader{}.GetString(key);
+    }
+    Windows::Foundation::IAsyncAction DashboardPage::Reload()
+    {
+        using namespace ::AetherNexus::Services;
+        auto lifetime = get_strong();
+        m_stop.request_stop();
+        m_stop = std::stop_source{};
+        auto const stop = m_stop.get_token();
+        auto const version = ++m_requestVersion;
+        auto const count = RangePicker().SelectedIndex() == 1 ? 30 : 7;
+        auto const now = std::chrono::floor<std::chrono::seconds>(std::chrono::system_clock::now());
+        m_monthlyBudgetCents.reset();
+        m_budgetUnavailable = false;
+        try { m_monthlyBudgetCents = BudgetService::Load(); }
+        catch (...) { m_budgetUnavailable = true; }
+        m_viewModel.SetSnapshot({});
+        RenderSnapshot();
+        auto const today = std::chrono::floor<std::chrono::days>(now);
+        DateRangeLabel().Text(VM::Date(today - std::chrono::days{count - 1}) + L" – " + VM::Date(today) + L" · UTC");
+        RefreshButton().IsEnabled(false);
+        RangePicker().IsEnabled(false);
+        LoadingRing().IsActive(true);
+        LoadingRing().Visibility(Visibility::Visible);
+        SettingsGuidance().Visibility(Visibility::Collapsed);
+        DataNotice().IsOpen(true);
+        DataNotice().Severity(InfoBarSeverity::Informational);
+        DataNotice().Title(Text(L"DashboardLoadingTitle"));
+        DataNotice().Message(Text(L"DashboardLoadingBody"));
+        DataStatus().Text(Text(L"DashboardLoadingTitle"));
+
+        DashboardResult result;
+        std::optional<ApiErrorCode> failure;
+        apartment_context ui;
+        co_await resume_background();
+        try
+        {
+            PlatformApiClient client{std::make_shared<WindowsHttpTransport>()};
+            result = client.LoadDashboard(count, now, stop);
+        }
+        catch (ApiError const& error) { failure = error.code; }
+        catch (...) { failure = ApiErrorCode::Network; }
+        co_await ui;
+        if (!m_ready || version != m_requestVersion || stop.stop_requested()) co_return;
+        RefreshButton().IsEnabled(true);
+        RangePicker().IsEnabled(true);
+        LoadingRing().IsActive(false);
+        LoadingRing().Visibility(Visibility::Collapsed);
+        if (failure)
+        {
+            if (*failure != ApiErrorCode::Cancelled) ShowError(*failure, false);
+            co_return;
+        }
+        m_viewModel.SetSnapshot(std::move(result.snapshot));
+        RenderSnapshot();
+        if (result.usageError || result.costsError)
+        {
+            auto const& snapshot = m_viewModel.Snapshot();
+            ShowError(result.usageError ? *result.usageError : *result.costsError,
+                snapshot.usageAvailable || snapshot.costsAvailable);
+        }
+        else
+        {
+            DataNotice().IsOpen(false);
+            DataStatus().Text(Text(L"DashboardUpdated"));
+        }
+    }
+    void DashboardPage::ShowError(::AetherNexus::Services::ApiErrorCode code, bool partial)
+    {
+        using enum ::AetherNexus::Services::ApiErrorCode;
+        wchar_t const* key = L"ApiNetworkError";
+        bool settings = false;
+        switch (code)
+        {
+        case MissingCredential: key = L"ApiMissingAdminKey"; settings = true; break;
+        case CredentialUnavailable: key = L"ApiCredentialUnavailable"; settings = true; break;
+        case Unauthorized: key = L"ApiUnauthorized"; settings = true; break;
+        case Forbidden: key = L"ApiForbidden"; settings = true; break;
+        case RateLimited: key = L"ApiRateLimited"; break;
+        case Timeout: key = L"ApiTimeout"; break;
+        case Server: key = L"ApiServerError"; break;
+        case InvalidResponse: key = L"ApiInvalidResponse"; break;
+        default: break;
+        }
+        DataNotice().IsOpen(true);
+        DataNotice().Severity(settings ? InfoBarSeverity::Informational : InfoBarSeverity::Warning);
+        DataNotice().Title(Text(partial ? L"DashboardPartial" : L"DashboardUnavailable"));
+        DataNotice().Message(Text(key));
+        SettingsGuidance().Visibility(settings ? Visibility::Visible : Visibility::Collapsed);
+        DataStatus().Text(Text(partial ? L"DashboardPartial" : L"DashboardUnavailable"));
+    }
+    void DashboardPage::OnOpenSettings(Windows::Foundation::IInspectable const&, RoutedEventArgs const&)
+    {
+        // Use the existing shell's navigation selection so its selected item stays in sync.
+        auto current = get_strong().as<DependencyObject>();
+        while (current)
+        {
+            if (auto const navigation = current.try_as<NavigationView>())
+            {
+                navigation.SelectedItem(navigation.SettingsItem());
+                return;
+            }
+            current = Media::VisualTreeHelper::GetParent(current);
+        }
+    }
+    void DashboardPage::RenderSnapshot()
+    {
         auto const& data = m_viewModel.Snapshot();
-        TokensValue().Text(VM::Number(data.inputTokens + data.outputTokens));
-        CompletionsValue().Text(VM::Number(data.requests));
-        CacheValue().Text(VM::Percent(data.cacheRatio()));
-        SpendValue().Text(VM::Money(data.monthCostUsd));
-        TodayValue().Text(VM::Number(data.todayTokens));
-        RequestsValue().Text(VM::Number(data.requests));
-        BudgetValue().Text(VM::Money(data.monthCostUsd) + L" / " + VM::Money(data.localBudgetUsd));
-        BudgetProgress().Value(data.monthCostUsd / data.localBudgetUsd * 100);
-        DateRangeLabel().Text(VM::Date(data.buckets.front().date) + L" – " + VM::Date(data.buckets.back().date) + L" · UTC");
+        TokensValue().Text(data.usageAvailable ? hstring{VM::Number(data.inputTokens + data.outputTokens)} : L"—");
+        CompletionsValue().Text(data.usageAvailable ? hstring{VM::Number(data.requests)} : L"—");
+        CacheValue().Text(data.usageAvailable && data.cacheAvailable ? hstring{VM::Percent(data.cacheRatio())} : L"—");
+        SpendValue().Text(data.costsAvailable ? hstring{VM::Money(data.monthCostUsd)} : L"—");
+        TodayValue().Text(data.usageAvailable ? hstring{VM::Number(data.todayTokens)} : L"—");
+        RequestsValue().Text(data.usageAvailable ? hstring{VM::Number(data.requests)} : L"—");
+        BudgetValue().Text(m_budgetUnavailable ? Text(L"BudgetLoadFailed") : (m_monthlyBudgetCents
+            ? hstring{(data.costsAvailable ? VM::Money(data.monthCostUsd) : L"—") + L" / " + VM::Money(*m_monthlyBudgetCents / 100.0)}
+            : Text(L"BudgetNotConfigured")));
+        BudgetProgress().Visibility(data.costsAvailable && m_monthlyBudgetCents ? Visibility::Visible : Visibility::Collapsed);
+        if (m_monthlyBudgetCents) BudgetProgress().Value(std::clamp(data.monthCostUsd * 10000.0 / *m_monthlyBudgetCents, 0.0, 100.0));
         // Summaries remain available to screen readers; the decorative chart shapes are not focusable.
         Automation::AutomationProperties::SetName(TokensChart(), TokensValue().Text());
         DrawCharts();
@@ -78,6 +196,10 @@ namespace winrt::AetherNexus::implementation
     void DashboardPage::DrawCharts()
     {
         auto const& data = m_viewModel.Snapshot();
+        TokensChart().Children().Clear();
+        CompletionsChart().Children().Clear();
+        CacheChart().Children().Clear();
+        RequestsChart().Children().Clear();
         if (data.buckets.empty()) return;
         std::vector<double> input, output, cache, requests;
         for (auto const& bucket : data.buckets)
@@ -92,7 +214,7 @@ namespace winrt::AetherNexus::implementation
         Charts::Line(TokensChart(), input, TokensChart().Tag().as<Media::Brush>(), maximum);
         Charts::Line(TokensChart(), output, OutputLegendMarker().Fill(), maximum, false, false);
         Charts::Bars(CompletionsChart(), requests, CompletionsChart().Tag().as<Media::Brush>());
-        Charts::Line(CacheChart(), cache, CacheChart().Tag().as<Media::Brush>(), 1.0);
+        if (data.cacheAvailable) Charts::Line(CacheChart(), cache, CacheChart().Tag().as<Media::Brush>(), 1.0);
         Charts::Line(RequestsChart(), requests, RequestsChart().Tag().as<Media::Brush>());
     }
 }

@@ -10,14 +10,14 @@
 - **Infrastructure**：Windows 認證儲存、檔案系統與平台橋接。金鑰不得存入原始碼或明文設定檔。
 - **Resources/Styles**：共用 XAML 字典，經由 App.xaml 合併；色彩優先使用系統 ThemeResource。
 - **Strings**：以語系資料夾放置 `Resources.resw`，供未來 `x:Uid` 及資源載入器使用。
-- **tests**：未來獨立測試專案位置，目前不宣稱已具備單元或 UI 測試。
+- **tests**：獨立原生測試專案、測試腳本與記憶體虛擬 API；不被主專案引用。
 
 MainWindow 實體檔案位於 Views，但保留 `AetherNexus.MainWindow` runtimeclass 名稱；實體資料夾不強制對應 WinRT namespace，避免僅為整理目錄而變更公開型別名稱。
 
 新增 C++、IDL、XAML 或 RESW 檔案時，須同步更新 `AetherNexus.vcxproj` 與 `.filters`，使用適合的 `ClCompile`、`ClInclude`、`Midl`、`Page` 或 `PRIResource` 項目。C++/WinRT 產生檔禁止手動編輯或提交。保持原生 NuGet `packages.config` 工作流程；升級套件時同步更新 vcxproj 的 imports 與版本。
 
-MainWindow 使用 NavigationView 與 Frame，路由至 DashboardPage 或共用的 PlaceholderPage。DashboardViewModel 是不依賴 UI 的 C++ 呈現模型，產生與彙整離線預覽資料；View 僅負責顯示、圖表繪製與響應式排版。此階段採用事件觸發的整體更新，沒有需要 INotifyPropertyChanged 的長期非同步狀態。
+MainWindow 路由至 DashboardPage、SettingsPage 或 PlaceholderPage。DashboardViewModel 僅持有已解析的伺服器資料；DashboardPage 協調背景載入、呈現狀態與取消生命週期。PlatformApiClient 對接 IApiTransport，處理日期範圍、分頁與資料驗證；WindowsHttpTransport 是主專案的正式 HTTPS 通道。
 
 SettingsPage 負責設定操作協調；ThemeService 保存非敏感的主題偏好，CredentialStore 使用 Windows 認證管理員保存獨立的一般／Admin 權杖，不將秘密綁定至 ViewModel。詳細安全邊界見 [settings-security.md](settings-security.md)。
 
-目前不實作 OpenAI 請求或資料庫；後續按功能逐步加入服務。
+BudgetService 保存使用者自行設定的本機 USD 參考預算（整數美分），不與伺服器資料或權杖混用。MockApiTransport 僅存在於 `tests/Support`，測試執行腳本也位於 `tests/`。主專案沒有測試旗標、測試伺服器網址或假資料產生器。目前未實作模型生成請求或資料庫。

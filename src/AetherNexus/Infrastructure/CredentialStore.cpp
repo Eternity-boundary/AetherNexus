@@ -13,6 +13,7 @@
 #include <stdexcept>
 #include <system_error>
 #include <utility>
+#include <cstring>
 #pragma comment(lib, "Advapi32.lib")
 
 namespace AetherNexus::Infrastructure
@@ -90,6 +91,25 @@ namespace AetherNexus::Infrastructure
         credential.CredentialBlobSize = static_cast<DWORD>(value.size() * sizeof(wchar_t));
         credential.CredentialBlob = reinterpret_cast<BYTE*>(const_cast<wchar_t*>(value.data()));
         if (!CredWriteW(&credential, 0)) StorageError(GetLastError());
+    }
+    std::unique_ptr<SecureToken> CredentialStore::Read(TokenKind kind) const
+    {
+        CREDENTIALW* raw{};
+        if (!CredReadW(Target(kind).c_str(), CRED_TYPE_GENERIC, 0, &raw))
+        {
+            auto const error = GetLastError();
+            if (error == ERROR_NOT_FOUND) return {};
+            StorageError(error);
+        }
+        Credential credential{raw};
+        if (!raw->CredentialBlob || raw->CredentialBlobSize == 0
+            || raw->CredentialBlobSize > CRED_MAX_CREDENTIAL_BLOB_SIZE || raw->CredentialBlobSize % sizeof(wchar_t) != 0)
+            StorageError(ERROR_INVALID_DATA);
+        auto secret = std::make_unique<SecureToken>(L"");
+        secret->m_value.resize(raw->CredentialBlobSize / sizeof(wchar_t));
+        std::memcpy(secret->m_value.data(), raw->CredentialBlob, raw->CredentialBlobSize);
+        if (!IsValidInput(secret->View())) StorageError(ERROR_INVALID_DATA);
+        return secret;
     }
     void CredentialStore::Remove(TokenKind kind) const
     {

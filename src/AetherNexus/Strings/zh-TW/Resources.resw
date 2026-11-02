@@ -5,15 +5,13 @@
   <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
   <data name="AppSubtitle.Text" xml:space="preserve"><value>Platform 用戶端</value></data>
-  <data name="WorkspaceStatus.Text" xml:space="preserve"><value>離線預覽 · 尚未連接</value></data>
+  <data name="WorkspaceStatus.Text" xml:space="preserve"><value>Windows 原生用戶端</value></data>
   <data name="DashboardIntro.Text" xml:space="preserve"><value>掌握模型活動、Token 用量與支出，讓每一次請求都有跡可循。</value></data>
   <data name="RangePicker.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>統計日期範圍</value></data>
   <data name="LastSevenDays.Content" xml:space="preserve"><value>最近 7 天</value></data>
   <data name="LastThirtyDays.Content" xml:space="preserve"><value>最近 30 天</value></data>
-  <data name="PreviewRefresh.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>重新整理示範資料</value></data>
-  <data name="PreviewRefresh.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve"><value>重新整理示範資料</value></data>
-  <data name="DemoNotice.Title" xml:space="preserve"><value>示範資料</value></data>
-  <data name="DemoNotice.Message" xml:space="preserve"><value>目前顯示離線預覽數值與趨勢，尚未連接 OpenAI 帳戶。</value></data>
+  <data name="DashboardRefresh.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>重新整理伺服器資料</value></data>
+  <data name="DashboardRefresh.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve"><value>重新整理伺服器資料</value></data>
   <data name="TotalTokens.Text" xml:space="preserve"><value>Token 總用量</value></data>
   <data name="InputLegend.Text" xml:space="preserve"><value>輸入</value></data>
   <data name="OutputLegend.Text" xml:space="preserve"><value>輸出</value></data>
@@ -21,19 +19,17 @@
   <data name="CacheRatio.Text" xml:space="preserve"><value>提示詞快取比例</value></data>
   <data name="CacheDefinition.Text" xml:space="preserve"><value>快取輸入 Token ÷ 輸入 Token</value></data>
   <data name="MonthSpend.Text" xml:space="preserve"><value>本月支出</value></data>
-  <data name="LocalBudget.Text" xml:space="preserve"><value>本機參考預算 · $100.00 USD</value></data>
+  <data name="CostDataHint.Text" xml:space="preserve"><value>來自組織 Costs API，帳務資料可能延遲。</value></data>
   <data name="SpendDefinition.Text" xml:space="preserve"><value>本月至今 · USD · 不受上方日期範圍影響</value></data>
   <data name="TodayTokens.Text" xml:space="preserve"><value>今日 Token 用量</value></data>
   <data name="TodayDefinition.Text" xml:space="preserve"><value>以輸入與輸出用量，觀察今天的模型活動。</value></data>
   <data name="TodayPeriod.Text" xml:space="preserve"><value>UTC 今日 · 不受上方日期範圍影響</value></data>
   <data name="TotalRequests.Text" xml:space="preserve"><value>請求總數</value></data>
   <data name="RequestScope.Text" xml:space="preserve"><value>目前範圍：Responses 與 Chat Completions</value></data>
-  <data name="PreviewStatus.Text" xml:space="preserve"><value>離線預覽</value></data>
-  <data name="PreviewRefreshed" xml:space="preserve"><value>示範資料已更新</value></data>
   <data name="DataScopeTitle.Text" xml:space="preserve"><value>關於資料範圍</value></data>
-  <data name="DataScopeBody.Text" xml:space="preserve"><value>未來可透過 Admin Key 讀取組織用量與支出；一般專案權杖只能彙整本機已記錄的請求，不能代表整個組織。本機參考預算並非官方限額。</value></data>
+  <data name="DataScopeBody.Text" xml:space="preserve"><value>Dashboard 使用 Admin Key 讀取組織用量與 USD 成本。一般 API Key 不具備相同的組織管理權限；未取得的統計會顯示「—」。資料依 UTC 彙整，並以伺服器回報為準。</value></data>
   <data name="PlaceholderTitle.Text" xml:space="preserve"><value>頁面準備中</value></data>
-  <data name="PlaceholderBody.Text" xml:space="preserve"><value>此功能已保留導覽位置，將在後續版本加入。你可以從左側返回 Dashboard，查看目前的介面預覽。</value></data>
+  <data name="PlaceholderBody.Text" xml:space="preserve"><value>此功能已保留導覽位置，將在後續版本加入。你可以從左側返回 Dashboard，查看用量資料。</value></data>
   <data name="SettingsTitle.Text" xml:space="preserve"><value>設定</value></data>
   <data name="SettingsIntro.Text" xml:space="preserve"><value>調整你的工作環境，分別管理模型與組織管理權杖。</value></data>
   <data name="AppearanceTitle.Text" xml:space="preserve"><value>外觀</value></data>
@@ -80,4 +76,32 @@
   <data name="RemoveKeyAction" xml:space="preserve"><value>移除本機副本</value></data>
   <data name="ReplaceKeyAction" xml:space="preserve"><value>取代權杖</value></data>
   <data name="CancelAction" xml:space="preserve"><value>取消</value></data>
+  <data name="DashboardOpenSettings.Content" xml:space="preserve"><value>前往設定填寫 Admin Key</value></data>
+  <data name="DashboardLoadingTitle" xml:space="preserve"><value>正在載入</value></data>
+  <data name="DashboardLoadingBody" xml:space="preserve"><value>正在從 OpenAI 取得組織用量與成本。</value></data>
+  <data name="DashboardUpdated" xml:space="preserve"><value>伺服器資料已更新</value></data>
+  <data name="DashboardPartial" xml:space="preserve"><value>部分資料無法取得</value></data>
+  <data name="DashboardUnavailable" xml:space="preserve"><value>尚無可用資料</value></data>
+  <data name="ApiMissingAdminKey" xml:space="preserve"><value>尚未儲存 Admin Key。請前往「設定 → 權杖管理」填寫 Admin Key，再回到 Dashboard 重新整理。一般 API Key 無法取代組織統計所需的管理權杖。</value></data>
+  <data name="ApiCredentialUnavailable" xml:space="preserve"><value>無法讀取 Windows 認證儲存。請前往設定確認權杖，或重新登入 Windows 後再試。</value></data>
+  <data name="ApiUnauthorized" xml:space="preserve"><value>伺服器未接受此 Admin Key。請前往設定更新權杖，再重新整理。</value></data>
+  <data name="ApiForbidden" xml:space="preserve"><value>此 Admin Key 沒有讀取所需組織資料的權限。請確認金鑰權限與組織設定。</value></data>
+  <data name="ApiRateLimited" xml:space="preserve"><value>伺服器暫時限制請求頻率，請稍後手動重新整理。</value></data>
+  <data name="ApiTimeout" xml:space="preserve"><value>連線逾時，請確認網路後重新整理。</value></data>
+  <data name="ApiNetworkError" xml:space="preserve"><value>無法安全連線至伺服器。請確認網路、Proxy 與 Windows 憑證設定後再試。</value></data>
+  <data name="ApiServerError" xml:space="preserve"><value>OpenAI 伺服器暫時無法處理請求，請稍後重新整理。</value></data>
+  <data name="ApiInvalidResponse" xml:space="preserve"><value>伺服器回應格式、幣別或統計資料無法辨識，未顯示可能不正確的數值。</value></data>
+  <data name="BudgetTitle.Text" xml:space="preserve"><value>本機每月參考預算</value></data>
+  <data name="BudgetDescription.Text" xml:space="preserve"><value>自行設定 USD 金額，在 Dashboard 對照本月支出。僅供本機參考，不會設定 OpenAI 官方預算或限制請求。</value></data>
+  <data name="BudgetEnabled.Header" xml:space="preserve"><value>啟用參考預算</value></data>
+  <data name="BudgetEnabled.OnContent" xml:space="preserve"><value>啟用</value></data>
+  <data name="BudgetEnabled.OffContent" xml:space="preserve"><value>停用</value></data>
+  <data name="BudgetAmount.Header" xml:space="preserve"><value>每月金額（USD，最多兩位小數）</value></data>
+  <data name="SaveBudgetButton.Content" xml:space="preserve"><value>儲存預算設定</value></data>
+  <data name="BudgetSaved" xml:space="preserve"><value>本機預算設定已儲存，返回 Dashboard 即會更新；OpenAI 官方設定不受影響。</value></data>
+  <data name="BudgetInvalid" xml:space="preserve"><value>請輸入 0.01 至 1,000,000,000 USD，最多兩位小數。</value></data>
+  <data name="BudgetLoadFailed" xml:space="preserve"><value>無法讀取本機預算設定。</value></data>
+  <data name="BudgetSaveFailed" xml:space="preserve"><value>無法儲存本機預算設定，請稍後重試。</value></data>
+  <data name="BudgetNotConfigured" xml:space="preserve"><value>尚未設定，可前往設定頁啟用。</value></data>
+  <data name="LocalBudgetLabel.Text" xml:space="preserve"><value>本機參考預算 · 非官方額度</value></data>
 </root>

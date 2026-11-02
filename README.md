@@ -1,6 +1,6 @@
 # AetherNexus
 
-使用 **WinUI 3 + C++/WinRT + C++23** 的 Windows 原生用戶端。目前提供 Platform 風格的左側導覽、Dashboard 統計卡片與圖表，以及可切換主題與管理權杖的設定頁；其餘功能頁先提供佔位畫面。Dashboard 數值均為明確標示的離線示範資料，尚未連接 API。
+使用 **WinUI 3 + C++/WinRT + C++23** 的 Windows 原生用戶端。Dashboard 從伺服器讀取用量與成本；設定頁可切換主題、管理權杖與本機參考預算，其餘功能頁先提供佔位畫面。Dashboard 沒有內建示範資料或假值備援。
 
 ## 目錄
 
@@ -9,7 +9,7 @@ AetherNexus.slnx
 build/                        共用原生 MSBuild 設定
 scripts/                      建置工具
 docs/                         架構說明
-tests/                        未來測試專案
+tests/                        獨立測試、虛擬 API 與測試腳本
 src/AetherNexus/
   App.xaml[.h/.cpp]            應用程式生命週期與組合入口
   Views/                      Window、Page 與視覺互動
@@ -48,3 +48,5 @@ pwsh -NoProfile -File ./scripts/Run.ps1
 架構與新增檔案規則請參閱 [docs/architecture.md](docs/architecture.md)。
 Dashboard 欄位、資料範圍與驗證紀錄請參閱 [docs/dashboard.md](docs/dashboard.md)。
 設定頁已提供主題切換及一般／Admin 權杖的 Windows 認證管理員儲存；操作、安全邊界與測試方式見 [docs/settings-security.md](docs/settings-security.md)。
+
+Dashboard 需要具備組織用量／成本讀取權限的 Admin Key；缺少或無效時會提供設定指引。一般 API Key 用於模型端點，不替代 Admin Key。啟動正式程式會讀取伺服器；偵錯 API 請執行 `pwsh -NoProfile -File ./tests/Test-PlatformApi.ps1`，只使用記憶體內的虛擬回應。詳見 [docs/api-client.md](docs/api-client.md)。

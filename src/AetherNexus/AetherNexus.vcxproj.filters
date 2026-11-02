@@ -17,6 +17,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Services\ApiTypes.h"><Filter>Services</Filter></ClInclude>
+    <ClInclude Include="Services\BudgetService.h"><Filter>Services</Filter></ClInclude>
+    <ClInclude Include="Services\PlatformApiClient.h"><Filter>Services</Filter></ClInclude>
+    <ClInclude Include="Services\WindowsHttpTransport.h"><Filter>Services</Filter></ClInclude>
+    <ClCompile Include="Services\ApiTypes.cpp"><Filter>Services</Filter></ClCompile>
+    <ClCompile Include="Services\BudgetService.cpp"><Filter>Services</Filter></ClCompile>
+    <ClCompile Include="Services\PlatformApiClient.cpp"><Filter>Services</Filter></ClCompile>
+    <ClCompile Include="Services\WindowsHttpTransport.cpp"><Filter>Services</Filter></ClCompile>
     <ClInclude Include="Infrastructure\CredentialStore.h"><Filter>Infrastructure</Filter></ClInclude>
     <ClInclude Include="Services\ThemeService.h"><Filter>Services</Filter></ClInclude>
     <ClInclude Include="Views\SettingsPage.xaml.h"><Filter>Views</Filter></ClInclude>

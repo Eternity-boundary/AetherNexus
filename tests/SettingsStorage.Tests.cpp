@@ -97,6 +97,11 @@ int wmain(int argc, wchar_t** argv)
         }
         Check(prefix + L"model-api-key", modelValue);
         Check(prefix + L"admin-api-key", adminValue);
+        {
+            auto model = store.Read(TokenKind::Model);
+            auto admin = store.Read(TokenKind::Admin);
+            Require(model && admin && model->View() == modelValue && admin->View() == adminValue);
+        }
         CheckNewProcess(prefix);
         std::cout << "PASS: distinct slots, local-user persistence, and fresh-process readback.\n";
 
@@ -121,6 +126,7 @@ int wmain(int argc, wchar_t** argv)
         std::cout << "PASS: maximum supported credential size.\n";
         store.Remove(TokenKind::Model);
         Require(!store.Has(TokenKind::Model) && store.Has(TokenKind::Admin));
+        Require(!store.Read(TokenKind::Model));
         store.Remove(TokenKind::Model);
         store.Remove(TokenKind::Admin);
         Require(!store.Has(TokenKind::Admin));

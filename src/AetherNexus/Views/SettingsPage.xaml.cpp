@@ -8,6 +8,7 @@
 #include "pch.h"
 #include "SettingsPage.xaml.h"
 #include "SettingsPage.g.cpp"
+#include "Services/BudgetService.h"
 #include <winrt/Microsoft.Windows.ApplicationModel.Resources.h>
 #include <exception>
 #include <memory>
@@ -71,6 +72,14 @@ namespace winrt::AetherNexus::implementation
             try { m_theme = ThemeService::Load(); }
             catch (...) { Notify(L"ThemeLoadFailed", InfoBarSeverity::Warning); }
             ThemePicker().SelectedIndex(static_cast<int32_t>(m_theme));
+            try
+            {
+                auto const budget = ::AetherNexus::Services::BudgetService::Load();
+                BudgetEnabled().IsOn(budget.has_value());
+                if (budget) BudgetAmount().Value(*budget / 100.0);
+                BudgetAmount().IsEnabled(budget.has_value());
+            }
+            catch (...) { Notify(L"BudgetLoadFailed", InfoBarSeverity::Warning); }
             m_ready = true;
             SetBusy(true);
             apartment_context ui;
@@ -101,6 +110,32 @@ namespace winrt::AetherNexus::implementation
     void SettingsPage::OnPasswordChanged(Windows::Foundation::IInspectable const&, RoutedEventArgs const&)
     {
         if (m_ready) UpdateControls();
+    }
+    void SettingsPage::OnBudgetToggled(Windows::Foundation::IInspectable const&, RoutedEventArgs const&)
+    {
+        if (m_ready) BudgetAmount().IsEnabled(BudgetEnabled().IsOn());
+    }
+    void SettingsPage::OnSaveBudget(Windows::Foundation::IInspectable const&, RoutedEventArgs const&)
+    {
+        if (!m_ready) return;
+        using ::AetherNexus::Services::BudgetService;
+        std::optional<int64_t> cents;
+        if (BudgetEnabled().IsOn())
+        {
+            int64_t converted{};
+            if (!BudgetService::TryConvertUsd(BudgetAmount().Value(), converted))
+            {
+                Notify(L"BudgetInvalid", InfoBarSeverity::Warning);
+                return;
+            }
+            cents = converted;
+        }
+        try
+        {
+            BudgetService::Save(cents);
+            Notify(L"BudgetSaved", InfoBarSeverity::Success);
+        }
+        catch (...) { Notify(L"BudgetSaveFailed", InfoBarSeverity::Error); }
     }
     void SettingsPage::OnThemeSelectionChanged(Windows::Foundation::IInspectable const&, SelectionChangedEventArgs const&)
     {

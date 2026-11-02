@@ -34,6 +34,17 @@ Project: AetherNexus
           </ComboBox>
         </StackPanel>
       </Border>
+      <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+              BorderThickness="1" CornerRadius="{ThemeResource OverlayCornerRadius}" Padding="24">
+        <StackPanel Spacing="12">
+          <TextBlock x:Uid="BudgetTitle" Style="{StaticResource SubtitleTextBlockStyle}" />
+          <TextBlock x:Uid="BudgetDescription" Style="{StaticResource SecondaryTextStyle}" />
+          <ToggleSwitch x:Name="BudgetEnabled" x:Uid="BudgetEnabled" Toggled="OnBudgetToggled" AutomationProperties.AutomationId="BudgetEnabled" />
+          <NumberBox x:Name="BudgetAmount" x:Uid="BudgetAmount" Minimum="0.01" Maximum="1000000000" SpinButtonPlacementMode="Compact"
+                     Width="240" HorizontalAlignment="Left" IsEnabled="False" AutomationProperties.AutomationId="BudgetAmount" />
+          <Button x:Uid="SaveBudgetButton" Click="OnSaveBudget" HorizontalAlignment="Left" AutomationProperties.AutomationId="SaveBudget" />
+        </StackPanel>
+      </Border>
       <StackPanel Spacing="8">
         <TextBlock x:Uid="CredentialsTitle" Style="{StaticResource SubtitleTextBlockStyle}" />
         <TextBlock x:Uid="CredentialsDescription" Style="{StaticResource SecondaryTextStyle}" />

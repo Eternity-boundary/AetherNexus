@@ -32,8 +32,9 @@ namespace AetherNexus::Models
         int64_t requests{};
         int64_t todayTokens{};
         double monthCostUsd{};
-        // A local planning value, not an organization budget or account balance.
-        double localBudgetUsd{100.0};
+        bool usageAvailable{false};
+        bool costsAvailable{false};
+        bool cacheAvailable{true};
         double cacheRatio() const noexcept
         {
             return inputTokens == 0 ? 0.0 : static_cast<double>(cachedInputTokens) / inputTokens;

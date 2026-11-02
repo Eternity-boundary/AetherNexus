@@ -9,14 +9,15 @@
 
 #include "Models/UsageSnapshot.h"
 #include <string>
+#include <utility>
 
 namespace AetherNexus::ViewModels
 {
-    // Presentation data for the offline UI preview. No credentials or HTTP calls.
+    // Presentation state contains only parsed server data, never credentials.
     class DashboardViewModel
     {
     public:
-        void SetRange(int days);
+        void SetSnapshot(Models::UsageSnapshot snapshot) { m_snapshot = std::move(snapshot); }
         Models::UsageSnapshot const& Snapshot() const noexcept { return m_snapshot; }
         static std::wstring Number(int64_t value);
         static std::wstring Money(double value);
