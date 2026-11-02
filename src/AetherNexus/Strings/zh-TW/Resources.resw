@@ -34,4 +34,50 @@
   <data name="DataScopeBody.Text" xml:space="preserve"><value>未來可透過 Admin Key 讀取組織用量與支出；一般專案權杖只能彙整本機已記錄的請求，不能代表整個組織。本機參考預算並非官方限額。</value></data>
   <data name="PlaceholderTitle.Text" xml:space="preserve"><value>頁面準備中</value></data>
   <data name="PlaceholderBody.Text" xml:space="preserve"><value>此功能已保留導覽位置，將在後續版本加入。你可以從左側返回 Dashboard，查看目前的介面預覽。</value></data>
+  <data name="SettingsTitle.Text" xml:space="preserve"><value>設定</value></data>
+  <data name="SettingsIntro.Text" xml:space="preserve"><value>調整你的工作環境，分別管理模型與組織管理權杖。</value></data>
+  <data name="AppearanceTitle.Text" xml:space="preserve"><value>外觀</value></data>
+  <data name="AppearanceDescription.Text" xml:space="preserve"><value>立即套用至整個視窗，並在下次啟動時保留你的選擇。</value></data>
+  <data name="ThemePicker.Header" xml:space="preserve"><value>應用程式佈景主題</value></data>
+  <data name="ThemeSystem.Content" xml:space="preserve"><value>跟隨系統</value></data>
+  <data name="ThemeLight.Content" xml:space="preserve"><value>淺色</value></data>
+  <data name="ThemeDark.Content" xml:space="preserve"><value>深色</value></data>
+  <data name="CredentialsTitle.Text" xml:space="preserve"><value>權杖管理</value></data>
+  <data name="CredentialsDescription.Text" xml:space="preserve"><value>兩種權杖分開儲存與移除。此頁只管理本機儲存，不會傳送驗證請求。</value></data>
+  <data name="ModelKeyTitle.Text" xml:space="preserve"><value>一般 API Key</value></data>
+  <data name="ModelKeyDescription.Text" xml:space="preserve"><value>供模型呼叫與專案操作使用。建議使用具備所需最小權限的專案金鑰。</value></data>
+  <data name="AdminKeyTitle.Text" xml:space="preserve"><value>Admin Key</value></data>
+  <data name="AdminKeyDescription.Text" xml:space="preserve"><value>供組織用量、成本及管理功能使用。管理金鑰權限較高，不會與一般 API Key 互相替代。</value></data>
+  <data name="ModelKeyInput.Header" xml:space="preserve"><value>新的 API Key</value></data>
+  <data name="ModelKeyInput.PlaceholderText" xml:space="preserve"><value>輸入權杖以新增或取代</value></data>
+  <data name="AdminKeyInput.Header" xml:space="preserve"><value>新的 Admin Key</value></data>
+  <data name="AdminKeyInput.PlaceholderText" xml:space="preserve"><value>輸入管理權杖以新增或取代</value></data>
+  <data name="SaveModelButton.Content" xml:space="preserve"><value>儲存權杖</value></data>
+  <data name="SaveAdminButton.Content" xml:space="preserve"><value>儲存權杖</value></data>
+  <data name="RemoveModelButton.Content" xml:space="preserve"><value>移除</value></data>
+  <data name="RemoveAdminButton.Content" xml:space="preserve"><value>移除</value></data>
+  <data name="SaveModelButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>儲存一般 API Key</value></data>
+  <data name="SaveAdminButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>儲存 Admin Key</value></data>
+  <data name="RemoveModelButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>移除本機一般 API Key</value></data>
+  <data name="RemoveAdminButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>移除本機 Admin Key</value></data>
+  <data name="CredentialSafetyNotice.Title" xml:space="preserve"><value>受 Windows 保護的本機儲存</value></data>
+  <data name="CredentialSafetyNotice.Message" xml:space="preserve"><value>權杖保存在目前 Windows 使用者的認證管理員，不寫入明文設定，也不回填至畫面。輸入內容會在儲存嘗試或離開頁面後清空。</value></data>
+  <data name="KeyLoading" xml:space="preserve"><value>正在讀取儲存狀態…</value></data>
+  <data name="KeyStored" xml:space="preserve"><value>已安全儲存 · 尚未驗證</value></data>
+  <data name="KeyMissing" xml:space="preserve"><value>尚未儲存</value></data>
+  <data name="KeyUnavailable" xml:space="preserve"><value>無法存取認證儲存；請重新開啟設定頁再試</value></data>
+  <data name="ThemeLoadFailed" xml:space="preserve"><value>無法讀取主題偏好，目前使用預設選擇。</value></data>
+  <data name="ThemeSaved" xml:space="preserve"><value>佈景主題已套用並儲存。</value></data>
+  <data name="ThemeSaveFailed" xml:space="preserve"><value>無法儲存佈景主題，請稍後再試。</value></data>
+  <data name="StorageFailed" xml:space="preserve"><value>Windows 認證儲存操作未完成。請稍後再試；不會改用明文儲存。</value></data>
+  <data name="InvalidKeyInput" xml:space="preserve"><value>請輸入不含空白、換行或控制字元的權杖，長度不得超過 1280 個 ASCII 字元。</value></data>
+  <data name="KeySaved" xml:space="preserve"><value>權杖已儲存至 Windows 認證管理員，尚未驗證有效性。</value></data>
+  <data name="KeyRemoved" xml:space="preserve"><value>已移除此裝置上的權杖副本；官方金鑰並未撤銷。</value></data>
+  <data name="ModelKeyName" xml:space="preserve"><value>一般 API Key</value></data>
+  <data name="AdminKeyName" xml:space="preserve"><value>Admin Key</value></data>
+  <data name="RemoveKeyPrompt" xml:space="preserve"><value>要移除此裝置上儲存的這個權杖嗎？這只會刪除本機副本，不會撤銷 OpenAI 上的金鑰。</value></data>
+  <data name="ReplaceKeyPrompt" xml:space="preserve"><value>要使用新輸入的權杖取代本機已儲存的這個權杖嗎？舊副本會被覆寫，官方金鑰並不會撤銷。</value></data>
+  <data name="RemoveKeyAction" xml:space="preserve"><value>移除本機副本</value></data>
+  <data name="ReplaceKeyAction" xml:space="preserve"><value>取代權杖</value></data>
+  <data name="CancelAction" xml:space="preserve"><value>取消</value></data>
 </root>

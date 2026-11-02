@@ -2,7 +2,7 @@
 
 ## 頁面與互動
 
-左側使用原生 NavigationView，包含 Dashboard、Agent Builder、Chat、Images、Audio、Video、Prompts、Logs、Traces、Assistants、Batches、Evaluations、Fine-tuning、Storage、Usage、API keys、Projects 及 Settings。導航類別依 Platform 的工作流程分組，除 Dashboard 外均顯示獨立標題與「頁面準備中」佔位畫面。
+左側使用原生 NavigationView，包含 Dashboard、Agent Builder、Chat、Images、Audio、Video、Prompts、Logs、Traces、Assistants、Batches、Evaluations、Fine-tuning、Storage、Usage、API keys、Projects 及 Settings。導航類別依 Platform 的工作流程分組，除 Dashboard 與 Settings 外均顯示獨立標題與「頁面準備中」佔位畫面。
 
 Dashboard 提供 7／30 天範圍切換與示範資料重新整理。六張卡片會依內容寬度排成 3、2 或 1 欄；圖表在重排後重新計算座標。Mica、系統字體、原生焦點／鍵盤操作與 ThemeResource 統一介面風格。圖表色彩包含 Light、Dark、HighContrast 資源。
 

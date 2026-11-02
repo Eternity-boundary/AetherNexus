@@ -27,12 +27,12 @@ namespace winrt::AetherNexus::implementation
         // See https://github.com/microsoft/cppwinrt/tree/master/nuget#initializecomponent
 
 #if defined _DEBUG && !defined DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION
-        UnhandledException([](IInspectable const&, UnhandledExceptionEventArgs const& e)
+        UnhandledException([](IInspectable const&, UnhandledExceptionEventArgs const&)
         {
             if (IsDebuggerPresent())
             {
-                auto errorMessage = e.Message();
-                OutputDebugStringW(errorMessage.c_str());
+                // Exception messages from UI/platform components may contain input.
+                OutputDebugStringW(L"AetherNexus: unhandled application exception.\n");
                 __debugbreak();
             }
         });

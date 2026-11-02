@@ -18,4 +18,6 @@ MainWindow 實體檔案位於 Views，但保留 `AetherNexus.MainWindow` runtime
 
 MainWindow 使用 NavigationView 與 Frame，路由至 DashboardPage 或共用的 PlaceholderPage。DashboardViewModel 是不依賴 UI 的 C++ 呈現模型，產生與彙整離線預覽資料；View 僅負責顯示、圖表繪製與響應式排版。此階段採用事件觸發的整體更新，沒有需要 INotifyPropertyChanged 的長期非同步狀態。
 
-目前不實作 OpenAI 請求、憑證設定或資料庫。後續按功能逐步加入服務，避免為介面預覽引入額外相依套件。
+SettingsPage 負責設定操作協調；ThemeService 保存非敏感的主題偏好，CredentialStore 使用 Windows 認證管理員保存獨立的一般／Admin 權杖，不將秘密綁定至 ViewModel。詳細安全邊界見 [settings-security.md](settings-security.md)。
+
+目前不實作 OpenAI 請求或資料庫；後續按功能逐步加入服務。

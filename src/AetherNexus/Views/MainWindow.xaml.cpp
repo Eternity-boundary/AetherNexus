@@ -9,6 +9,8 @@
 #include "MainWindow.xaml.h"
 #include "DashboardPage.xaml.h"
 #include "PlaceholderPage.xaml.h"
+#include "SettingsPage.xaml.h"
+#include "Services/ThemeService.h"
 #include <microsoft.ui.xaml.window.h>
 #include <winrt/Microsoft.UI.Windowing.h>
 #include <winrt/Windows.Graphics.h>
@@ -53,6 +55,28 @@ namespace winrt::AetherNexus::implementation
     {
         SetTitleBar(TitleBarDragRegion());
         m_loaded = true;
+        try { ::AetherNexus::Services::ThemeService::Apply(Root(), ::AetherNexus::Services::ThemeService::Load()); }
+        catch (...) { Root().RequestedTheme(ElementTheme::Default); }
+        if (!m_uiSettings)
+        {
+            m_uiSettings = Windows::UI::ViewManagement::UISettings{};
+            m_colorRevoker = m_uiSettings.ColorValuesChanged(auto_revoke, [weak = get_weak(), queue = DispatcherQueue()](auto const&, auto const&)
+            {
+                queue.TryEnqueue([weak]
+                {
+                    if (auto self = weak.get())
+                    {
+                        try
+                        {
+                            using namespace ::AetherNexus::Services;
+                            if (ThemeService::Load() == ThemePreference::System)
+                                ThemeService::Apply(self->Root(), ThemePreference::System);
+                        }
+                        catch (...) { /* Preserve the current theme if settings are unavailable. */ }
+                    }
+                });
+            });
+        }
         UpdateTitleBarTheme();
         Navigation().SelectedItem(DashboardItem());
     }
@@ -79,7 +103,7 @@ namespace winrt::AetherNexus::implementation
     {
         if (args.IsSettingsSelected())
         {
-            ContentFrame().Navigate(xaml_typename<AetherNexus::PlaceholderPage>(), box_value(L"Settings"));
+            ContentFrame().Navigate(xaml_typename<AetherNexus::SettingsPage>());
         }
         else if (auto const item = args.SelectedItem().try_as<Controls::NavigationViewItem>())
         {

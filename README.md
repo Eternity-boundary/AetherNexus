@@ -1,6 +1,6 @@
 # AetherNexus
 
-使用 **WinUI 3 + C++/WinRT + C++23** 的 Windows 原生用戶端。目前提供 Platform 風格的左側導覽、Dashboard 統計卡片與圖表，其餘功能頁先提供佔位畫面。所有數值均為明確標示的離線示範資料，尚未連接 API。
+使用 **WinUI 3 + C++/WinRT + C++23** 的 Windows 原生用戶端。目前提供 Platform 風格的左側導覽、Dashboard 統計卡片與圖表，以及可切換主題與管理權杖的設定頁；其餘功能頁先提供佔位畫面。Dashboard 數值均為明確標示的離線示範資料，尚未連接 API。
 
 ## 目錄
 
@@ -47,3 +47,4 @@ pwsh -NoProfile -File ./scripts/Run.ps1
 
 架構與新增檔案規則請參閱 [docs/architecture.md](docs/architecture.md)。
 Dashboard 欄位、資料範圍與驗證紀錄請參閱 [docs/dashboard.md](docs/dashboard.md)。
+設定頁已提供主題切換及一般／Admin 權杖的 Windows 認證管理員儲存；操作、安全邊界與測試方式見 [docs/settings-security.md](docs/settings-security.md)。
