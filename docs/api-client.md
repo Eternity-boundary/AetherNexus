@@ -6,7 +6,7 @@
 
 | 端點 | 用途 | 權杖 |
 | --- | --- | --- |
-| `GET /v1/organization/usage/completions` | 輸入／輸出 Token、快取比例、文字模型請求數 | Admin Key |
+| `GET /v1/organization/usage/completions` | Completions 輸入／輸出 Token、快取讀取量與佔比、模型請求數（含文字、音訊與影像 Token） | Admin Key |
 | `GET /v1/organization/costs` | UTC 本月至今的 USD 成本 | Admin Key |
 | `GET /v1/models` | 可用模型清單（服務層已提供，尚未新增模型頁） | 一般 API Key |
 
@@ -18,10 +18,11 @@ WindowsHttpTransport 僅接受端點列舉與結構化查詢，固定連至 `htt
 
 - 使用 UTC 日桶。Usage 查詢包含選定日數與今日；Costs 獨立查詢本月，不隨 7／30 天改變。
 - 明確設定 `limit=31`，逐頁讀取 `has_more`／`next_page`。游標以 UTF-8 百分比編碼；拒絕重複游標、重複日桶及超過 64 頁的回應。
-- 驗證 JSON 結構、整數計數、加總溢位、快取數量、幣別與金額。輸入 Token 已含快取 Token，不重複相加。缺少快取欄位時顯示不可用，不推斷為 0%。
+- 驗證 JSON 結構、整數計數、加總溢位、快取數量、幣別與金額。輸入 Token 已含快取讀取、快取寫入及各模態 Token，不重複相加。快取比例為期間 Token 加權值；輸入為零或缺少快取欄位時顯示不可用，不推斷為 0%。每個日桶保留快取欄位的可用狀態，讓圖表在缺值處斷開。
 - 正常空結果產生 0 用量；認證、權限、網路或格式錯誤則顯示「—」，不混淆為沒有使用量。Usage 與 Costs 的成功／失敗獨立處理。
 - 設定每階段 WinHTTP 逾時與回應大小上限。取消會阻止後續頁面／讀取；目前正在阻塞的 WinHTTP 呼叫仍依系統逾時結束。離開頁面或新查詢後，舊結果不更新畫面。不自動無限重試 429 或伺服器錯誤。
 - 本機每月參考預算由使用者在設定頁保存，預設沒有金額。只有設定後才顯示成本／預算與進度，不代表官方限額。
+- 所有查詢均未套用專案、使用者、API Key、模型或 Batch 篩選；用量僅涵蓋 Completions，成本則為組織所有成本項目。完整畫面語義與官方比對紀錄見 [dashboard.md](dashboard.md)。
 
 ## 測試隔離
 
@@ -33,6 +34,8 @@ pwsh -NoProfile -File ./tests/Test-SettingsStorage.ps1
 ```
 
 先通過虛擬 API 合約測試，再加入正式 HTTPS 實作。涵蓋 UTC 日期與月界、7／30 天分頁、月末成本分頁、加總、空資料、401／403／429／503、逾時、格式錯誤、游標重複、無效計數、快取不可用、非 USD 幣別、取消及預算金額邊界。
+
+Dashboard 語義測試亦編譯正式 DashboardViewModel，核對多模態／快取寫入子集不重複計數、請求數與 Token 不混用、加權快取比例、零分母、日桶缺值、輸入／輸出共用圖表尺度及 UTC 年月日時間格式。
 
 本次沒有執行真實 OpenAI 請求；正式 HTTPS 通道已編譯驗證，未宣稱已完成實際帳戶連線驗證。正式啟動程式後才會使用設定頁的權杖讀取伺服器。
 

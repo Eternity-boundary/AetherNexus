@@ -8,6 +8,7 @@
 #include "Services/PlatformApiClient.h"
 #include "Support/MockApiTransport.h"
 #include "Services/BudgetService.h"
+#include "ViewModels/DashboardViewModel.h"
 #include <limits>
 #include <winrt/Windows.Data.Json.h>
 #include <winrt/Windows.Foundation.Collections.h>
@@ -70,7 +71,7 @@ int main()
                 expectedInput += (40 + (day * 17) % 60) * 42000;
             }
             Require(data.inputTokens == expectedInput);
-            Require(std::abs(data.cacheRatio() - 20000.0 / 42000.0) < 1e-10);
+            Require(data.cacheRatio() && std::abs(*data.cacheRatio() - 20000.0 / 42000.0) < 1e-10);
             Require(data.todayTokens == data.buckets.back().inputTokens + data.buckets.back().outputTokens);
             Require(transport->Requests().size() == static_cast<size_t>((count + 6) / 7 + 1));
             auto const& costsRequest = transport->Requests().back();
@@ -94,7 +95,7 @@ int main()
 
         auto empty = PlatformApiClient{std::make_shared<MockApiTransport>(MockScenario::Empty)}.LoadDashboard(7, now);
         Require(empty.snapshot.usageAvailable && empty.snapshot.costsAvailable);
-        Require(empty.snapshot.inputTokens == 0 && empty.snapshot.cacheRatio() == 0 && empty.snapshot.buckets.size() == 7);
+        Require(empty.snapshot.inputTokens == 0 && !empty.snapshot.cacheRatio() && empty.snapshot.buckets.size() == 7);
         for (auto const& [scenario, error] : {std::pair{MockScenario::Unauthorized, ApiErrorCode::Unauthorized},
             {MockScenario::Forbidden, ApiErrorCode::Forbidden}, {MockScenario::RateLimited, ApiErrorCode::RateLimited},
             {MockScenario::ServerError, ApiErrorCode::Server}, {MockScenario::Timeout, ApiErrorCode::Timeout},
@@ -184,8 +185,66 @@ int main()
             return response;
         };
         auto unavailableCache = PlatformApiClient{noCache}.LoadDashboard(7, now);
-        Require(unavailableCache.snapshot.usageAvailable && !unavailableCache.snapshot.cacheAvailable);
+        Require(unavailableCache.snapshot.usageAvailable && !unavailableCache.snapshot.cacheAvailable && !unavailableCache.snapshot.cacheRatio());
+        AetherNexus::ViewModels::DashboardViewModel incomplete;
+        incomplete.SetSnapshot(unavailableCache.snapshot);
+        auto const incompleteCharts = incomplete.Charts();
+        Require(std::isnan(incompleteCharts.cachedInput.front()) && std::isnan(incompleteCharts.cacheRatios.front()));
+        Require(std::isfinite(incompleteCharts.cacheRatios[1])); // Known days are still displayed.
         std::cout << "PASS: invalid values, duplicate buckets, missing/repeated cursors, currency, and cancellation.\n";
+
+        // Official field semantics: cached, cache-write, and modality counts are
+        // subsets of input_tokens, never additional tokens. Rates are token-weighted.
+        auto contract = std::make_shared<Scripted>();
+        contract->edit = [](auto const& request, auto response)
+        {
+            if (request.endpoint != Endpoint::CompletionsUsage) return response;
+            auto object = JsonObject::Parse(response.body);
+            auto buckets = object.GetNamedArray(L"data");
+            while (buckets.Size() > 3) buckets.RemoveAtEnd();
+            for (uint32_t i = 0; i < buckets.Size(); ++i)
+            {
+                auto row = buckets.GetObjectAt(i).GetNamedArray(L"results").GetObjectAt(0);
+                auto set = [&](auto key, double value) { row.SetNamedValue(key, JsonValue::CreateNumberValue(value)); };
+                set(L"input_tokens", i == 0 ? 1000 : (i == 1 ? 100 : 0));
+                set(L"output_tokens", i == 0 ? 500 : (i == 1 ? 2000 : 0));
+                set(L"input_cached_tokens", i == 0 ? 400 : (i == 1 ? 100 : 0));
+                set(L"num_model_requests", i == 0 ? 5 : (i == 1 ? 7 : 0));
+                if (i == 0)
+                {
+                    set(L"input_cache_write_tokens", 100);
+                    set(L"input_uncached_tokens", 500);
+                    set(L"input_text_tokens", 400);
+                    set(L"input_audio_tokens", 50);
+                    set(L"input_image_tokens", 50);
+                    set(L"input_cached_text_tokens", 300);
+                    set(L"input_cached_audio_tokens", 50);
+                    set(L"input_cached_image_tokens", 50);
+                }
+            }
+            object.SetNamedValue(L"has_more", JsonValue::CreateBooleanValue(false));
+            object.SetNamedValue(L"next_page", JsonValue::CreateNullValue());
+            response.body = object.Stringify();
+            return response;
+        };
+        auto officialFields = PlatformApiClient{contract}.LoadDashboard(7, now);
+        Require(!officialFields.usageError && officialFields.snapshot.usageAvailable);
+        auto const& semantics = officialFields.snapshot;
+        Require(semantics.inputTokens == 1100 && semantics.outputTokens == 2500);
+        Require(semantics.cachedInputTokens == 500 && semantics.requests == 12);
+        Require(std::abs(*semantics.cacheRatio() - 500.0 / 1100.0) < 1e-10);
+        Require(!semantics.buckets[2].cacheRatio()); // 0/0 is unavailable, never 0%.
+        AetherNexus::ViewModels::DashboardViewModel presentation;
+        presentation.SetSnapshot(semantics);
+        auto const series = presentation.Charts();
+        Require(series.input[0] == 1000 && series.output[0] == 500 && series.cachedInput[0] == 400);
+        Require(std::abs(series.cacheRatios[0] - 0.4) < 1e-10 && series.cacheRatios[1] == 1);
+        Require(std::isnan(series.cacheRatios[2]) && series.cachedInput[2] == 0 && series.requests[2] == 0);
+        Require(series.tokenMaximum > 2000 && series.tokenMaximum < 2400); // Output cannot be clipped to the input scale.
+        using VM = AetherNexus::ViewModels::DashboardViewModel;
+        Require(VM::Date(sys_days{year{2025}/December/31}) == L"2025/12/31");
+        Require(VM::DateTime(now) == L"2026/11/03 12:00:00 UTC");
+        std::cout << "PASS: official token/request semantics, weighted cache ratios, undefined ratios, chart gaps and shared scales.\n";
         std::cout << "No sockets, real credentials, or OpenAI requests were used.\n";
         int64_t cents{};
         Require(BudgetService::TryConvertUsd(123.45, cents) && cents == 12345);

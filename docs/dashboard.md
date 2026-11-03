@@ -10,18 +10,30 @@ Dashboard 提供 7／30 天範圍切換與伺服器資料重新整理。六張�
 
 | 卡片 | 資料來源／定義 | 範圍 |
 | --- | --- | --- |
-| Token 總用量 | `input_tokens + output_tokens`，不再額外加上 cached tokens | 選取期間 |
-| Responses & Chat Completions | `num_model_requests` | 選取期間，每日長條圖 |
-| 提示詞快取比例 | `input_cached_tokens / input_tokens`，不是請求命中率；輸入為 0 時為 0 | 選取期間與每日趨勢 |
-| 本月支出 | Costs API 的 USD 金額加總 | UTC 本月至今 |
-| 今日 Token 用量 | 今日輸入與輸出 Token 加總，取代餘額卡片 | UTC 今日 |
-| 請求總數 | 目前僅涵蓋文字模型，與 Responses / Chat Completions 相同統計範圍 | 選取期間 |
+| Completions Token 用量 | Completions Usage 的 `input_tokens + output_tokens`，包含文字、音訊與影像；快取讀取、快取寫入及各模態數量皆不重複加總 | 選取期間 |
+| Completions 模型請求數 | `num_model_requests`；是模型請求數，不代表所有 API HTTP 請求或對話數 | 選取期間，每日長條圖 |
+| 快取輸入 Token 佔比 | `sum(input_cached_tokens) / sum(input_tokens)`，不是請求命中率、節省成本比例或每日百分比的平均；輸入為 0 或欄位缺失時為「—」 | 選取期間與每日趨勢 |
+| 組織本月成本 | 未依成本項目篩選的 Costs API USD 金額加總，範圍不限於 Completions | UTC 本月 1 日至查詢時間 |
+| 今日 Completions Token | Completions Usage 今日輸入與輸出合計，取代餘額卡片 | UTC 今日 00:00 至查詢時間 |
+| 快取輸入 Token | `input_cached_tokens` 的期間加總，是輸入 Token 的子集；取代原本重複且容易誤解為全部 API 的「請求總數」卡 | 選取期間與每日趨勢 |
+
+用量請求未設定專案、使用者、模型、API Key 或 Batch 篩選，因此涵蓋 Admin Key 所屬組織、所有專案及 Batch／非 Batch 的 Completions 用量。畫面採官方端點的 Completions 名稱，不自行將此資料等同於某兩個生成端點的精確集合，也不宣稱包含 Embeddings、Moderations 等其他用量端點。
+
+「近 7／30 天」指 UTC 日曆日，包含尚未結束的今日，不是回溯整整 168／720 小時。頁尾顯示含年份與時間的實際用量查詢邊界，對應 `start_time` 含、`end_time` 不含；本月成本與今日用量使用相同查詢截止時間，但起日獨立。
+
+圖表以實際日桶繪製。輸入與輸出共用包含兩組最大值的尺度；零請求不繪製長條。無輸入或未知的快取比例以斷點呈現，不當作 0% 或跨越缺值連線。已知零快取讀取量仍可顯示 0 Token。
 
 資料由 PlatformApiClient 取得並解析後交給 DashboardViewModel，不存在內建示範數值。UTC 日期在執行時取得，跨月範圍不影響本月至今卡片，帳務資料可能延遲。本機參考預算由使用者在設定頁選擇是否啟用並輸入 USD 金額，預設未設定；它不會設定官方額度或限制請求。
 
 組織統計使用設定頁保存的 Admin Key；缺少／失效／權限不足時提供說明與「前往設定填寫 Admin Key」按鈕。未取得欄位顯示「—」，伺服器回傳空用量時才顯示 0。用量與成本分別處理，部分端點失敗不抹掉另一端點成功取得的資料；快取欄位不可用時不顯示假的 0%。
 
 官方欄位來源：[Usage API](https://developers.openai.com/api/reference/resources/admin/subresources/organization/subresources/usage)、[Usage 與 Costs 範例](https://developers.openai.com/cookbook/examples/completions_usage_api)。
+
+## 官方文件比對（2026-11-03）
+
+- [Completions Usage](https://developers.openai.com/api/reference/resources/admin/subresources/organization/subresources/usage/methods/completions)：核對欄位子集、模態、模型請求數、預設 Batch 範圍、日期邊界與分頁。輸入／輸出加總及原本加權的快取計算保留；修正標示、零分母及缺值呈現。
+- [Costs](https://developers.openai.com/api/reference/resources/admin/subresources/organization/subresources/usage/methods/costs)：保留獨立 UTC 月範圍及 USD 金額加總；明示這是組織所有成本項目，不能從 Completions Token 推算，也不是帳戶餘額或付款紀錄。
+- 缺值、沒有用量與沒有權限分別呈現。認證與傳輸行為未改變，未讀取真實權杖或呼叫 OpenAI API。
 
 ## 相依套件
 
@@ -32,4 +44,5 @@ Dashboard 提供 7／30 天範圍切換與伺服器資料重新整理。六張�
 - x64 Debug：MSBuild 編譯、IDL／XAML 產生及資源封裝。
 - 已實際啟動檢查深色三欄、淺色雙欄（960 DIP）與淺色單欄（560 DIP）；驗證後恢復跟隨系統主題與預設視窗尺寸。
 - 先前已檢查導航與版面；本次 API 更動使用獨立虛擬通道測試，沒有啟動正式 Dashboard 進行真實 API 呼叫。
+- 語義回歸測試使用官方欄位形狀的本機資料，涵蓋多模態／快取寫入不重複計數、Token 加權比例、零分母與缺值斷點、輸出高於輸入的圖表尺度及含年份的 UTC 查詢時間。
 - HighContrast 已提供資源定義，尚未切換系統對比主題進行實機驗證。

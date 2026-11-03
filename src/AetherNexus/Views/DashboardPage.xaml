@@ -67,7 +67,7 @@ Project: AetherNexus
           <Grid RowSpacing="12">
             <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="*" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
             <StackPanel>
-              <TextBlock Text="Responses &amp; Chat Completions" Style="{StaticResource MetricLabelStyle}" />
+              <TextBlock x:Uid="CompletionsRequests" Style="{StaticResource MetricLabelStyle}" />
               <TextBlock x:Name="CompletionsValue" Style="{StaticResource MetricValueStyle}" />
             </StackPanel>
             <Canvas x:Name="CompletionsChart" Tag="{ThemeResource CacheChartBrush}" Grid.Row="1" Height="76" VerticalAlignment="Bottom" IsHitTestVisible="False" />
@@ -116,21 +116,21 @@ Project: AetherNexus
             <TextBlock x:Uid="TodayPeriod" Grid.Row="2" Style="{StaticResource SecondaryTextStyle}" />
           </Grid>
         </Border>
-        <Border x:Name="RequestsCard" Grid.Row="1" Grid.Column="2" Style="{StaticResource MetricCardStyle}">
+        <Border x:Name="CachedTokensCard" Grid.Row="1" Grid.Column="2" Style="{StaticResource MetricCardStyle}">
           <Grid RowSpacing="12">
             <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="*" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
             <StackPanel>
-              <TextBlock x:Uid="TotalRequests" Style="{StaticResource MetricLabelStyle}" />
-              <TextBlock x:Name="RequestsValue" Style="{StaticResource MetricValueStyle}" />
+              <TextBlock x:Uid="CachedTokens" Style="{StaticResource MetricLabelStyle}" />
+              <TextBlock x:Name="CachedTokensValue" Style="{StaticResource MetricValueStyle}" />
             </StackPanel>
-            <Canvas x:Name="RequestsChart" Tag="{ThemeResource RequestChartBrush}" Grid.Row="1" Height="76" VerticalAlignment="Bottom" IsHitTestVisible="False" />
-            <TextBlock x:Uid="RequestScope" Grid.Row="2" Style="{StaticResource SecondaryTextStyle}" />
+            <Canvas x:Name="CachedTokensChart" Tag="{ThemeResource RequestChartBrush}" Grid.Row="1" Height="76" VerticalAlignment="Bottom" IsHitTestVisible="False" />
+            <TextBlock x:Uid="CachedTokensDefinition" Grid.Row="2" Style="{StaticResource SecondaryTextStyle}" />
           </Grid>
         </Border>
       </Grid>
       <Grid Margin="0,-12,16,0" ColumnSpacing="12">
         <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
-        <TextBlock x:Name="DateRangeLabel" Style="{StaticResource SecondaryTextStyle}" />
+        <TextBlock x:Name="DateRangeLabel" Style="{StaticResource SecondaryTextStyle}" TextWrapping="Wrap" />
         <TextBlock x:Name="DataStatus" Grid.Column="1" Style="{StaticResource SecondaryTextStyle}"
                    AutomationProperties.LiveSetting="Polite" />
       </Grid>

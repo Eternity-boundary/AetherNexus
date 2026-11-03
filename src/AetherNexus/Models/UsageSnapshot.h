@@ -9,6 +9,7 @@
 
 #include <chrono>
 #include <cstdint>
+#include <optional>
 #include <vector>
 
 namespace AetherNexus::Models
@@ -20,7 +21,12 @@ namespace AetherNexus::Models
         int64_t outputTokens{};
         int64_t cachedInputTokens{};
         int64_t requests{};
-        double costUsd{};
+        bool cacheAvailable{true};
+        std::optional<double> cacheRatio() const noexcept
+        {
+            if (!cacheAvailable || inputTokens == 0) return {};
+            return static_cast<double>(cachedInputTokens) / inputTokens;
+        }
     };
 
     struct UsageSnapshot
@@ -35,9 +41,10 @@ namespace AetherNexus::Models
         bool usageAvailable{false};
         bool costsAvailable{false};
         bool cacheAvailable{true};
-        double cacheRatio() const noexcept
+        std::optional<double> cacheRatio() const noexcept
         {
-            return inputTokens == 0 ? 0.0 : static_cast<double>(cachedInputTokens) / inputTokens;
+            if (!usageAvailable || !cacheAvailable || inputTokens == 0) return {};
+            return static_cast<double>(cachedInputTokens) / inputTokens;
         }
     };
 }

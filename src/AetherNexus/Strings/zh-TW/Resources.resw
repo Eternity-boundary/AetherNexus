@@ -6,28 +6,30 @@
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
   <data name="AppSubtitle.Text" xml:space="preserve"><value>Platform 用戶端</value></data>
   <data name="WorkspaceStatus.Text" xml:space="preserve"><value>Windows 原生用戶端</value></data>
-  <data name="DashboardIntro.Text" xml:space="preserve"><value>掌握模型活動、Token 用量與支出，讓每一次請求都有跡可循。</value></data>
+  <data name="DashboardIntro.Text" xml:space="preserve"><value>查看組織的 Completions 用量與整體成本；所有日期皆採 UTC。</value></data>
   <data name="RangePicker.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>統計日期範圍</value></data>
-  <data name="LastSevenDays.Content" xml:space="preserve"><value>最近 7 天</value></data>
-  <data name="LastThirtyDays.Content" xml:space="preserve"><value>最近 30 天</value></data>
+  <data name="LastSevenDays.Content" xml:space="preserve"><value>近 7 天（含今日）</value></data>
+  <data name="LastThirtyDays.Content" xml:space="preserve"><value>近 30 天（含今日）</value></data>
   <data name="DashboardRefresh.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>重新整理伺服器資料</value></data>
   <data name="DashboardRefresh.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve"><value>重新整理伺服器資料</value></data>
-  <data name="TotalTokens.Text" xml:space="preserve"><value>Token 總用量</value></data>
+  <data name="TotalTokens.Text" xml:space="preserve"><value>Completions Token 用量</value></data>
   <data name="InputLegend.Text" xml:space="preserve"><value>輸入</value></data>
   <data name="OutputLegend.Text" xml:space="preserve"><value>輸出</value></data>
-  <data name="RequestsPerDay.Text" xml:space="preserve"><value>每日文字模型請求</value></data>
-  <data name="CacheRatio.Text" xml:space="preserve"><value>提示詞快取比例</value></data>
-  <data name="CacheDefinition.Text" xml:space="preserve"><value>快取輸入 Token ÷ 輸入 Token</value></data>
-  <data name="MonthSpend.Text" xml:space="preserve"><value>本月支出</value></data>
-  <data name="CostDataHint.Text" xml:space="preserve"><value>來自組織 Costs API，帳務資料可能延遲。</value></data>
-  <data name="SpendDefinition.Text" xml:space="preserve"><value>本月至今 · USD · 不受上方日期範圍影響</value></data>
-  <data name="TodayTokens.Text" xml:space="preserve"><value>今日 Token 用量</value></data>
-  <data name="TodayDefinition.Text" xml:space="preserve"><value>以輸入與輸出用量，觀察今天的模型活動。</value></data>
-  <data name="TodayPeriod.Text" xml:space="preserve"><value>UTC 今日 · 不受上方日期範圍影響</value></data>
-  <data name="TotalRequests.Text" xml:space="preserve"><value>請求總數</value></data>
-  <data name="RequestScope.Text" xml:space="preserve"><value>目前範圍：Responses 與 Chat Completions</value></data>
+  <data name="CompletionsRequests.Text" xml:space="preserve"><value>Completions 模型請求數</value></data>
+  <data name="RequestsPerDay.Text" xml:space="preserve"><value>選取期間的模型請求合計 · 每日趨勢</value></data>
+  <data name="CacheRatio.Text" xml:space="preserve"><value>快取輸入 Token 佔比</value></data>
+  <data name="CacheDefinition.Text" xml:space="preserve"><value>期間快取輸入 ÷ 期間輸入；非請求命中率。無輸入或欄位缺失時顯示「—」，圖表留空。</value></data>
+  <data name="MonthSpend.Text" xml:space="preserve"><value>組織本月成本</value></data>
+  <data name="CostDataHint.Text" xml:space="preserve"><value>組織 Costs API 的所有成本項目，範圍不限於 Completions。</value></data>
+  <data name="SpendDefinition.Text" xml:space="preserve"><value>UTC 本月 1 日至查詢時間 · USD · 不受上方日期範圍影響</value></data>
+  <data name="TodayTokens.Text" xml:space="preserve"><value>今日 Completions Token</value></data>
+  <data name="TodayDefinition.Text" xml:space="preserve"><value>Completions 用量中的輸入與輸出合計，包含文字、音訊與影像 Token。</value></data>
+  <data name="TodayPeriod.Text" xml:space="preserve"><value>UTC 今日 00:00 至查詢時間 · 不受上方日期範圍影響</value></data>
+  <data name="CachedTokens.Text" xml:space="preserve"><value>快取輸入 Token</value></data>
+  <data name="CachedTokensDefinition.Text" xml:space="preserve"><value>選取期間的快取讀取量；已包含於輸入 Token，不再重複加總。</value></data>
   <data name="DataScopeTitle.Text" xml:space="preserve"><value>關於資料範圍</value></data>
-  <data name="DataScopeBody.Text" xml:space="preserve"><value>Dashboard 使用 Admin Key 讀取組織用量與 USD 成本。一般 API Key 不具備相同的組織管理權限；未取得的統計會顯示「—」。資料依 UTC 彙整，並以伺服器回報為準。</value></data>
+  <data name="DataScopeBody.Text" xml:space="preserve"><value>使用 Admin Key 讀取所屬組織的彙總，未依專案、使用者或 API Key 篩選，包含 Batch 與非 Batch。Token、模型請求與快取指標僅涵蓋 Completions 用量，並非所有 API 活動；輸入已含快取讀取、快取寫入與各模態 Token，均不額外相加。Costs 則涵蓋組織所有成本項目，不能以這些 Token 直接換算。一般 API Key 無法取代 Admin Key。未取得的統計顯示「—」，數值以伺服器回報為準。</value></data>
+  <data name="UsageQueryRange" xml:space="preserve"><value>用量查詢範圍：</value></data>
   <data name="PlaceholderTitle.Text" xml:space="preserve"><value>頁面準備中</value></data>
   <data name="PlaceholderBody.Text" xml:space="preserve"><value>此功能已保留導覽位置，將在後續版本加入。你可以從左側返回 Dashboard，查看用量資料。</value></data>
   <data name="SettingsTitle.Text" xml:space="preserve"><value>設定</value></data>
@@ -92,7 +94,7 @@
   <data name="ApiServerError" xml:space="preserve"><value>OpenAI 伺服器暫時無法處理請求，請稍後重新整理。</value></data>
   <data name="ApiInvalidResponse" xml:space="preserve"><value>伺服器回應格式、幣別或統計資料無法辨識，未顯示可能不正確的數值。</value></data>
   <data name="BudgetTitle.Text" xml:space="preserve"><value>本機每月參考預算</value></data>
-  <data name="BudgetDescription.Text" xml:space="preserve"><value>自行設定 USD 金額，在 Dashboard 對照本月支出。僅供本機參考，不會設定 OpenAI 官方預算或限制請求。</value></data>
+  <data name="BudgetDescription.Text" xml:space="preserve"><value>自行設定 USD 金額，在 Dashboard 對照組織本月成本。僅供本機參考，不會設定 OpenAI 官方預算或限制請求。</value></data>
   <data name="BudgetEnabled.Header" xml:space="preserve"><value>啟用參考預算</value></data>
   <data name="BudgetEnabled.OnContent" xml:space="preserve"><value>啟用</value></data>
   <data name="BudgetEnabled.OffContent" xml:space="preserve"><value>停用</value></data>

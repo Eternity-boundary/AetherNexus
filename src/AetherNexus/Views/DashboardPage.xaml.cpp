@@ -66,7 +66,8 @@ namespace winrt::AetherNexus::implementation
         m_viewModel.SetSnapshot({});
         RenderSnapshot();
         auto const today = std::chrono::floor<std::chrono::days>(now);
-        DateRangeLabel().Text(VM::Date(today - std::chrono::days{count - 1}) + L" – " + VM::Date(today) + L" · UTC");
+        DateRangeLabel().Text(Text(L"UsageQueryRange") + L" " + VM::Date(today - std::chrono::days{count - 1})
+            + L" 00:00:00 – " + VM::DateTime(now));
         RefreshButton().IsEnabled(false);
         RangePicker().IsEnabled(false);
         LoadingRing().IsActive(true);
@@ -157,10 +158,11 @@ namespace winrt::AetherNexus::implementation
         auto const& data = m_viewModel.Snapshot();
         TokensValue().Text(data.usageAvailable ? hstring{VM::Number(data.inputTokens + data.outputTokens)} : L"—");
         CompletionsValue().Text(data.usageAvailable ? hstring{VM::Number(data.requests)} : L"—");
-        CacheValue().Text(data.usageAvailable && data.cacheAvailable ? hstring{VM::Percent(data.cacheRatio())} : L"—");
+        auto const cacheRatio = data.cacheRatio();
+        CacheValue().Text(cacheRatio ? hstring{VM::Percent(*cacheRatio)} : L"—");
         SpendValue().Text(data.costsAvailable ? hstring{VM::Money(data.monthCostUsd)} : L"—");
         TodayValue().Text(data.usageAvailable ? hstring{VM::Number(data.todayTokens)} : L"—");
-        RequestsValue().Text(data.usageAvailable ? hstring{VM::Number(data.requests)} : L"—");
+        CachedTokensValue().Text(data.usageAvailable && data.cacheAvailable ? hstring{VM::Number(data.cachedInputTokens)} : L"—");
         BudgetValue().Text(m_budgetUnavailable ? Text(L"BudgetLoadFailed") : (m_monthlyBudgetCents
             ? hstring{(data.costsAvailable ? VM::Money(data.monthCostUsd) : L"—") + L" / " + VM::Money(*m_monthlyBudgetCents / 100.0)}
             : Text(L"BudgetNotConfigured")));
@@ -177,7 +179,7 @@ namespace winrt::AetherNexus::implementation
         if (columns != m_columns)
         {
             m_columns = columns;
-            std::array<Border, 6> cards{TokensCard(), CompletionsCard(), CacheCard(), SpendCard(), TodayCard(), RequestsCard()};
+            std::array<Border, 6> cards{TokensCard(), CompletionsCard(), CacheCard(), SpendCard(), TodayCard(), CachedTokensCard()};
             CardsGrid().ColumnDefinitions().Clear();
             for (int i = 0; i < columns; ++i) CardsGrid().ColumnDefinitions().Append(ColumnDefinition{});
             for (size_t i = 0; i < cards.size(); ++i)
@@ -199,22 +201,14 @@ namespace winrt::AetherNexus::implementation
         TokensChart().Children().Clear();
         CompletionsChart().Children().Clear();
         CacheChart().Children().Clear();
-        RequestsChart().Children().Clear();
-        if (data.buckets.empty()) return;
-        std::vector<double> input, output, cache, requests;
-        for (auto const& bucket : data.buckets)
-        {
-            input.push_back(static_cast<double>(bucket.inputTokens));
-            output.push_back(static_cast<double>(bucket.outputTokens));
-            cache.push_back(bucket.inputTokens ? static_cast<double>(bucket.cachedInputTokens) / bucket.inputTokens : 0);
-            requests.push_back(static_cast<double>(bucket.requests));
-        }
-        auto const maximum = *std::max_element(input.begin(), input.end()) * 1.15;
+        CachedTokensChart().Children().Clear();
+        if (!data.usageAvailable || data.buckets.empty()) return;
+        auto const series = m_viewModel.Charts();
         namespace Charts = ::AetherNexus::Views::Charts;
-        Charts::Line(TokensChart(), input, TokensChart().Tag().as<Media::Brush>(), maximum);
-        Charts::Line(TokensChart(), output, OutputLegendMarker().Fill(), maximum, false, false);
-        Charts::Bars(CompletionsChart(), requests, CompletionsChart().Tag().as<Media::Brush>());
-        if (data.cacheAvailable) Charts::Line(CacheChart(), cache, CacheChart().Tag().as<Media::Brush>(), 1.0);
-        Charts::Line(RequestsChart(), requests, RequestsChart().Tag().as<Media::Brush>());
+        Charts::Line(TokensChart(), series.input, TokensChart().Tag().as<Media::Brush>(), series.tokenMaximum);
+        Charts::Line(TokensChart(), series.output, OutputLegendMarker().Fill(), series.tokenMaximum, false, false);
+        Charts::Bars(CompletionsChart(), series.requests, CompletionsChart().Tag().as<Media::Brush>());
+        Charts::Line(CacheChart(), series.cacheRatios, CacheChart().Tag().as<Media::Brush>(), 1.0);
+        Charts::Line(CachedTokensChart(), series.cachedInput, CachedTokensChart().Tag().as<Media::Brush>());
     }
 }

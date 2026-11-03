@@ -25,6 +25,7 @@
     <ClCompile Include="PlatformApi.Tests.cpp" />
     <ClCompile Include="..\src\AetherNexus\Services\ApiTypes.cpp" />
     <ClCompile Include="..\src\AetherNexus\Services\PlatformApiClient.cpp" />
+    <ClCompile Include="..\src\AetherNexus\ViewModels\DashboardViewModel.cpp" />
     <ClCompile Include="Support\MockApiTransport.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

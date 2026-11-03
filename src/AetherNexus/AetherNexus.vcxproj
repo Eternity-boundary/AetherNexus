@@ -168,7 +168,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </ClCompile>
     <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
-    <ClCompile Include="ViewModels\DashboardViewModel.cpp" />
+    <ClCompile Include="ViewModels\DashboardViewModel.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
     <ClCompile Include="Infrastructure\CredentialStore.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
     <ClCompile Include="Services\ThemeService.cpp" />
     <ClCompile Include="Services\BudgetService.cpp" />

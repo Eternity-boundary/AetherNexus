@@ -114,7 +114,11 @@ namespace AetherNexus::Services
                         auto const output = Integer(item, L"output_tokens");
                         auto const cachedField = item.TryLookup(L"input_cached_tokens");
                         auto const cached = cachedField && cachedField.ValueType() != JsonValueType::Null ? Integer(item, L"input_cached_tokens") : 0;
-                        if (!cachedField || cachedField.ValueType() == JsonValueType::Null) cacheAvailable = false;
+                        if (!cachedField || cachedField.ValueType() == JsonValueType::Null)
+                        {
+                            cacheAvailable = false;
+                            bucket.cacheAvailable = false;
+                        }
                         if (cached > input) Invalid();
                         Add(bucket.inputTokens, input);
                         Add(bucket.outputTokens, output);
