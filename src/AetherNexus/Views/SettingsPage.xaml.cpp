@@ -52,6 +52,7 @@ namespace winrt::AetherNexus::implementation
             case StorageState::Stored: return Text(L"KeyStored");
             case StorageState::Missing: return Text(L"KeyMissing");
             case StorageState::Unavailable: return Text(L"KeyUnavailable");
+            case StorageState::Unknown: return Text(L"KeyLoading");
             default: return Text(L"KeyLoading");
             }
         };
@@ -76,7 +77,7 @@ namespace winrt::AetherNexus::implementation
             {
                 auto const budget = ::AetherNexus::Services::BudgetService::Load();
                 BudgetEnabled().IsOn(budget.has_value());
-                if (budget) BudgetAmount().Value(*budget / 100.0);
+                if (budget) BudgetAmount().Value(static_cast<double>(*budget) / 100.0);
                 BudgetAmount().IsEnabled(budget.has_value());
             }
             catch (...) { Notify(L"BudgetLoadFailed", InfoBarSeverity::Warning); }

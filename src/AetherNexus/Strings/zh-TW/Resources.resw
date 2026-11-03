@@ -1,109 +1,756 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
-  <resheader name="version"><value>2.0</value></resheader>
-  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
-  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
-  <data name="AppSubtitle.Text" xml:space="preserve"><value>Platform 用戶端</value></data>
-  <data name="WorkspaceStatus.Text" xml:space="preserve"><value>Windows 原生用戶端</value></data>
-  <data name="DashboardIntro.Text" xml:space="preserve"><value>查看組織的 Completions 用量與整體成本；所有日期皆採 UTC。</value></data>
-  <data name="RangePicker.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>統計日期範圍</value></data>
-  <data name="LastSevenDays.Content" xml:space="preserve"><value>近 7 天（含今日）</value></data>
-  <data name="LastThirtyDays.Content" xml:space="preserve"><value>近 30 天（含今日）</value></data>
-  <data name="DashboardRefresh.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>重新整理伺服器資料</value></data>
-  <data name="DashboardRefresh.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve"><value>重新整理伺服器資料</value></data>
-  <data name="TotalTokens.Text" xml:space="preserve"><value>Completions Token 用量</value></data>
-  <data name="InputLegend.Text" xml:space="preserve"><value>輸入</value></data>
-  <data name="OutputLegend.Text" xml:space="preserve"><value>輸出</value></data>
-  <data name="CompletionsRequests.Text" xml:space="preserve"><value>Completions 模型請求數</value></data>
-  <data name="RequestsPerDay.Text" xml:space="preserve"><value>選取期間的模型請求合計 · 每日趨勢</value></data>
-  <data name="CacheRatio.Text" xml:space="preserve"><value>快取輸入 Token 佔比</value></data>
-  <data name="CacheDefinition.Text" xml:space="preserve"><value>期間快取輸入 ÷ 期間輸入；非請求命中率。無輸入或欄位缺失時顯示「—」，圖表留空。</value></data>
-  <data name="MonthSpend.Text" xml:space="preserve"><value>組織本月成本</value></data>
-  <data name="CostDataHint.Text" xml:space="preserve"><value>組織 Costs API 的所有成本項目，範圍不限於 Completions。</value></data>
-  <data name="SpendDefinition.Text" xml:space="preserve"><value>UTC 本月 1 日至查詢時間 · USD · 不受上方日期範圍影響</value></data>
-  <data name="TodayTokens.Text" xml:space="preserve"><value>今日 Completions Token</value></data>
-  <data name="TodayDefinition.Text" xml:space="preserve"><value>Completions 用量中的輸入與輸出合計，包含文字、音訊與影像 Token。</value></data>
-  <data name="TodayPeriod.Text" xml:space="preserve"><value>UTC 今日 00:00 至查詢時間 · 不受上方日期範圍影響</value></data>
-  <data name="CachedTokens.Text" xml:space="preserve"><value>快取輸入 Token</value></data>
-  <data name="CachedTokensDefinition.Text" xml:space="preserve"><value>選取期間的快取讀取量；已包含於輸入 Token，不再重複加總。</value></data>
-  <data name="DataScopeTitle.Text" xml:space="preserve"><value>關於資料範圍</value></data>
-  <data name="DataScopeBody.Text" xml:space="preserve"><value>使用 Admin Key 讀取所屬組織的彙總，未依專案、使用者或 API Key 篩選，包含 Batch 與非 Batch。Token、模型請求與快取指標僅涵蓋 Completions 用量，並非所有 API 活動；輸入已含快取讀取、快取寫入與各模態 Token，均不額外相加。Costs 則涵蓋組織所有成本項目，不能以這些 Token 直接換算。一般 API Key 無法取代 Admin Key。未取得的統計顯示「—」，數值以伺服器回報為準。</value></data>
-  <data name="UsageQueryRange" xml:space="preserve"><value>用量查詢範圍：</value></data>
-  <data name="PlaceholderTitle.Text" xml:space="preserve"><value>頁面準備中</value></data>
-  <data name="PlaceholderBody.Text" xml:space="preserve"><value>此功能已保留導覽位置，將在後續版本加入。你可以從左側返回 Dashboard，查看用量資料。</value></data>
-  <data name="SettingsTitle.Text" xml:space="preserve"><value>設定</value></data>
-  <data name="SettingsIntro.Text" xml:space="preserve"><value>調整你的工作環境，分別管理模型與組織管理權杖。</value></data>
-  <data name="AppearanceTitle.Text" xml:space="preserve"><value>外觀</value></data>
-  <data name="AppearanceDescription.Text" xml:space="preserve"><value>立即套用至整個視窗，並在下次啟動時保留你的選擇。</value></data>
-  <data name="ThemePicker.Header" xml:space="preserve"><value>應用程式佈景主題</value></data>
-  <data name="ThemeSystem.Content" xml:space="preserve"><value>跟隨系統</value></data>
-  <data name="ThemeLight.Content" xml:space="preserve"><value>淺色</value></data>
-  <data name="ThemeDark.Content" xml:space="preserve"><value>深色</value></data>
-  <data name="CredentialsTitle.Text" xml:space="preserve"><value>權杖管理</value></data>
-  <data name="CredentialsDescription.Text" xml:space="preserve"><value>兩種權杖分開儲存與移除。此頁只管理本機儲存，不會傳送驗證請求。</value></data>
-  <data name="ModelKeyTitle.Text" xml:space="preserve"><value>一般 API Key</value></data>
-  <data name="ModelKeyDescription.Text" xml:space="preserve"><value>供模型呼叫與專案操作使用。建議使用具備所需最小權限的專案金鑰。</value></data>
-  <data name="AdminKeyTitle.Text" xml:space="preserve"><value>Admin Key</value></data>
-  <data name="AdminKeyDescription.Text" xml:space="preserve"><value>供組織用量、成本及管理功能使用。管理金鑰權限較高，不會與一般 API Key 互相替代。</value></data>
-  <data name="ModelKeyInput.Header" xml:space="preserve"><value>新的 API Key</value></data>
-  <data name="ModelKeyInput.PlaceholderText" xml:space="preserve"><value>輸入權杖以新增或取代</value></data>
-  <data name="AdminKeyInput.Header" xml:space="preserve"><value>新的 Admin Key</value></data>
-  <data name="AdminKeyInput.PlaceholderText" xml:space="preserve"><value>輸入管理權杖以新增或取代</value></data>
-  <data name="SaveModelButton.Content" xml:space="preserve"><value>儲存權杖</value></data>
-  <data name="SaveAdminButton.Content" xml:space="preserve"><value>儲存權杖</value></data>
-  <data name="RemoveModelButton.Content" xml:space="preserve"><value>移除</value></data>
-  <data name="RemoveAdminButton.Content" xml:space="preserve"><value>移除</value></data>
-  <data name="SaveModelButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>儲存一般 API Key</value></data>
-  <data name="SaveAdminButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>儲存 Admin Key</value></data>
-  <data name="RemoveModelButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>移除本機一般 API Key</value></data>
-  <data name="RemoveAdminButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>移除本機 Admin Key</value></data>
-  <data name="CredentialSafetyNotice.Title" xml:space="preserve"><value>受 Windows 保護的本機儲存</value></data>
-  <data name="CredentialSafetyNotice.Message" xml:space="preserve"><value>權杖保存在目前 Windows 使用者的認證管理員，不寫入明文設定，也不回填至畫面。輸入內容會在儲存嘗試或離開頁面後清空。</value></data>
-  <data name="KeyLoading" xml:space="preserve"><value>正在讀取儲存狀態…</value></data>
-  <data name="KeyStored" xml:space="preserve"><value>已安全儲存 · 尚未驗證</value></data>
-  <data name="KeyMissing" xml:space="preserve"><value>尚未儲存</value></data>
-  <data name="KeyUnavailable" xml:space="preserve"><value>無法存取認證儲存；請重新開啟設定頁再試</value></data>
-  <data name="ThemeLoadFailed" xml:space="preserve"><value>無法讀取主題偏好，目前使用預設選擇。</value></data>
-  <data name="ThemeSaved" xml:space="preserve"><value>佈景主題已套用並儲存。</value></data>
-  <data name="ThemeSaveFailed" xml:space="preserve"><value>無法儲存佈景主題，請稍後再試。</value></data>
-  <data name="StorageFailed" xml:space="preserve"><value>Windows 認證儲存操作未完成。請稍後再試；不會改用明文儲存。</value></data>
-  <data name="InvalidKeyInput" xml:space="preserve"><value>請輸入不含空白、換行或控制字元的權杖，長度不得超過 1280 個 ASCII 字元。</value></data>
-  <data name="KeySaved" xml:space="preserve"><value>權杖已儲存至 Windows 認證管理員，尚未驗證有效性。</value></data>
-  <data name="KeyRemoved" xml:space="preserve"><value>已移除此裝置上的權杖副本；官方金鑰並未撤銷。</value></data>
-  <data name="ModelKeyName" xml:space="preserve"><value>一般 API Key</value></data>
-  <data name="AdminKeyName" xml:space="preserve"><value>Admin Key</value></data>
-  <data name="RemoveKeyPrompt" xml:space="preserve"><value>要移除此裝置上儲存的這個權杖嗎？這只會刪除本機副本，不會撤銷 OpenAI 上的金鑰。</value></data>
-  <data name="ReplaceKeyPrompt" xml:space="preserve"><value>要使用新輸入的權杖取代本機已儲存的這個權杖嗎？舊副本會被覆寫，官方金鑰並不會撤銷。</value></data>
-  <data name="RemoveKeyAction" xml:space="preserve"><value>移除本機副本</value></data>
-  <data name="ReplaceKeyAction" xml:space="preserve"><value>取代權杖</value></data>
-  <data name="CancelAction" xml:space="preserve"><value>取消</value></data>
-  <data name="DashboardOpenSettings.Content" xml:space="preserve"><value>前往設定填寫 Admin Key</value></data>
-  <data name="DashboardLoadingTitle" xml:space="preserve"><value>正在載入</value></data>
-  <data name="DashboardLoadingBody" xml:space="preserve"><value>正在從 OpenAI 取得組織用量與成本。</value></data>
-  <data name="DashboardUpdated" xml:space="preserve"><value>伺服器資料已更新</value></data>
-  <data name="DashboardPartial" xml:space="preserve"><value>部分資料無法取得</value></data>
-  <data name="DashboardUnavailable" xml:space="preserve"><value>尚無可用資料</value></data>
-  <data name="ApiMissingAdminKey" xml:space="preserve"><value>尚未儲存 Admin Key。請前往「設定 → 權杖管理」填寫 Admin Key，再回到 Dashboard 重新整理。一般 API Key 無法取代組織統計所需的管理權杖。</value></data>
-  <data name="ApiCredentialUnavailable" xml:space="preserve"><value>無法讀取 Windows 認證儲存。請前往設定確認權杖，或重新登入 Windows 後再試。</value></data>
-  <data name="ApiUnauthorized" xml:space="preserve"><value>伺服器未接受此 Admin Key。請前往設定更新權杖，再重新整理。</value></data>
-  <data name="ApiForbidden" xml:space="preserve"><value>此 Admin Key 沒有讀取所需組織資料的權限。請確認金鑰權限與組織設定。</value></data>
-  <data name="ApiRateLimited" xml:space="preserve"><value>伺服器暫時限制請求頻率，請稍後手動重新整理。</value></data>
-  <data name="ApiTimeout" xml:space="preserve"><value>連線逾時，請確認網路後重新整理。</value></data>
-  <data name="ApiNetworkError" xml:space="preserve"><value>無法安全連線至伺服器。請確認網路、Proxy 與 Windows 憑證設定後再試。</value></data>
-  <data name="ApiServerError" xml:space="preserve"><value>OpenAI 伺服器暫時無法處理請求，請稍後重新整理。</value></data>
-  <data name="ApiInvalidResponse" xml:space="preserve"><value>伺服器回應格式、幣別或統計資料無法辨識，未顯示可能不正確的數值。</value></data>
-  <data name="BudgetTitle.Text" xml:space="preserve"><value>本機每月參考預算</value></data>
-  <data name="BudgetDescription.Text" xml:space="preserve"><value>自行設定 USD 金額，在 Dashboard 對照組織本月成本。僅供本機參考，不會設定 OpenAI 官方預算或限制請求。</value></data>
-  <data name="BudgetEnabled.Header" xml:space="preserve"><value>啟用參考預算</value></data>
-  <data name="BudgetEnabled.OnContent" xml:space="preserve"><value>啟用</value></data>
-  <data name="BudgetEnabled.OffContent" xml:space="preserve"><value>停用</value></data>
-  <data name="BudgetAmount.Header" xml:space="preserve"><value>每月金額（USD，最多兩位小數）</value></data>
-  <data name="SaveBudgetButton.Content" xml:space="preserve"><value>儲存預算設定</value></data>
-  <data name="BudgetSaved" xml:space="preserve"><value>本機預算設定已儲存，返回 Dashboard 即會更新；OpenAI 官方設定不受影響。</value></data>
-  <data name="BudgetInvalid" xml:space="preserve"><value>請輸入 0.01 至 1,000,000,000 USD，最多兩位小數。</value></data>
-  <data name="BudgetLoadFailed" xml:space="preserve"><value>無法讀取本機預算設定。</value></data>
-  <data name="BudgetSaveFailed" xml:space="preserve"><value>無法儲存本機預算設定，請稍後重試。</value></data>
-  <data name="BudgetNotConfigured" xml:space="preserve"><value>尚未設定，可前往設定頁啟用。</value></data>
-  <data name="LocalBudgetLabel.Text" xml:space="preserve"><value>本機參考預算 · 非官方額度</value></data>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppSubtitle.Text" xml:space="preserve">
+    <value>Platform 用戶端</value>
+  </data>
+  <data name="WorkspaceStatus.Text" xml:space="preserve">
+    <value>Windows 原生用戶端</value>
+  </data>
+  <data name="DashboardIntro.Text" xml:space="preserve">
+    <value>依專案查看 Completions 用量與成本；所有日期皆採 UTC。</value>
+  </data>
+  <data name="ProjectPicker.Header" xml:space="preserve">
+    <value>專案</value>
+  </data>
+  <data name="ProjectPicker.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>統計專案範圍</value>
+  </data>
+  <data name="ProjectAll" xml:space="preserve">
+    <value>所有專案（組織）</value>
+  </data>
+  <data name="ProjectArchivedSuffix" xml:space="preserve">
+    <value>（已封存）</value>
+  </data>
+  <data name="ProjectMissingSuffix" xml:space="preserve">
+    <value>（不在最新專案清單中）</value>
+  </data>
+  <data name="ProjectScopePrefix" xml:space="preserve">
+    <value>目前統計範圍：</value>
+  </data>
+  <data name="ProjectListUnavailableTitle" xml:space="preserve">
+    <value>無法更新專案清單</value>
+  </data>
+  <data name="ProjectListUnavailableBody" xml:space="preserve">
+    <value>已保留目前的專案選擇與先前清單。請確認 Admin Key 具備讀取組織專案的權限及網路連線，再按重新整理重試。清單讀取失敗不會切換統計範圍。</value>
+  </data>
+  <data name="ProjectListEmptyTitle" xml:space="preserve">
+    <value>專案清單為空</value>
+  </data>
+  <data name="ProjectListEmptyBody" xml:space="preserve">
+    <value>伺服器沒有回傳專案。目前仍可選擇「所有專案」；之後可按重新整理更新清單。</value>
+  </data>
+  <data name="RangePicker.Header" xml:space="preserve">
+    <value>日期範圍</value>
+  </data>
+  <data name="RangePicker.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>統計日期範圍</value>
+  </data>
+  <data name="LastSevenDays.Content" xml:space="preserve">
+    <value>近 7 天（含今日）</value>
+  </data>
+  <data name="LastThirtyDays.Content" xml:space="preserve">
+    <value>近 30 天（含今日）</value>
+  </data>
+  <data name="DashboardRefresh.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>重新整理伺服器資料</value>
+  </data>
+  <data name="DashboardRefresh.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>重新整理伺服器資料</value>
+  </data>
+  <data name="TotalTokens.Text" xml:space="preserve">
+    <value>Completions Token 用量</value>
+  </data>
+  <data name="InputLegend.Text" xml:space="preserve">
+    <value>輸入</value>
+  </data>
+  <data name="OutputLegend.Text" xml:space="preserve">
+    <value>輸出</value>
+  </data>
+  <data name="CompletionsRequests.Text" xml:space="preserve">
+    <value>Completions 模型請求數</value>
+  </data>
+  <data name="RequestsPerDay.Text" xml:space="preserve">
+    <value>選取期間的模型請求合計 · 每日趨勢</value>
+  </data>
+  <data name="CacheRatio.Text" xml:space="preserve">
+    <value>快取輸入 Token 佔比</value>
+  </data>
+  <data name="CacheDefinition.Text" xml:space="preserve">
+    <value>期間快取輸入 ÷ 期間輸入；非請求命中率。無輸入或欄位缺失時顯示「—」，圖表留空。</value>
+  </data>
+  <data name="MonthSpend.Text" xml:space="preserve">
+    <value>本月成本</value>
+  </data>
+  <data name="CostDataHint.Text" xml:space="preserve">
+    <value>目前專案範圍的所有成本項目，不限於 Completions。</value>
+  </data>
+  <data name="SpendDefinition.Text" xml:space="preserve">
+    <value>UTC 本月 1 日至查詢時間 · USD · 不受上方日期範圍影響</value>
+  </data>
+  <data name="TodayTokens.Text" xml:space="preserve">
+    <value>今日 Completions Token</value>
+  </data>
+  <data name="TodayDefinition.Text" xml:space="preserve">
+    <value>Completions 用量中的輸入與輸出合計，包含文字、音訊與影像 Token。</value>
+  </data>
+  <data name="TodayPeriod.Text" xml:space="preserve">
+    <value>UTC 今日 00:00 至查詢時間 · 不受上方日期範圍影響</value>
+  </data>
+  <data name="CachedTokens.Text" xml:space="preserve">
+    <value>快取輸入 Token</value>
+  </data>
+  <data name="CachedTokensDefinition.Text" xml:space="preserve">
+    <value>選取期間的快取讀取量；已包含於輸入 Token。</value>
+  </data>
+  <data name="DataScopeTitle.Text" xml:space="preserve">
+    <value>關於資料範圍</value>
+  </data>
+  <data name="DataScopeBody.Text" xml:space="preserve">
+    <value>使用 Admin Key 讀取組織資料。「所有專案」顯示組織彙總；選擇指定專案後，所有用量、圖表與成本皆限制為同一專案。專案清單包含已封存專案，未另外依使用者或 API Key 篩選，包含 Batch 與非 Batch。Token、模型請求與快取指標僅涵蓋 Completions 用量，並非所有 API 活動；輸入已含快取讀取、快取寫入與各模態 Token，均不額外相加。成本包含目前專案範圍的所有成本項目，不能以這些 Token 直接換算。一般 API Key 無法取代 Admin Key。未取得的統計顯示「—」，數值以伺服器回報為準。</value>
+  </data>
+  <data name="UsageQueryRange" xml:space="preserve">
+    <value>用量查詢範圍：</value>
+  </data>
+  <data name="PlaceholderTitle.Text" xml:space="preserve">
+    <value>頁面準備中</value>
+  </data>
+  <data name="PlaceholderBody.Text" xml:space="preserve">
+    <value>此功能已保留導覽位置，將在後續版本加入。你可以從左側返回 Dashboard，查看用量資料。</value>
+  </data>
+  <data name="SettingsTitle.Text" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="SettingsIntro.Text" xml:space="preserve">
+    <value>調整你的工作環境，分別管理模型與組織管理權杖。</value>
+  </data>
+  <data name="AppearanceTitle.Text" xml:space="preserve">
+    <value>外觀</value>
+  </data>
+  <data name="AppearanceDescription.Text" xml:space="preserve">
+    <value>立即套用至整個視窗，並在下次啟動時保留你的選擇。</value>
+  </data>
+  <data name="ThemePicker.Header" xml:space="preserve">
+    <value>應用程式佈景主題</value>
+  </data>
+  <data name="ThemeSystem.Content" xml:space="preserve">
+    <value>跟隨系統</value>
+  </data>
+  <data name="ThemeLight.Content" xml:space="preserve">
+    <value>淺色</value>
+  </data>
+  <data name="ThemeDark.Content" xml:space="preserve">
+    <value>深色</value>
+  </data>
+  <data name="CredentialsTitle.Text" xml:space="preserve">
+    <value>權杖管理</value>
+  </data>
+  <data name="CredentialsDescription.Text" xml:space="preserve">
+    <value>兩種權杖分開儲存與移除。此頁只管理本機儲存，不會傳送驗證請求。</value>
+  </data>
+  <data name="ModelKeyTitle.Text" xml:space="preserve">
+    <value>一般 API Key</value>
+  </data>
+  <data name="ModelKeyDescription.Text" xml:space="preserve">
+    <value>供模型呼叫與專案操作使用。建議使用具備所需最小權限的專案金鑰。</value>
+  </data>
+  <data name="AdminKeyTitle.Text" xml:space="preserve">
+    <value>Admin Key</value>
+  </data>
+  <data name="AdminKeyDescription.Text" xml:space="preserve">
+    <value>供組織用量、成本及管理功能使用。管理金鑰權限較高，不會與一般 API Key 互相替代。</value>
+  </data>
+  <data name="ModelKeyInput.Header" xml:space="preserve">
+    <value>新的 API Key</value>
+  </data>
+  <data name="ModelKeyInput.PlaceholderText" xml:space="preserve">
+    <value>輸入權杖以新增或取代</value>
+  </data>
+  <data name="AdminKeyInput.Header" xml:space="preserve">
+    <value>新的 Admin Key</value>
+  </data>
+  <data name="AdminKeyInput.PlaceholderText" xml:space="preserve">
+    <value>輸入管理權杖以新增或取代</value>
+  </data>
+  <data name="SaveModelButton.Content" xml:space="preserve">
+    <value>儲存權杖</value>
+  </data>
+  <data name="SaveAdminButton.Content" xml:space="preserve">
+    <value>儲存權杖</value>
+  </data>
+  <data name="RemoveModelButton.Content" xml:space="preserve">
+    <value>移除</value>
+  </data>
+  <data name="RemoveAdminButton.Content" xml:space="preserve">
+    <value>移除</value>
+  </data>
+  <data name="SaveModelButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>儲存一般 API Key</value>
+  </data>
+  <data name="SaveAdminButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>儲存 Admin Key</value>
+  </data>
+  <data name="RemoveModelButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>移除本機一般 API Key</value>
+  </data>
+  <data name="RemoveAdminButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>移除本機 Admin Key</value>
+  </data>
+  <data name="CredentialSafetyNotice.Title" xml:space="preserve">
+    <value>受 Windows 保護的本機儲存</value>
+  </data>
+  <data name="CredentialSafetyNotice.Message" xml:space="preserve">
+    <value>權杖保存在目前 Windows 使用者的認證管理員，不寫入明文設定，也不回填至畫面。輸入內容會在儲存嘗試或離開頁面後清空。</value>
+  </data>
+  <data name="KeyLoading" xml:space="preserve">
+    <value>正在讀取儲存狀態…</value>
+  </data>
+  <data name="KeyStored" xml:space="preserve">
+    <value>已安全儲存 · 尚未驗證</value>
+  </data>
+  <data name="KeyMissing" xml:space="preserve">
+    <value>尚未儲存</value>
+  </data>
+  <data name="KeyUnavailable" xml:space="preserve">
+    <value>無法存取認證儲存；請重新開啟設定頁再試</value>
+  </data>
+  <data name="ThemeLoadFailed" xml:space="preserve">
+    <value>無法讀取主題偏好，目前使用預設選擇。</value>
+  </data>
+  <data name="ThemeSaved" xml:space="preserve">
+    <value>佈景主題已套用並儲存。</value>
+  </data>
+  <data name="ThemeSaveFailed" xml:space="preserve">
+    <value>無法儲存佈景主題，請稍後再試。</value>
+  </data>
+  <data name="StorageFailed" xml:space="preserve">
+    <value>Windows 認證儲存操作未完成。請稍後再試；不會改用明文儲存。</value>
+  </data>
+  <data name="InvalidKeyInput" xml:space="preserve">
+    <value>請輸入不含空白、換行或控制字元的權杖，長度不得超過 1280 個 ASCII 字元。</value>
+  </data>
+  <data name="KeySaved" xml:space="preserve">
+    <value>權杖已儲存至 Windows 認證管理員，尚未驗證有效性。</value>
+  </data>
+  <data name="KeyRemoved" xml:space="preserve">
+    <value>已移除此裝置上的權杖副本；官方金鑰並未撤銷。</value>
+  </data>
+  <data name="ModelKeyName" xml:space="preserve">
+    <value>一般 API Key</value>
+  </data>
+  <data name="AdminKeyName" xml:space="preserve">
+    <value>Admin Key</value>
+  </data>
+  <data name="RemoveKeyPrompt" xml:space="preserve">
+    <value>要移除此裝置上儲存的這個權杖嗎？這只會刪除本機副本，不會撤銷 OpenAI 上的金鑰。</value>
+  </data>
+  <data name="ReplaceKeyPrompt" xml:space="preserve">
+    <value>要使用新輸入的權杖取代本機已儲存的這個權杖嗎？舊副本會被覆寫，官方金鑰並不會撤銷。</value>
+  </data>
+  <data name="RemoveKeyAction" xml:space="preserve">
+    <value>移除本機副本</value>
+  </data>
+  <data name="ReplaceKeyAction" xml:space="preserve">
+    <value>取代權杖</value>
+  </data>
+  <data name="CancelAction" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="DashboardOpenSettings.Content" xml:space="preserve">
+    <value>前往設定填寫 Admin Key</value>
+  </data>
+  <data name="DashboardLoadingTitle" xml:space="preserve">
+    <value>正在載入</value>
+  </data>
+  <data name="DashboardLoadingBody" xml:space="preserve">
+    <value>正在從 OpenAI 取得組織用量與成本。</value>
+  </data>
+  <data name="DashboardUpdated" xml:space="preserve">
+    <value>伺服器資料已更新</value>
+  </data>
+  <data name="DashboardPartial" xml:space="preserve">
+    <value>部分資料無法取得</value>
+  </data>
+  <data name="DashboardUnavailable" xml:space="preserve">
+    <value>尚無可用資料</value>
+  </data>
+  <data name="ApiMissingAdminKey" xml:space="preserve">
+    <value>尚未儲存 Admin Key。請前往「設定 → 權杖管理」填寫 Admin Key，再回到 Dashboard 重新整理。一般 API Key 無法取代組織統計所需的管理權杖。</value>
+  </data>
+  <data name="ApiCredentialUnavailable" xml:space="preserve">
+    <value>無法讀取 Windows 認證儲存。請前往設定確認權杖，或重新登入 Windows 後再試。</value>
+  </data>
+  <data name="ApiUnauthorized" xml:space="preserve">
+    <value>伺服器未接受此 Admin Key。請前往設定更新權杖，再重新整理。</value>
+  </data>
+  <data name="ApiForbidden" xml:space="preserve">
+    <value>此 Admin Key 沒有讀取所需組織資料的權限。請確認金鑰權限與組織設定。</value>
+  </data>
+  <data name="ApiRateLimited" xml:space="preserve">
+    <value>伺服器暫時限制請求頻率，請稍後手動重新整理。</value>
+  </data>
+  <data name="ApiTimeout" xml:space="preserve">
+    <value>連線逾時，請確認網路後重新整理。</value>
+  </data>
+  <data name="ApiNetworkError" xml:space="preserve">
+    <value>無法安全連線至伺服器。請確認網路、Proxy 與 Windows 憑證設定後再試。</value>
+  </data>
+  <data name="ApiServerError" xml:space="preserve">
+    <value>OpenAI 伺服器暫時無法處理請求，請稍後重新整理。</value>
+  </data>
+  <data name="ApiInvalidResponse" xml:space="preserve">
+    <value>伺服器回應格式、幣別或統計資料無法辨識，未顯示可能不正確的數值。</value>
+  </data>
+  <data name="BudgetTitle.Text" xml:space="preserve">
+    <value>本機每月參考預算</value>
+  </data>
+  <data name="BudgetDescription.Text" xml:space="preserve">
+    <value>自行設定 USD 金額，在 Dashboard 對照組織本月成本。僅供本機參考，不會設定 OpenAI 官方預算或限制請求。</value>
+  </data>
+  <data name="BudgetEnabled.Header" xml:space="preserve">
+    <value>啟用參考預算</value>
+  </data>
+  <data name="BudgetEnabled.OnContent" xml:space="preserve">
+    <value>啟用</value>
+  </data>
+  <data name="BudgetEnabled.OffContent" xml:space="preserve">
+    <value>停用</value>
+  </data>
+  <data name="BudgetAmount.Header" xml:space="preserve">
+    <value>每月金額（USD，最多兩位小數）</value>
+  </data>
+  <data name="SaveBudgetButton.Content" xml:space="preserve">
+    <value>儲存預算設定</value>
+  </data>
+  <data name="BudgetSaved" xml:space="preserve">
+    <value>本機預算設定已儲存，返回 Dashboard 即會更新；OpenAI 官方設定不受影響。</value>
+  </data>
+  <data name="BudgetInvalid" xml:space="preserve">
+    <value>請輸入 0.01 至 1,000,000,000 USD，最多兩位小數。</value>
+  </data>
+  <data name="BudgetLoadFailed" xml:space="preserve">
+    <value>無法讀取本機預算設定。</value>
+  </data>
+  <data name="BudgetSaveFailed" xml:space="preserve">
+    <value>無法儲存本機預算設定，請稍後重試。</value>
+  </data>
+  <data name="BudgetNotConfigured" xml:space="preserve">
+    <value>尚未設定，可前往設定頁啟用。</value>
+  </data>
+  <data name="BudgetOrganizationOnly" xml:space="preserve">
+    <value>本機參考預算僅對照「所有專案」的組織成本。</value>
+  </data>
+  <data name="LocalBudgetLabel.Text" xml:space="preserve">
+    <value>本機參考預算 · 非官方額度</value>
+  </data>
+  <data name="PlaygroundIntro.Text" xml:space="preserve">
+    <value>原生 Playground · 請求僅在按下執行時送出；切換頁面會取消執行並保留本次工作階段。</value>
+  </data>
+  <data name="PlaygroundParameters.Content" xml:space="preserve">
+    <value>參數</value>
+  </data>
+  <data name="PlaygroundOfficialDocs.Content" xml:space="preserve">
+    <value>官方說明</value>
+  </data>
+  <data name="PlaygroundSettings.Content" xml:space="preserve">
+    <value>前往設定填寫一般 API Key</value>
+  </data>
+  <data name="PlaygroundModel.Header" xml:space="preserve">
+    <value>模型</value>
+  </data>
+  <data name="PlaygroundRefreshModels.Content" xml:space="preserve">
+    <value>重新整理可用模型</value>
+  </data>
+  <data name="PlaygroundKeyScope.Text" xml:space="preserve">
+    <value>使用設定頁的一般 API Key 及其所屬專案；Dashboard 的專案篩選不會切換生成金鑰。</value>
+  </data>
+  <data name="PlaygroundInstructions.Header" xml:space="preserve">
+    <value>Developer instructions</value>
+  </data>
+  <data name="PlaygroundMaxTokens.Header" xml:space="preserve">
+    <value>最大輸出 Token</value>
+  </data>
+  <data name="PlaygroundTemperature.Header" xml:space="preserve">
+    <value>Temperature（留空使用模型預設）</value>
+  </data>
+  <data name="PlaygroundReasoning.Header" xml:space="preserve">
+    <value>Reasoning effort</value>
+  </data>
+  <data name="PlaygroundDefault.Content" xml:space="preserve">
+    <value>模型預設</value>
+  </data>
+  <data name="PlaygroundWebSearch.Content" xml:space="preserve">
+    <value>啟用 Web search</value>
+  </data>
+  <data name="PlaygroundImageSize.Header" xml:space="preserve">
+    <value>尺寸（WIDTHxHEIGHT）</value>
+  </data>
+  <data name="PlaygroundQuality.Header" xml:space="preserve">
+    <value>品質</value>
+  </data>
+  <data name="PlaygroundBackground.Header" xml:space="preserve">
+    <value>背景</value>
+  </data>
+  <data name="PlaygroundFormat.Header" xml:space="preserve">
+    <value>輸出格式</value>
+  </data>
+  <data name="PlaygroundImageCount.Header" xml:space="preserve">
+    <value>圖片數量</value>
+  </data>
+  <data name="PlaygroundImageReferences.Text" xml:space="preserve">
+    <value>加入參考圖片會切換為圖片編輯。進階參數可設定遮罩、markup、壓縮及其他公開 API 選項。</value>
+  </data>
+  <data name="PlaygroundAudioMode.Header" xml:space="preserve">
+    <value>音訊工作流程</value>
+  </data>
+  <data name="PlaygroundRealtimeSpeech.Content" xml:space="preserve">
+    <value>Realtime 語音生成／對話</value>
+  </data>
+  <data name="PlaygroundTranscribe.Content" xml:space="preserve">
+    <value>音檔轉錄</value>
+  </data>
+  <data name="PlaygroundTranslate.Content" xml:space="preserve">
+    <value>翻譯為英文（相容模式）</value>
+  </data>
+  <data name="PlaygroundLegacySpeech.Content" xml:space="preserve">
+    <value>文字轉語音（相容模式）</value>
+  </data>
+  <data name="PlaygroundVoice.Header" xml:space="preserve">
+    <value>聲線</value>
+  </data>
+  <data name="PlaygroundSpeechInstructions.Header" xml:space="preserve">
+    <value>語音指示</value>
+  </data>
+  <data name="PlaygroundLanguage.Header" xml:space="preserve">
+    <value>音檔語言（選填 ISO 639-1）</value>
+  </data>
+  <data name="PlaygroundAudioDisclosure.Text" xml:space="preserve">
+    <value>輸出語音由 AI 生成。錄音只保存在記憶體，按下執行才上傳。Realtime 音檔需為 24 kHz、單聲道、16-bit PCM WAV；可直接使用錄音鍵。</value>
+  </data>
+  <data name="PlaygroundNode.Header" xml:space="preserve">
+    <value>節點（ID · 類型）</value>
+  </data>
+  <data name="PlaygroundNodeName.Header" xml:space="preserve">
+    <value>節點名稱</value>
+  </data>
+  <data name="PlaygroundNodeModel.Header" xml:space="preserve">
+    <value>Agent 模型</value>
+  </data>
+  <data name="PlaygroundNodeInstructions.Header" xml:space="preserve">
+    <value>Agent 指示／Transform 範本</value>
+  </data>
+  <data name="PlaygroundNodeNext.Header" xml:space="preserve">
+    <value>下一節點 ID／條件成立</value>
+  </data>
+  <data name="PlaygroundNodeOtherwise.Header" xml:space="preserve">
+    <value>條件不成立的節點 ID</value>
+  </data>
+  <data name="PlaygroundNodeMatch.Header" xml:space="preserve">
+    <value>條件：輸出包含此文字</value>
+  </data>
+  <data name="PlaygroundApplyNode.Content" xml:space="preserve">
+    <value>套用節點</value>
+  </data>
+  <data name="PlaygroundDeleteNode.Content" xml:space="preserve">
+    <value>刪除節點</value>
+  </data>
+  <data name="PlaygroundNodeHelp.Text" xml:space="preserve">
+    <value>在畫布上拖曳節點調整位置。next／otherwise 連接節點 ID；Transform 的 {{input}} 會替換成前一步輸出。預覽最多執行 64 步，不執行任意程式碼。</value>
+  </data>
+  <data name="PlaygroundAdvanced.Header" xml:space="preserve">
+    <value>進階 JSON 參數</value>
+  </data>
+  <data name="PlaygroundAdvancedHelp.Text" xml:space="preserve">
+    <value>其他公開 API 參數；同名進階欄位優先於表單。Chat 可設定 text.format、tools 等，預設 store=false。model、input、stream 等由頁面控制。</value>
+  </data>
+  <data name="PlaygroundClear.Content" xml:space="preserve">
+    <value>清除</value>
+  </data>
+  <data name="PlaygroundImport.Content" xml:space="preserve">
+    <value>匯入</value>
+  </data>
+  <data name="PlaygroundExport.Content" xml:space="preserve">
+    <value>匯出</value>
+  </data>
+  <data name="PlaygroundCode.Content" xml:space="preserve">
+    <value>程式碼</value>
+  </data>
+  <data name="PlaygroundWorkspaceTab.Header" xml:space="preserve">
+    <value>工作區</value>
+  </data>
+  <data name="PlaygroundOutputTab.Header" xml:space="preserve">
+    <value>輸出</value>
+  </data>
+  <data name="PlaygroundDetailsTab.Header" xml:space="preserve">
+    <value>回應 JSON</value>
+  </data>
+  <data name="PlaygroundCodeTab.Header" xml:space="preserve">
+    <value>程式碼</value>
+  </data>
+  <data name="PlaygroundImageEmpty.Text" xml:space="preserve">
+    <value>描述要生成的圖片，或加入參考圖片進行編輯。完成後可預覽與下載原始圖片。</value>
+  </data>
+  <data name="PlaygroundAddAgent.Content" xml:space="preserve">
+    <value>+ Agent</value>
+  </data>
+  <data name="PlaygroundAddCondition.Content" xml:space="preserve">
+    <value>+ 條件</value>
+  </data>
+  <data name="PlaygroundAddTransform.Content" xml:space="preserve">
+    <value>+ 轉換</value>
+  </data>
+  <data name="PlaygroundWorkflowJson.Header" xml:space="preserve">
+    <value>工作流程 JSON</value>
+  </data>
+  <data name="PlaygroundApplyWorkflow.Content" xml:space="preserve">
+    <value>套用 JSON</value>
+  </data>
+  <data name="PlaygroundAddShot.Content" xml:space="preserve">
+    <value>加入分鏡</value>
+  </data>
+  <data name="PlaygroundOpenVideo.Content" xml:space="preserve">
+    <value>開啟本機影片</value>
+  </data>
+  <data name="PlaygroundStoryboard.Header" xml:space="preserve">
+    <value>本機分鏡（可編輯時長及提示詞）</value>
+  </data>
+  <data name="PlaygroundCopy.Content" xml:space="preserve">
+    <value>複製文字</value>
+  </data>
+  <data name="PlaygroundSaveOutput.Content" xml:space="preserve">
+    <value>儲存輸出</value>
+  </data>
+  <data name="PlaygroundInput.Header" xml:space="preserve">
+    <value>輸入／提示詞</value>
+  </data>
+  <data name="PlaygroundAttach.Content" xml:space="preserve">
+    <value>附件</value>
+  </data>
+  <data name="PlaygroundRemoveAttachments.Content" xml:space="preserve">
+    <value>移除附件</value>
+  </data>
+  <data name="PlaygroundRecord.Content" xml:space="preserve">
+    <value>錄音</value>
+  </data>
+  <data name="PlaygroundStop.Content" xml:space="preserve">
+    <value>停止</value>
+  </data>
+  <data name="PlaygroundRun.Content" xml:space="preserve">
+    <value>執行</value>
+  </data>
+  <data name="PlaygroundBuilderNotice" xml:space="preserve">
+    <value>本機工作流程編輯器，支援 Agent、條件與轉換節點、執行預覽及 Agents SDK Python 匯出。官方雲端 Agent Builder 預定於 2026-11-30 下線。</value>
+  </data>
+  <data name="PlaygroundVideoNotice" xml:space="preserve">
+    <value>OpenAI Videos API 與 Sora 2 已於 2026-09-24 關閉，沒有直接替代 API。此頁可編輯／匯入／匯出本機分鏡及預覽既有影片，不提供已停用的生成呼叫。</value>
+  </data>
+  <data name="PlaygroundTranslationNotice" xml:space="preserve">
+    <value>相容模式使用 audio/translations，預定於 2027-02-26 停用；輸出為英文。一般轉錄請使用 gpt-transcribe。</value>
+  </data>
+  <data name="PlaygroundSpeechNotice" xml:space="preserve">
+    <value>相容模式使用 audio/speech，相關模型預定於 2027-01-06 停用。新工作流程請選 Realtime 語音。</value>
+  </data>
+  <data name="PlaygroundMessageRole" xml:space="preserve">
+    <value>訊息角色</value>
+  </data>
+  <data name="PlaygroundMessageText" xml:space="preserve">
+    <value>訊息內容</value>
+  </data>
+  <data name="PlaygroundAttachedCount" xml:space="preserve">
+    <value>已附加檔案：</value>
+  </data>
+  <data name="PlaygroundNetworkError" xml:space="preserve">
+    <value>無法連線。請檢查網路後重試；生成請求不會自動重送。</value>
+  </data>
+  <data name="PlaygroundMissingKey" xml:space="preserve">
+    <value>一般 API Key 未設定、無法讀取或已失效。請前往設定更新後，重新整理模型或重試。</value>
+  </data>
+  <data name="PlaygroundForbidden" xml:space="preserve">
+    <value>一般 API Key 沒有存取此模型或功能的權限。請確認所屬專案與模型權限；Admin Key 不用於生成。</value>
+  </data>
+  <data name="PlaygroundRateLimited" xml:space="preserve">
+    <value>已達 API 配額或速率限制。請檢查 Platform 配額並稍後重試。</value>
+  </data>
+  <data name="PlaygroundTimeout" xml:space="preserve">
+    <value>請求逾時。伺服器可能已處理部分請求，重試前請先檢查用量。</value>
+  </data>
+  <data name="PlaygroundCancelled" xml:space="preserve">
+    <value>已取消本機等待；停止後仍可能產生已開始處理的用量。</value>
+  </data>
+  <data name="PlaygroundCancelling" xml:space="preserve">
+    <value>正在停止…</value>
+  </data>
+  <data name="PlaygroundInvalidResponse" xml:space="preserve">
+    <value>API 回應格式或串流不完整，未將它當成成功回應。</value>
+  </data>
+  <data name="PlaygroundInvalidInput" xml:space="preserve">
+    <value>請檢查模型、JSON 參數、工作流程連線及附件格式／大小。API 不接受目前的選項時，也會顯示此提示。</value>
+  </data>
+  <data name="PlaygroundFilePermission" xml:space="preserve">
+    <value>無法存取檔案或麥克風。請檢查 Windows 權限與所選位置。</value>
+  </data>
+  <data name="PlaygroundOperationFailed" xml:space="preserve">
+    <value>操作失敗，請確認輸入、檔案與目前功能的可用性後重試。</value>
+  </data>
+  <data name="PlaygroundNoModels" xml:space="preserve">
+    <value>此金鑰沒有回傳可用模型，可手動輸入已獲授權的模型 ID。</value>
+  </data>
+  <data name="PlaygroundRunning" xml:space="preserve">
+    <value>正在執行…可按停止取消等待。</value>
+  </data>
+  <data name="PlaygroundCompleted" xml:space="preserve">
+    <value>已完成。</value>
+  </data>
+  <data name="PlaygroundIncomplete" xml:space="preserve">
+    <value>模型回應未完整結束；請檢查回應 JSON 與輸出限制。</value>
+  </data>
+  <data name="PlaygroundClearTitle" xml:space="preserve">
+    <value>清除本機工作階段？</value>
+  </data>
+  <data name="PlaygroundClearBody" xml:space="preserve">
+    <value>此頁的對話、附件、輸出或工作流程將被清除。需要保留的內容請先匯出。</value>
+  </data>
+  <data name="PlaygroundRecordingReady" xml:space="preserve">
+    <value>錄音已保存在本機記憶體，按執行才會送出。</value>
+  </data>
+  <data name="PlaygroundFinishRecording" xml:space="preserve">
+    <value>結束錄音</value>
+  </data>
+  <data name="PlaygroundRecording" xml:space="preserve">
+    <value>正在本機錄音，按結束錄音完成；內容尚未送出。</value>
+  </data>
+  <data name="PlaygroundSaved" xml:space="preserve">
+    <value>已儲存。</value>
+  </data>
+  <data name="PlaygroundImported" xml:space="preserve">
+    <value>已匯入本機資料。</value>
+  </data>
+  <data name="PlaygroundCopied" xml:space="preserve">
+    <value>已複製。</value>
+  </data>
+  <data name="PlaygroundNodeApplied" xml:space="preserve">
+    <value>工作流程已更新。</value>
+  </data>
+  <data name="PlaygroundKeepEndpoints" xml:space="preserve">
+    <value>Start 與 End 節點需要保留。</value>
+  </data>
+  <data name="PlaygroundAddMessage.Content" xml:space="preserve">
+    <value>加入訊息</value>
+  </data>
 </root>

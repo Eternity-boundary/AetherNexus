@@ -22,7 +22,7 @@ namespace AetherNexus::Services
         {
             if (!std::isfinite(value) || value < 0.01 || value > MaximumCents / 100.0) return false;
             auto const rounded = static_cast<int64_t>(std::llround(value * 100.0));
-            if (std::abs(value - rounded / 100.0) > 0.000001) return false;
+            if (std::abs(value - static_cast<double>(rounded) / 100.0) > 0.000001) return false;
             cents = rounded;
             return true;
         }

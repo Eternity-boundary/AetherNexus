@@ -26,8 +26,9 @@ namespace winrt::AetherNexus::implementation
     fire_and_forget DashboardPage::OnLoaded(Windows::Foundation::IInspectable const&, RoutedEventArgs const&)
     {
         auto lifetime = get_strong();
+        UpdateProjects();
         m_ready = true;
-        co_await Reload();
+        co_await Reload(true);
     }
     void DashboardPage::OnUnloaded(Windows::Foundation::IInspectable const&, RoutedEventArgs const&)
     {
@@ -43,13 +44,61 @@ namespace winrt::AetherNexus::implementation
     fire_and_forget DashboardPage::OnRefresh(Windows::Foundation::IInspectable const&, RoutedEventArgs const&)
     {
         auto lifetime = get_strong();
-        if (m_ready) co_await Reload();
+        if (m_ready) co_await Reload(true);
+    }
+    fire_and_forget DashboardPage::OnProjectChanged(Windows::Foundation::IInspectable const&, SelectionChangedEventArgs const&)
+    {
+        auto lifetime = get_strong();
+        if (!m_ready || m_updatingProjects) co_return;
+        auto const selected = ProjectPicker().SelectedItem().try_as<ComboBoxItem>();
+        if (!selected) co_return;
+        auto const id = std::wstring{unbox_value<hstring>(selected.Tag())};
+        if (m_selectedProjectId == id) co_return;
+        m_selectedProjectId = id;
+        co_await Reload();
+    }
+    hstring DashboardPage::ProjectLabel(::AetherNexus::Services::ProjectInfo const& project) const
+    {
+        auto label = project.name.empty() ? project.id : project.name + L" · " + project.id;
+        if (project.archived) label += Text(L"ProjectArchivedSuffix");
+        return hstring{label};
+    }
+    void DashboardPage::UpdateProjects()
+    {
+        m_updatingProjects = true;
+        ProjectPicker().Items().Clear();
+        ComboBoxItem all;
+        all.Content(box_value(Text(L"ProjectAll")));
+        all.Tag(box_value(L""));
+        ProjectPicker().Items().Append(all);
+        int selectedIndex = 0;
+        for (auto const& project : m_projects)
+        {
+            ComboBoxItem item;
+            auto const label = ProjectLabel(project);
+            item.Content(box_value(label));
+            item.Tag(box_value(hstring{project.id}));
+            ToolTipService::SetToolTip(item, box_value(label));
+            if (project.id == m_selectedProjectId) selectedIndex = static_cast<int>(ProjectPicker().Items().Size());
+            ProjectPicker().Items().Append(item);
+        }
+        if (!m_selectedProjectId.empty() && selectedIndex == 0)
+        {
+            // Keep the exact scope if a refresh omits the selected project; never fall back to organization totals.
+            ComboBoxItem missing;
+            missing.Content(box_value(hstring{m_selectedProjectId} + L" " + Text(L"ProjectMissingSuffix")));
+            missing.Tag(box_value(hstring{m_selectedProjectId}));
+            selectedIndex = static_cast<int>(ProjectPicker().Items().Size());
+            ProjectPicker().Items().Append(missing);
+        }
+        ProjectPicker().SelectedIndex(selectedIndex);
+        m_updatingProjects = false;
     }
     hstring DashboardPage::Text(wchar_t const* key) const
     {
         return Microsoft::Windows::ApplicationModel::Resources::ResourceLoader{}.GetString(key);
     }
-    Windows::Foundation::IAsyncAction DashboardPage::Reload()
+    Windows::Foundation::IAsyncAction DashboardPage::Reload(bool refreshProjects)
     {
         using namespace ::AetherNexus::Services;
         auto lifetime = get_strong();
@@ -58,6 +107,7 @@ namespace winrt::AetherNexus::implementation
         auto const stop = m_stop.get_token();
         auto const version = ++m_requestVersion;
         auto const count = RangePicker().SelectedIndex() == 1 ? 30 : 7;
+        auto const projectId = m_selectedProjectId;
         auto const now = std::chrono::floor<std::chrono::seconds>(std::chrono::system_clock::now());
         m_monthlyBudgetCents.reset();
         m_budgetUnavailable = false;
@@ -70,6 +120,7 @@ namespace winrt::AetherNexus::implementation
             + L" 00:00:00 – " + VM::DateTime(now));
         RefreshButton().IsEnabled(false);
         RangePicker().IsEnabled(false);
+        ProjectPicker().IsEnabled(false);
         LoadingRing().IsActive(true);
         LoadingRing().Visibility(Visibility::Visible);
         SettingsGuidance().Visibility(Visibility::Collapsed);
@@ -81,12 +132,24 @@ namespace winrt::AetherNexus::implementation
 
         DashboardResult result;
         std::optional<ApiErrorCode> failure;
+        std::optional<ApiErrorCode> projectsError;
+        std::vector<ProjectInfo> projects;
         apartment_context ui;
         co_await resume_background();
         try
         {
             PlatformApiClient client{std::make_shared<WindowsHttpTransport>()};
-            result = client.LoadDashboard(count, now, stop);
+            if (refreshProjects)
+            {
+                try { projects = client.ListProjects(stop); }
+                catch (ApiError const& error)
+                {
+                    if (error.code == ApiErrorCode::Cancelled) throw;
+                    projectsError = error.code;
+                }
+                catch (...) { projectsError = ApiErrorCode::Network; }
+            }
+            result = client.LoadDashboard(count, now, stop, projectId);
         }
         catch (ApiError const& error) { failure = error.code; }
         catch (...) { failure = ApiErrorCode::Network; }
@@ -94,8 +157,21 @@ namespace winrt::AetherNexus::implementation
         if (!m_ready || version != m_requestVersion || stop.stop_requested()) co_return;
         RefreshButton().IsEnabled(true);
         RangePicker().IsEnabled(true);
+        ProjectPicker().IsEnabled(true);
         LoadingRing().IsActive(false);
         LoadingRing().Visibility(Visibility::Collapsed);
+        if (refreshProjects)
+        {
+            if (!projectsError)
+            {
+                m_projects = std::move(projects);
+                UpdateProjects();
+            }
+            ProjectNotice().IsOpen(projectsError.has_value() || m_projects.empty());
+            ProjectNotice().Severity(projectsError ? InfoBarSeverity::Warning : InfoBarSeverity::Informational);
+            ProjectNotice().Title(Text(projectsError ? L"ProjectListUnavailableTitle" : L"ProjectListEmptyTitle"));
+            ProjectNotice().Message(Text(projectsError ? L"ProjectListUnavailableBody" : L"ProjectListEmptyBody"));
+        }
         if (failure)
         {
             if (*failure != ApiErrorCode::Cancelled) ShowError(*failure, false);
@@ -130,6 +206,8 @@ namespace winrt::AetherNexus::implementation
         case Timeout: key = L"ApiTimeout"; break;
         case Server: key = L"ApiServerError"; break;
         case InvalidResponse: key = L"ApiInvalidResponse"; break;
+        case Network:
+        case Cancelled: break;
         default: break;
         }
         DataNotice().IsOpen(true);
@@ -156,6 +234,8 @@ namespace winrt::AetherNexus::implementation
     void DashboardPage::RenderSnapshot()
     {
         auto const& data = m_viewModel.Snapshot();
+        auto const selected = ProjectPicker().SelectedItem().try_as<ComboBoxItem>();
+        ProjectScopeLabel().Text(Text(L"ProjectScopePrefix") + L" " + (selected ? unbox_value<hstring>(selected.Content()) : hstring{m_selectedProjectId}));
         TokensValue().Text(data.usageAvailable ? hstring{VM::Number(data.inputTokens + data.outputTokens)} : L"—");
         CompletionsValue().Text(data.usageAvailable ? hstring{VM::Number(data.requests)} : L"—");
         auto const cacheRatio = data.cacheRatio();
@@ -163,11 +243,11 @@ namespace winrt::AetherNexus::implementation
         SpendValue().Text(data.costsAvailable ? hstring{VM::Money(data.monthCostUsd)} : L"—");
         TodayValue().Text(data.usageAvailable ? hstring{VM::Number(data.todayTokens)} : L"—");
         CachedTokensValue().Text(data.usageAvailable && data.cacheAvailable ? hstring{VM::Number(data.cachedInputTokens)} : L"—");
-        BudgetValue().Text(m_budgetUnavailable ? Text(L"BudgetLoadFailed") : (m_monthlyBudgetCents
-            ? hstring{(data.costsAvailable ? VM::Money(data.monthCostUsd) : L"—") + L" / " + VM::Money(*m_monthlyBudgetCents / 100.0)}
-            : Text(L"BudgetNotConfigured")));
-        BudgetProgress().Visibility(data.costsAvailable && m_monthlyBudgetCents ? Visibility::Visible : Visibility::Collapsed);
-        if (m_monthlyBudgetCents) BudgetProgress().Value(std::clamp(data.monthCostUsd * 10000.0 / *m_monthlyBudgetCents, 0.0, 100.0));
+        BudgetValue().Text(!m_selectedProjectId.empty() ? Text(L"BudgetOrganizationOnly") : (m_budgetUnavailable ? Text(L"BudgetLoadFailed") : (m_monthlyBudgetCents
+            ? hstring{(data.costsAvailable ? VM::Money(data.monthCostUsd) : L"—") + L" / " + VM::Money(static_cast<double>(*m_monthlyBudgetCents) / 100.0)}
+            : Text(L"BudgetNotConfigured"))));
+        BudgetProgress().Visibility(m_selectedProjectId.empty() && data.costsAvailable && m_monthlyBudgetCents ? Visibility::Visible : Visibility::Collapsed);
+        if (m_monthlyBudgetCents) BudgetProgress().Value(std::clamp(data.monthCostUsd * 10000.0 / static_cast<double>(*m_monthlyBudgetCents), 0.0, 100.0));
         // Summaries remain available to screen readers; the decorative chart shapes are not focusable.
         Automation::AutomationProperties::SetName(TokensChart(), TokensValue().Text());
         DrawCharts();

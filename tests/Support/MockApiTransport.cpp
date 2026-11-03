@@ -32,6 +32,15 @@ namespace AetherNexus::Services
         if (request.endpoint == Endpoint::Models)
             return {200, m_scenario == MockScenario::Empty ? L"{\"object\":\"list\",\"data\":[]}"
                 : L"{\"object\":\"list\",\"data\":[{\"object\":\"model\",\"id\":\"mock-text-model\",\"owned_by\":\"mock\"}]}"};
+        if (request.endpoint == Endpoint::Projects)
+        {
+            if (m_scenario == MockScenario::Empty) return {200, L"{\"object\":\"list\",\"data\":[],\"has_more\":false}"};
+            if (request.page.empty())
+                return {200, LR"({"object":"list","data":[{"object":"organization.project","id":"proj_mock_alpha","name":"Development","created_at":1700000000,"status":"active","archived_at":null}],"has_more":true,"last_id":"proj_mock_alpha"})"};
+            if (request.page == L"proj_mock_alpha")
+                return {200, LR"({"object":"list","data":[{"object":"organization.project","id":"proj_mock_beta","name":"Production","created_at":1700000000,"status":"archived","archived_at":1700000100}],"has_more":false,"last_id":"proj_mock_beta"})"};
+            throw ApiError{ApiErrorCode::InvalidResponse};
+        }
         int offset = 0;
         if (!request.page.empty())
         {
@@ -46,7 +55,10 @@ namespace AetherNexus::Services
             for (int i = offset; i < end; ++i)
             {
                 auto const start = request.startTime + static_cast<int64_t>(i) * 86400;
-                auto const weight = 40 + (start / 86400 * 17) % 60;
+                auto weight = 40 + (start / 86400 * 17) % 60;
+                if (request.projectId == L"proj_mock_alpha") weight /= 2;
+                else if (request.projectId == L"proj_mock_beta") weight -= weight / 2;
+                else if (!request.projectId.empty()) continue;
                 JsonObject result;
                 if (request.endpoint == Endpoint::Costs)
                 {

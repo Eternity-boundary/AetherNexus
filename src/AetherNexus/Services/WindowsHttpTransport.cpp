@@ -36,7 +36,7 @@ namespace AetherNexus::Services
                 constexpr std::wstring_view prefix{L"Authorization: Bearer "};
                 value.resize(prefix.size() + token.size() + 2);
                 std::copy(prefix.begin(), prefix.end(), value.begin());
-                std::copy(token.begin(), token.end(), value.begin() + prefix.size());
+                std::copy(token.begin(), token.end(), value.data() + prefix.size());
                 value[value.size() - 2] = L'\r';
                 value.back() = L'\n';
             }

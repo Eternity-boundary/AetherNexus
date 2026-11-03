@@ -1,29 +1,50 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <!--
-Copyright (c) 2026 Skylight Software Organization.
-Created by Eternity-boundary on 11,3 2026.
-All rights reserved.
-SPDX-License-Identifier: GPL-3.0-only
+    Copyright (c) 2026 Skylight Software Organization.
+    Created by Eternity-boundary on 11,3 2026.
+    All rights reserved.
+    SPDX-License-Identifier: GPL-3.0-only
+    
+    File: PlaceholderPage.xaml
+    Project: AetherNexus
+-->
 
-File: PlaceholderPage.xaml
-Project: AetherNexus
- -->
-
-<Page x:Class="AetherNexus.PlaceholderPage"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-  <Grid Padding="32,24,32,32" RowSpacing="24">
-    <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="*" /></Grid.RowDefinitions>
-    <TextBlock x:Name="PageTitle" Style="{StaticResource TitleTextBlockStyle}" />
-    <Border Grid.Row="1" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
+<Page
+    x:Class="AetherNexus.PlaceholderPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Padding="32,24,32,32" RowSpacing="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TextBlock x:Name="PageTitle" Style="{StaticResource TitleTextBlockStyle}" />
+        <Border
+            Grid.Row="1"
+            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+            BorderThickness="1"
             CornerRadius="{ThemeResource OverlayCornerRadius}">
-      <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="16" Margin="24" MaxWidth="440">
-        <FontIcon Glyph="&#xE7C3;" FontSize="40" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
-        <TextBlock x:Uid="PlaceholderTitle" Style="{StaticResource SubtitleTextBlockStyle}" HorizontalAlignment="Center" />
-        <TextBlock x:Uid="PlaceholderBody" TextWrapping="Wrap" TextAlignment="Center"
-                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-      </StackPanel>
-    </Border>
-  </Grid>
+            <StackPanel
+                MaxWidth="440"
+                Margin="24"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Spacing="16">
+                <FontIcon
+                    FontSize="40"
+                    Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                    Glyph="&#xE7C3;" />
+                <TextBlock
+                    x:Uid="PlaceholderTitle"
+                    HorizontalAlignment="Center"
+                    Style="{StaticResource SubtitleTextBlockStyle}" />
+                <TextBlock
+                    x:Uid="PlaceholderBody"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    TextAlignment="Center"
+                    TextWrapping="Wrap" />
+            </StackPanel>
+        </Border>
+    </Grid>
 </Page>

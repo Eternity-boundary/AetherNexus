@@ -34,7 +34,7 @@ namespace AetherNexus::ViewModels
     std::wstring DashboardViewModel::Number(int64_t value)
     {
         auto text = std::to_wstring(value);
-        for (auto i = static_cast<int>(text.size()) - 3; i > 0; i -= 3) text.insert(i, L",");
+        for (auto i = static_cast<int>(text.size()) - 3; i > 0; i -= 3) text.insert(static_cast<size_t>(i), L",");
         return text;
     }
 

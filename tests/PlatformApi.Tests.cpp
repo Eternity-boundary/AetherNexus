@@ -51,6 +51,24 @@ namespace
         Require(result.snapshot.costsAvailable);
         Require(result.snapshot.buckets.empty()); // Partial pages never become misleading totals.
     }
+    void InvalidProjects(std::function<void(JsonObject)> mutate)
+    {
+        auto transport = std::make_shared<Scripted>();
+        transport->edit = [mutate](auto const& request, auto response)
+        {
+            if (request.endpoint == Endpoint::Projects)
+            {
+                auto object = JsonObject::Parse(response.body);
+                mutate(object);
+                response.body = object.Stringify();
+            }
+            return response;
+        };
+        bool rejected = false;
+        try { (void)PlatformApiClient{transport}.ListProjects(); }
+        catch (ApiError const& error) { rejected = error.code == ApiErrorCode::InvalidResponse; }
+        Require(rejected);
+    }
 }
 int main()
 {
@@ -92,6 +110,88 @@ int main()
         auto const escaped = BuildRequestPath({Endpoint::Costs, 1, 2, L"+/=&x?"});
         Require(escaped.ends_with(L"page=%2B%2F%3D%26x%3F"));
         std::cout << "PASS: requests, roles, UTC ranges, pagination, aggregation, and model list.\n";
+
+        auto catalog = std::make_shared<MockApiTransport>();
+        auto const projects = PlatformApiClient{catalog}.ListProjects();
+        Require(projects.size() == 2 && projects[0].id == L"proj_mock_alpha" && projects[0].name == L"Development");
+        Require(!projects[0].archived && projects[1].archived);
+        Require(catalog->Requests().size() == 2 && catalog->Requests()[1].page == projects[0].id);
+        Require(RequiredCredential(Endpoint::Projects) == CredentialRole::Admin);
+        Require(BuildRequestPath(catalog->Requests()[0]) == L"/v1/organization/projects?limit=100&include_archived=true");
+        Require(BuildRequestPath(catalog->Requests()[1]).ends_with(L"&after=proj_mock_alpha"));
+        Require(BuildRequestPath({Endpoint::Projects, 0, 0, L"proj_+/&?"}).ends_with(L"&after=proj_%2B%2F%26%3F"));
+        Require(PlatformApiClient{std::make_shared<MockApiTransport>(MockScenario::Empty)}.ListProjects().empty());
+        auto unnamed = std::make_shared<Scripted>();
+        unnamed->edit = [](auto const& request, auto response)
+        {
+            if (request.endpoint == Endpoint::Projects)
+            {
+                auto object = JsonObject::Parse(response.body);
+                object.GetNamedArray(L"data").GetObjectAt(0).SetNamedValue(L"name", JsonValue::CreateNullValue());
+                response.body = object.Stringify();
+            }
+            return response;
+        };
+        Require(PlatformApiClient{unnamed}.ListProjects()[0].name.empty());
+        InvalidProjects([](auto object) { object.SetNamedValue(L"object", JsonValue::CreateStringValue(L"page")); });
+        InvalidProjects([](auto object) { object.GetNamedArray(L"data").GetObjectAt(0).SetNamedValue(L"id", JsonValue::CreateStringValue(L"")); });
+        InvalidProjects([](auto object) { object.GetNamedArray(L"data").GetObjectAt(0).SetNamedValue(L"name", JsonValue::CreateNumberValue(1)); });
+        InvalidProjects([](auto object) { auto rows = object.GetNamedArray(L"data"); rows.Append(rows.GetAt(0)); });
+        InvalidProjects([](auto object) { object.GetNamedArray(L"data").Clear(); object.SetNamedValue(L"has_more", JsonValue::CreateBooleanValue(true)); });
+        auto repeatedProjects = std::make_shared<Scripted>();
+        repeatedProjects->edit = [](auto const& request, auto response)
+        {
+            if (request.endpoint == Endpoint::Projects && !request.page.empty())
+            {
+                auto object = JsonObject::Parse(response.body);
+                object.GetNamedArray(L"data").GetObjectAt(0).SetNamedValue(L"id", JsonValue::CreateStringValue(L"proj_mock_alpha"));
+                response.body = object.Stringify();
+            }
+            return response;
+        };
+        bool duplicateRejected = false;
+        try { (void)PlatformApiClient{repeatedProjects}.ListProjects(); }
+        catch (ApiError const& error) { duplicateRejected = error.code == ApiErrorCode::InvalidResponse; }
+        Require(duplicateRejected);
+        auto noProjectPermission = std::make_shared<Scripted>();
+        noProjectPermission->edit = [](auto const& request, auto response)
+        {
+            return request.endpoint == Endpoint::Projects ? ApiResponse{403, L"private catalog error"} : response;
+        };
+        bool catalogForbidden = false;
+        try { (void)PlatformApiClient{noProjectPermission}.ListProjects(); }
+        catch (ApiError const& error) { catalogForbidden = error.code == ApiErrorCode::Forbidden; }
+        Require(catalogForbidden && PlatformApiClient{noProjectPermission}.LoadDashboard(7, now).snapshot.usageAvailable);
+
+        for (int count : {7, 30})
+        {
+            auto filtered = std::make_shared<MockApiTransport>();
+            PlatformApiClient client{filtered};
+            auto const all = client.LoadDashboard(count, now).snapshot;
+            auto const alpha = client.LoadDashboard(count, now, {}, L"proj_mock_alpha").snapshot;
+            auto const beta = client.LoadDashboard(count, now, {}, L"proj_mock_beta").snapshot;
+            auto const restored = client.LoadDashboard(count, now).snapshot;
+            Require(all.usageAvailable && alpha.usageAvailable && beta.usageAvailable && alpha.costsAvailable && beta.costsAvailable);
+            Require(all.inputTokens == alpha.inputTokens + beta.inputTokens && all.requests == alpha.requests + beta.requests);
+            Require(all.outputTokens == alpha.outputTokens + beta.outputTokens && all.cachedInputTokens == alpha.cachedInputTokens + beta.cachedInputTokens);
+            Require(all.todayTokens == alpha.todayTokens + beta.todayTokens);
+            Require(std::abs(all.monthCostUsd - alpha.monthCostUsd - beta.monthCostUsd) < 1e-10);
+            Require(restored.inputTokens == all.inputTokens && restored.monthCostUsd == all.monthCostUsd);
+            auto const perScope = static_cast<size_t>((count + 6) / 7 + 1);
+            Require(filtered->Requests().size() == perScope * 4);
+            for (size_t i = 0; i < filtered->Requests().size(); ++i)
+            {
+                auto const& request = filtered->Requests()[i];
+                auto const expected = i < perScope || i >= perScope * 3 ? L"" : (i < perScope * 2 ? L"proj_mock_alpha" : L"proj_mock_beta");
+                Require(request.projectId == expected);
+                auto const path = BuildRequestPath(request);
+                Require((path.find(L"project_ids%5B%5D=") != std::wstring::npos) == !request.projectId.empty());
+                if (!request.projectId.empty()) Require(path.find(L"project_ids%5B%5D=" + request.projectId) != std::wstring::npos);
+            }
+        }
+        auto const encodedProject = BuildRequestPath({Endpoint::Costs, 1, 2, L"cursor+", L"proj_a&b+/?"});
+        Require(encodedProject.ends_with(L"&project_ids%5B%5D=proj_a%26b%2B%2F%3F&page=cursor%2B"));
+        std::cout << "PASS: project catalog pagination/validation, archived/unnamed projects, independent permissions and project-filtered usage/costs.\n";
 
         auto empty = PlatformApiClient{std::make_shared<MockApiTransport>(MockScenario::Empty)}.LoadDashboard(7, now);
         Require(empty.snapshot.usageAvailable && empty.snapshot.costsAvailable);

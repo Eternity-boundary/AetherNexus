@@ -20,11 +20,14 @@ namespace winrt::AetherNexus::implementation
         void OnUnloaded(Windows::Foundation::IInspectable const&, Microsoft::UI::Xaml::RoutedEventArgs const&);
         fire_and_forget OnRangeChanged(Windows::Foundation::IInspectable const&, Microsoft::UI::Xaml::Controls::SelectionChangedEventArgs const&);
         fire_and_forget OnRefresh(Windows::Foundation::IInspectable const&, Microsoft::UI::Xaml::RoutedEventArgs const&);
+        fire_and_forget OnProjectChanged(Windows::Foundation::IInspectable const&, Microsoft::UI::Xaml::Controls::SelectionChangedEventArgs const&);
         void OnOpenSettings(Windows::Foundation::IInspectable const&, Microsoft::UI::Xaml::RoutedEventArgs const&);
         void OnCardsSizeChanged(Windows::Foundation::IInspectable const&, Microsoft::UI::Xaml::SizeChangedEventArgs const&);
         void OnThemeChanged(Microsoft::UI::Xaml::FrameworkElement const&, Windows::Foundation::IInspectable const&);
     private:
-        Windows::Foundation::IAsyncAction Reload();
+        Windows::Foundation::IAsyncAction Reload(bool refreshProjects = false);
+        void UpdateProjects();
+        hstring ProjectLabel(::AetherNexus::Services::ProjectInfo const& project) const;
         void RenderSnapshot();
         void ShowError(::AetherNexus::Services::ApiErrorCode code, bool partial);
         hstring Text(wchar_t const* key) const;
@@ -36,6 +39,9 @@ namespace winrt::AetherNexus::implementation
         std::stop_source m_stop;
         std::optional<int64_t> m_monthlyBudgetCents;
         bool m_budgetUnavailable{false};
+        bool m_updatingProjects{false};
+        std::wstring m_selectedProjectId;
+        std::vector<::AetherNexus::Services::ProjectInfo> m_projects;
     };
 }
 namespace winrt::AetherNexus::factory_implementation

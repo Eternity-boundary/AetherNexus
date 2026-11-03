@@ -38,7 +38,7 @@ namespace winrt::AetherNexus::implementation
         bool m_ready{false};
         bool m_busy{false};
         ThemePreference m_theme{ThemePreference::System};
-        std::array<StorageState, 2> m_states{StorageState::Unknown, StorageState::Unknown};
+        std::array<StorageState, 2> m_states{{StorageState::Unknown, StorageState::Unknown}};
         ::AetherNexus::Infrastructure::CredentialStore m_store;
     };
 }

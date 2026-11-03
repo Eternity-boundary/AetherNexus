@@ -1,5 +1,7 @@
 # 架構與擴充規則
 
+PlaygroundPage 由 MainWindow 注入唯讀與生成傳輸介面，各頁實例保留本次執行期間的記憶體狀態。GenerationClient／WorkflowService 處理生成合約及流程，WindowsGenerationTransport 提供正式 HTTPS／WebSocket。獨立 UI 宿主只編譯介面與虛擬實作，不編譯真實傳輸或憑證儲存，詳見 [playground.md](playground.md)。
+
 採用單一 WinUI 3 C++/WinRT 應用程式專案，以資料夾劃分 MVVM 責任。保留既有套件、應用程式識別及 MSIX 包裝方式。
 
 - **App**：生命週期、主視窗建立，以及未來服務實例的組合入口。

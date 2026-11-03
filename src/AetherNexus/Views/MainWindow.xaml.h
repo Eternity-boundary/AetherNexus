@@ -9,6 +9,7 @@
 
 #include "MainWindow.g.h"
 #include <winrt/Windows.UI.ViewManagement.h>
+#include <map>
 
 namespace winrt::AetherNexus::implementation
 {
@@ -22,6 +23,7 @@ namespace winrt::AetherNexus::implementation
     private:
         void UpdateTitleBarTheme();
         bool m_loaded{false};
+        std::map<std::wstring, Microsoft::UI::Xaml::Controls::Page> m_playgrounds;
         Windows::UI::ViewManagement::UISettings m_uiSettings{nullptr};
         Windows::UI::ViewManagement::UISettings::ColorValuesChanged_revoker m_colorRevoker;
     };

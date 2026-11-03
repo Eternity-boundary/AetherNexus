@@ -1,6 +1,8 @@
 # AetherNexus
 
-使用 **WinUI 3 + C++/WinRT + C++23** 的 Windows 原生用戶端。Dashboard 從伺服器讀取用量與成本；設定頁可切換主題、管理權杖與本機參考預算，其餘功能頁先提供佔位畫面。Dashboard 沒有內建示範資料或假值備援。
+Playground 已提供 Chat、Images、Audio 與本機 Agent Builder；Video 頁依官方 API 停用狀態提供本機分鏡與影片預覽。功能範圍、官方停用日期、安全設計及離線驗證方式見 [docs/playground.md](docs/playground.md)。
+
+使用 **WinUI 3 + C++/WinRT + C++23** 的 Windows 原生用戶端。Dashboard 從伺服器讀取用量與成本，可選擇所有專案或指定專案（含已封存專案）；設定頁可切換主題、管理權杖與本機參考預算。Playground 提供五個原生工作頁面，其餘管理頁面先提供佔位畫面。正式程式沒有內建示範資料或假值備援。
 
 ## 目錄
 
@@ -44,6 +46,8 @@ pwsh -NoProfile -File ./scripts/Run.ps1
 `Run.ps1` 透過 WinApp CLI 註冊並啟動本機開發版本，需要已啟用開發人員模式。它使用建置產生的 `AppxManifest.xml` 以保留框架相依資訊。`-DebugOutput` 可擷取啟動診斷，並持續附加至執行中的程式。
 
 輸出位於 `artifacts/bin/AetherNexus/<Platform>/<Configuration>/`，中間檔與 C++/WinRT、XAML 產生檔位於 `artifacts/obj/`。原有根目錄的 `.vs`、`x64`、`Generated Files` 等本機快取予以保留，新建置不再使用。
+
+原生專案保留 `/Wall`，x64 Debug／Release 使用 `/WX`。系統與套件標頭使用 [MSVC 外部標頭診斷設定](https://learn.microsoft.com/en-us/cpp/build/reference/external-external-headers-diagnostics)；WinUI 產生碼及 NuGet 自帶的初始化來源採獨立警告層級，並停用預編譯標頭以免恢復其警告狀態。第一方程式碼只排除正常 ABI 填補、未使用 inline 移除、WinRT 基底造成的隱含不可複製／移動，以及可選 `/Qspectre` 插樁報告等提示（C4514／C4625／C4626／C4820／C5026／C5027／C5045）；數值轉換、索引及列舉分支警告仍保留。
 
 架構與新增檔案規則請參閱 [docs/architecture.md](docs/architecture.md)。
 Dashboard 欄位、資料範圍與驗證紀錄請參閱 [docs/dashboard.md](docs/dashboard.md)。
