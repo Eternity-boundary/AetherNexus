@@ -12,7 +12,7 @@ foreach ($node in @($project.SelectNodes('//m:ItemGroup/*[@Include]', $ns))) {
     if ($node.LocalName -notin $includeTypes) { continue }
     $relative = $node.GetAttribute('Include')
     if ($relative.StartsWith('$(')) { continue }
-    if ($relative -match 'Views\\(MainWindow|DashboardPage|SettingsPage|PlaceholderPage)|CredentialStore|WindowsHttpTransport|WindowsGenerationTransport|BudgetService|ThemeService|DashboardViewModel|UsageSnapshot|Views\\Charts') { [void]$node.ParentNode.RemoveChild($node); continue }
+    if ($relative -match 'Views\\(MainWindow|DashboardPage|SettingsPage|PlaceholderPage|ManagePage)|ManagementClient|KeyIssuance|SecretClipboard|WindowsManagementTransport|ManageItem|CredentialStore|WindowsHttpTransport|WindowsGenerationTransport|BudgetService|ThemeService|DashboardViewModel|UsageSnapshot|Views\\Charts') { [void]$node.ParentNode.RemoveChild($node); continue }
     if ($node.LocalName -eq 'ClCompile' -and $relative -eq 'App.xaml.cpp') { $node.SetAttribute('Include', 'App.xaml.cpp'); continue }
     if ($node.LocalName -eq 'AppxManifest') { $node.SetAttribute('Include', 'Package.appxmanifest'); continue }
     $absolute = [System.IO.Path]::GetFullPath((Join-Path $sourceRoot $relative))

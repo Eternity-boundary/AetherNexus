@@ -1,5 +1,5 @@
 // Copyright (c) 2026 Skylight Software Organization.
-// Created by EternityBoundary on 11,3 2026.
+// Created by EternityBoundary on 11,4 2026.
 // All rights reserved.
 // SPDX-License-Identifier: GPL-3.0-only
 //
@@ -24,6 +24,7 @@ namespace winrt::AetherNexus::implementation
         void UpdateTitleBarTheme();
         bool m_loaded{false};
         std::map<std::wstring, Microsoft::UI::Xaml::Controls::Page> m_playgrounds;
+        std::map<std::wstring, Microsoft::UI::Xaml::Controls::Page> m_management;
         Windows::UI::ViewManagement::UISettings m_uiSettings{nullptr};
         Windows::UI::ViewManagement::UISettings::ColorValuesChanged_revoker m_colorRevoker;
     };

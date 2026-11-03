@@ -2,7 +2,7 @@
 
 ## 頁面與互動
 
-左側使用原生 NavigationView，包含 Dashboard、Agent Builder、Chat、Images、Audio、Video、Prompts、Logs、Traces、Assistants、Batches、Evaluations、Fine-tuning、Storage、Usage、API keys、Projects 及 Settings。導航類別依 Platform 的工作流程分組；Dashboard、Settings 與五個 [Playground 頁面](playground.md) 已實作，其餘管理頁面顯示獨立標題與「頁面準備中」佔位畫面。
+左側使用原生 NavigationView，包含 Dashboard、Agent Builder、Chat、Images、Audio、Video、Prompts、Logs、Traces、Assistants、Batches、Evaluations、Fine-tuning、Storage、Usage、API keys、Projects 及 Settings。導航類別依 Platform 的工作流程分組；Dashboard、Settings、五個 [Playground 頁面](playground.md) 與 [Manage 的三個頁面](manage.md) 已實作，其餘 Build 頁面顯示獨立標題與「頁面準備中」佔位畫面。
 
 Dashboard 提供專案選擇、7／30 天範圍切換與伺服器資料重新整理。專案欄位預設為「所有專案（組織）」，其他選項由伺服器取得，顯示名稱與 ID，並標示已封存專案。六張卡片會依內容寬度排成 3、2 或 1 欄。載入在背景執行，不阻塞 XAML 執行緒；離開頁面後取消後續讀取並忽略遲到結果。
 

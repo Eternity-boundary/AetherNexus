@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!--
-    Copyright (c) 2026 Skylight Software Organization.
-    Created by Eternity-boundary on 11,3 2026.
-    All rights reserved.
-    SPDX-License-Identifier: GPL-3.0-only
-    
-    File: PlaceholderPage.xaml
-    Project: AetherNexus
--->
+Copyright (c) 2026 Skylight Software Organization.
+Created by Eternity-boundary on 11,4 2026.
+All rights reserved.
+SPDX-License-Identifier: GPL-3.0-only
+
+File: PlaceholderPage.xaml
+Project: AetherNexus
+ -->
 
 <Page
     x:Class="AetherNexus.PlaceholderPage"

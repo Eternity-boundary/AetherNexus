@@ -116,4 +116,24 @@
     <None Include="Resources\Styles\README.md"><Filter>Resources\Styles</Filter></None>
     <None Include="Strings\zh-TW\README.md"><Filter>Strings\zh-TW</Filter></None>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Services\ManagementClient.h"><Filter>Services</Filter></ClInclude>
+    <ClInclude Include="Services\WindowsManagementTransport.h"><Filter>Services</Filter></ClInclude>
+    <ClInclude Include="Models\ManageItem.h"><Filter>Models</Filter></ClInclude>
+    <ClInclude Include="Views\ManagePage.xaml.h"><Filter>Views</Filter></ClInclude>
+    <ClCompile Include="Services\ManagementClient.cpp"><Filter>Services</Filter></ClCompile>
+    <ClCompile Include="Services\WindowsManagementTransport.cpp"><Filter>Services</Filter></ClCompile>
+    <ClCompile Include="Models\ManageItem.cpp"><Filter>Models</Filter></ClCompile>
+    <ClCompile Include="Views\ManagePage.xaml.cpp"><Filter>Views</Filter></ClCompile>
+    <Midl Include="Models\ManageItem.idl"><Filter>Models</Filter></Midl>
+    <Midl Include="Views\ManagePage.idl"><Filter>Views</Filter></Midl>
+    <Page Include="Views\ManagePage.xaml"><Filter>Views</Filter></Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Services\KeyIssuance.h"><Filter>Services</Filter></ClInclude>
+    <ClInclude Include="Infrastructure\SecureBuffer.h"><Filter>Infrastructure</Filter></ClInclude>
+    <ClInclude Include="Infrastructure\SecretClipboard.h"><Filter>Infrastructure</Filter></ClInclude>
+    <ClCompile Include="Services\KeyIssuance.cpp"><Filter>Services</Filter></ClCompile>
+    <ClCompile Include="Infrastructure\SecretClipboard.cpp"><Filter>Infrastructure</Filter></ClCompile>
+  </ItemGroup>
 </Project>

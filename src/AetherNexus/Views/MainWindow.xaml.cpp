@@ -1,5 +1,5 @@
 // Copyright (c) 2026 Skylight Software Organization.
-// Created by EternityBoundary on 11,3 2026.
+// Created by EternityBoundary on 11,4 2026.
 // All rights reserved.
 // SPDX-License-Identifier: GPL-3.0-only
 //
@@ -7,6 +7,8 @@
 // Project: AetherNexus
 #include "pch.h"
 #include "MainWindow.xaml.h"
+#include "Views/ManagePage.xaml.h"
+#include "Services/WindowsManagementTransport.h"
 #include "DashboardPage.xaml.h"
 #include "PlaceholderPage.xaml.h"
 #include "SettingsPage.xaml.h"
@@ -37,6 +39,14 @@ namespace winrt::AetherNexus::implementation
         // C++/WinRT's optimized factory initializes XAML after construction.
         SystemBackdrop(Media::MicaBackdrop{});
         ExtendsContentIntoTitleBar(true);
+        Closed([weak = get_weak()](auto const &, auto const &) {
+            if (auto self = weak.get())
+                for (auto const &[route, page] : self->m_management)
+                {
+                    (void)route;
+                    get_self<ManagePage>(page.as<AetherNexus::ManagePage>())->ClearDisclosure();
+                }
+        });
         HWND hwnd{};
         check_hresult(this->try_as<::IWindowNative>()->get_WindowHandle(&hwnd));
         auto const scale = static_cast<double>(GetDpiForWindow(hwnd)) / 96.0;
@@ -121,6 +131,18 @@ namespace winrt::AetherNexus::implementation
                     AetherNexus::PlaygroundPage page;
                     get_self<PlaygroundPage>(page)->Configure(hstring{route},std::make_shared<::AetherNexus::Services::WindowsHttpTransport>(),std::make_shared<::AetherNexus::Services::WindowsGenerationTransport>());
                     found = m_playgrounds.emplace(route, page).first;
+                }
+                ContentFrame().Content(found->second);
+            }
+            else if (route == L"usage" || route == L"keys" || route == L"projects")
+            {
+                auto found = m_management.find(route);
+                if (found == m_management.end())
+                {
+                    AetherNexus::ManagePage page;
+                    auto transport = std::make_shared<::AetherNexus::Services::WindowsManagementTransport>();
+                    get_self<ManagePage>(page)->Configure(hstring{route}, transport, transport);
+                    found = m_management.emplace(route, page).first;
                 }
                 ContentFrame().Content(found->second);
             }

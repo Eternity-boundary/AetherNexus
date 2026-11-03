@@ -102,6 +102,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
+      <AdditionalIncludeDirectories>$(ProjectDir)Models;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatAngleIncludeAsExternal>true</TreatAngleIncludeAsExternal>
       <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
       <!-- Normal ABI padding, unused inline removal and noncopyable WinRT bases are intentional.
@@ -121,6 +122,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
     <ClCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <!-- LTCG emits informational inlining decisions even for external WinRT templates. -->
+      <DisableSpecificWarnings>4710;4711;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</TreatWarningAsError>
     </ClCompile>
     <Link>
@@ -139,6 +142,13 @@
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="Services\ApiTypes.h" />
+    <ClInclude Include="Services\ManagementClient.h" />
+    <ClInclude Include="Services\KeyIssuance.h" />
+    <ClInclude Include="Infrastructure\SecureBuffer.h" />
+    <ClInclude Include="Infrastructure\SecretClipboard.h" />
+    <ClInclude Include="Services\WindowsManagementTransport.h" />
+    <ClInclude Include="Models\ManageItem.h" />
+    <ClInclude Include="Views\ManagePage.xaml.h"><DependentUpon>ManagePage.xaml</DependentUpon></ClInclude>
     <ClInclude Include="Services\BudgetService.h" />
     <ClInclude Include="Services\PlatformApiClient.h" />
     <ClInclude Include="Services\WindowsHttpTransport.h" />
@@ -174,6 +184,7 @@
     <Page Include="Views\MainWindow.xaml" />
     <Page Include="Views\SettingsPage.xaml" />
     <Page Include="Views\PlaygroundPage.xaml" />
+    <Page Include="Views\ManagePage.xaml" />
     <Page Include="Views\DashboardPage.xaml" />
     <Page Include="Views\PlaceholderPage.xaml" />
     <Page Include="Resources\Styles\DashboardStyles.xaml" />
@@ -201,6 +212,12 @@
     <ClCompile Include="Services\ApiTypes.cpp">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Services\ManagementClient.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
+    <ClCompile Include="Services\KeyIssuance.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
+    <ClCompile Include="Infrastructure\SecretClipboard.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
+    <ClCompile Include="Services\WindowsManagementTransport.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
+    <ClCompile Include="Models\ManageItem.cpp" />
+    <ClCompile Include="Views\ManagePage.xaml.cpp"><DependentUpon>ManagePage.xaml</DependentUpon></ClCompile>
     <ClCompile Include="Services\PlatformApiClient.cpp">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -241,6 +258,8 @@
     <Midl Include="Views\PlaygroundPage.idl">
       <DependentUpon>PlaygroundPage.xaml</DependentUpon>
     </Midl>
+    <Midl Include="Models\ManageItem.idl" />
+    <Midl Include="Views\ManagePage.idl"><DependentUpon>ManagePage.xaml</DependentUpon></Midl>
     <Midl Include="Views\DashboardPage.idl">
       <DependentUpon>DashboardPage.xaml</DependentUpon>
     </Midl>

@@ -26,3 +26,6 @@ tests/PlaygroundHarness/Package.appxmanifest
 *.pfx
 *.p12
 *.key
+
+tests/ManageHarness/Manage.UI.Tests.vcxproj
+tests/ManageHarness/Package.appxmanifest

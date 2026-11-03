@@ -753,4 +753,136 @@
   <data name="PlaygroundAddMessage.Content" xml:space="preserve">
     <value>加入訊息</value>
   </data>
+  <data name="ManageIntro.Text" xml:space="preserve"><value>管理目前 Admin Key 所屬組織的用量、金鑰與專案。</value></data>
+  <data name="ManageSettings.Content" xml:space="preserve"><value>前往設定填寫 Admin Key</value></data>
+  <data name="ManageProject.Header" xml:space="preserve"><value>專案範圍</value></data>
+  <data name="ManageStartDate.Header" xml:space="preserve"><value>開始日期（UTC，含）</value></data>
+  <data name="ManageEndDate.Header" xml:space="preserve"><value>結束日期（UTC，含）</value></data>
+  <data name="ManageGroup.Header" xml:space="preserve"><value>分組欄位（留空為彙總）</value></data>
+  <data name="ManageMetric.Header" xml:space="preserve"><value>圖表與合計指標</value></data>
+  <data name="ManageRefresh.Label" xml:space="preserve"><value>套用／重新整理</value></data>
+  <data name="ManageCancel.Label" xml:space="preserve"><value>停止等待</value></data>
+  <data name="ManageCreate.Label" xml:space="preserve"><value>建立</value></data>
+  <data name="ManageEdit.Label" xml:space="preserve"><value>編輯</value></data>
+  <data name="ManageRemove.Label" xml:space="preserve"><value>移除</value></data>
+  <data name="ManageExport.Label" xml:space="preserve"><value>匯出 CSV</value></data>
+  <data name="ManageOfficial.Label" xml:space="preserve"><value>在官方 Platform 開啟</value></data>
+  <data name="ManageSearch.PlaceholderText" xml:space="preserve"><value>搜尋名稱、ID 或分組</value></data>
+  <data name="ManageSearch.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>搜尋管理清單</value></data>
+  <data name="ManageDetails.Header" xml:space="preserve"><value>選取項目詳細資料</value></data>
+  <data name="ManageCategory" xml:space="preserve"><value>用量類型</value></data>
+  <data name="ManageKeyKind" xml:space="preserve"><value>金鑰類型</value></data>
+  <data name="ManageProjectView" xml:space="preserve"><value>專案檢視</value></data>
+  <data name="ManageProjectKeys" xml:space="preserve"><value>專案 API keys</value></data>
+  <data name="ManageAdminKeys" xml:space="preserve"><value>組織管理金鑰目錄</value></data>
+  <data name="ManageProjectOverview" xml:space="preserve"><value>專案總覽</value></data>
+  <data name="ManageMembers" xml:space="preserve"><value>專案成員</value></data>
+  <data name="ManageRateLimits" xml:space="preserve"><value>模型速率限制</value></data>
+  <data name="ManageInitial" xml:space="preserve"><value>正在準備管理頁面。</value></data>
+  <data name="ManageUsageHint" xml:space="preserve"><value>使用官方每日用量桶；日期為 UTC。用量與成本可能延遲。Completions 的輸入已含快取 Token；儲存 Bytes 與工作階段數不可當成 Token 或費用。缺失欄位顯示「—」。</value></data>
+  <data name="ManageKeysHint" xml:space="preserve"><value>清單只顯示中繼資料與尾碼。可簽發服務帳戶或 Admin 權杖，一次性彈窗關閉後安全清除記憶體；個人使用者金鑰仍請至官方 Platform 建立。專案金鑰可編輯權限與期限；撤銷會影響所有使用該金鑰的程式。</value></data>
+  <data name="ManageProjectsHint" xml:space="preserve"><value>專案可建立、改名及封存；封存不能復原。成員須已屬於組織，速率限制受組織上限與帳戶權限約束。這裡不會修改設定頁的本機參考預算。</value></data>
+  <data name="ManageAllProjects" xml:space="preserve"><value>所有專案（組織）</value></data>
+  <data name="ManageChooseProject" xml:space="preserve"><value>請選擇專案（總覽可查看所有專案）</value></data>
+  <data name="ManageArchived" xml:space="preserve"><value>已封存</value></data>
+  <data name="ManageApplyFilters" xml:space="preserve"><value>篩選條件已改變，按「套用／重新整理」取得資料。</value></data>
+  <data name="ManageSelectProject" xml:space="preserve"><value>請選擇一個專案，再按「套用／重新整理」。</value></data>
+  <data name="ManageEmpty" xml:space="preserve"><value>伺服器未回傳此範圍的記錄。</value></data>
+  <data name="ManageNoMatch" xml:space="preserve"><value>沒有符合搜尋條件的項目。</value></data>
+  <data name="ManageUnavailable" xml:space="preserve"><value>尚無可用資料。請檢查上方訊息後重新整理。</value></data>
+  <data name="ManageLoading" xml:space="preserve"><value>正在讀取伺服器資料…</value></data>
+  <data name="ManageUpdated" xml:space="preserve"><value>伺服器資料已更新。</value></data>
+  <data name="ManageFailed" xml:space="preserve"><value>無法完成讀取，請檢查網路後重新整理。</value></data>
+  <data name="ManageMissingKey" xml:space="preserve"><value>未儲存有效的 Admin Key，或無法讀取本機認證。請前往設定確認；一般 API Key 無法取代管理金鑰。</value></data>
+  <data name="ManageForbidden" xml:space="preserve"><value>Admin Key 沒有執行此操作的權限。請確認組織、專案及管理金鑰權限。</value></data>
+  <data name="ManageRateLimited" xml:space="preserve"><value>伺服器限制請求頻率，請稍後手動重新整理。</value></data>
+  <data name="ManageInvalidResponse" xml:space="preserve"><value>伺服器回應格式、分頁或數值無法辨識，未顯示不可靠的結果。</value></data>
+  <data name="ManageInvalidInput" xml:space="preserve"><value>輸入無效，或伺服器不接受此名稱、ID、權限、期限或限制值。請檢查內容、帳戶政策及項目狀態後重試。</value></data>
+  <data name="ManageCatalogFailed" xml:space="preserve"><value>無法更新專案清單；已保留目前範圍。其他資料可能仍可取得。</value></data>
+  <data name="ManageCancelled" xml:space="preserve"><value>已停止等待；未繼續讀取後續分頁。</value></data>
+  <data name="ManageCancelling" xml:space="preserve"><value>正在停止等待…</value></data>
+  <data name="ManageWriting" xml:space="preserve"><value>正在將已確認的變更送往伺服器…</value></data>
+  <data name="ManageMutationUncertain" xml:space="preserve"><value>操作的最終狀態可能尚未確認。停止等待或連線中斷不代表伺服器已取消變更；請先重新整理確認，再決定是否重試。</value></data>
+  <data name="ManageOrganizationKeysScope" xml:space="preserve"><value>組織金鑰目錄；以伺服器回傳的項目與權限為準。</value></data>
+  <data name="ManageOrganization" xml:space="preserve"><value>在目前 Admin Key 所屬組織建立專案。</value></data>
+  <data name="ManageNoChanges" xml:space="preserve"><value>沒有變更，未送出更新請求。</value></data>
+  <data name="ManageUngrouped" xml:space="preserve"><value>彙總</value></data>
+  <data name="ManageAddMember" xml:space="preserve"><value>加入成員</value></data>
+  <data name="ManageNewProject" xml:space="preserve"><value>建立專案</value></data>
+  <data name="ManageArchive" xml:space="preserve"><value>封存</value></data>
+  <data name="ManageRemoveMember" xml:space="preserve"><value>移除成員</value></data>
+  <data name="ManageRevoke" xml:space="preserve"><value>撤銷金鑰</value></data>
+  <data name="ManageCreated" xml:space="preserve"><value>建立／加入時間</value></data>
+  <data name="ManageExpires" xml:space="preserve"><value>到期時間（未提供時顯示 —）</value></data>
+  <data name="ManageLastUsed" xml:space="preserve"><value>最後使用時間</value></data>
+  <data name="ManageAllPermissions" xml:space="preserve"><value>全部權限（仍受擁有者權限限制）</value></data>
+  <data name="ManageNotProvided" xml:space="preserve"><value>伺服器未提供</value></data>
+  <data name="ManageCreateTitle" xml:space="preserve"><value>建立管理項目</value></data>
+  <data name="ManageEditTitle" xml:space="preserve"><value>編輯選取項目</value></data>
+  <data name="ManageSaveServer" xml:space="preserve"><value>儲存至伺服器</value></data>
+  <data name="ManageName" xml:space="preserve"><value>專案名稱</value></data>
+  <data name="ManageUserId" xml:space="preserve"><value>組織使用者 ID</value></data>
+  <data name="ManageRole" xml:space="preserve"><value>專案角色</value></data>
+  <data name="ManagePermissions" xml:space="preserve"><value>更新權限</value></data>
+  <data name="ManageKeepPermissions" xml:space="preserve"><value>保留目前權限</value></data>
+  <data name="ManageReadOnly" xml:space="preserve"><value>唯讀（api.all.read）</value></data>
+  <data name="ManageCustomPermissions" xml:space="preserve"><value>自訂 scope 清單</value></data>
+  <data name="ManageScopes" xml:space="preserve"><value>Scopes（以空白或換行分隔）</value></data>
+  <data name="ManageExpiryDays" xml:space="preserve"><value>從送出起的到期天數（留空保留，1–365）</value></data>
+  <data name="ManagePolicyHint" xml:space="preserve"><value>「全部權限」會送出空 scopes 陣列，代表移除金鑰的 scope 限制，不代表禁止存取。自訂模式不可留空。期限會從本次請求重新計算，並須符合組織與專案政策。</value></data>
+  <data name="ManageMemberHint" xml:space="preserve"><value>owner 可管理專案，member 為一般成員。加入對象須先是組織使用者；此操作不會寄出組織邀請。</value></data>
+  <data name="ManageLimitsHint" xml:space="preserve"><value>只送出已修改的欄位。速率限制不是預算或成本，伺服器可能依組織上限拒絕變更。</value></data>
+  <data name="ManageArchiveWarning" xml:space="preserve"><value>封存後不能復原，專案的 API 操作將不可用；歷史用量仍會保留。請輸入完整專案 ID 確認。</value></data>
+  <data name="ManageRemoveMemberWarning" xml:space="preserve"><value>將移除此使用者的專案成員資格，可能影響其存取權。這不會刪除組織使用者。請輸入完整使用者 ID 確認。</value></data>
+  <data name="ManageRevokeWarning" xml:space="preserve"><value>這會在伺服器撤銷金鑰，所有依賴它的程式可能停止運作；無法從此程式復原。本機設定中的副本不會自動移除。請輸入完整金鑰 ID 確認。</value></data>
+  <data name="ManageConfirmId" xml:space="preserve"><value>輸入上方完整 ID</value></data>
+  <data name="ManageExported" xml:space="preserve"><value>用量 CSV 已儲存。CSV 包含目前成功查詢的全部資料，不受文字搜尋影響。</value></data>
+  <data name="ManageCategory_completions" xml:space="preserve"><value>Completions 用量</value></data>
+  <data name="ManageCategory_costs" xml:space="preserve"><value>所有成本（USD）</value></data>
+  <data name="ManageCategory_embeddings" xml:space="preserve"><value>Embeddings</value></data>
+  <data name="ManageCategory_images" xml:space="preserve"><value>Images</value></data>
+  <data name="ManageCategory_audio_speeches" xml:space="preserve"><value>語音生成</value></data>
+  <data name="ManageCategory_audio_transcriptions" xml:space="preserve"><value>音檔轉錄</value></data>
+  <data name="ManageCategory_moderations" xml:space="preserve"><value>Moderations</value></data>
+  <data name="ManageCategory_vector_stores" xml:space="preserve"><value>向量儲存空間</value></data>
+  <data name="ManageCategory_code_interpreter_sessions" xml:space="preserve"><value>Code Interpreter 工作階段</value></data>
+  <data name="ManageCategory_file_search_calls" xml:space="preserve"><value>File search 呼叫</value></data>
+  <data name="ManageCategory_web_search_calls" xml:space="preserve"><value>Web search 呼叫</value></data>
+  <data name="ManageMetric_input_tokens" xml:space="preserve"><value>輸入 Token</value></data>
+  <data name="ManageMetric_output_tokens" xml:space="preserve"><value>輸出 Token</value></data>
+  <data name="ManageMetric_input_cached_tokens" xml:space="preserve"><value>快取輸入 Token（輸入的子集）</value></data>
+  <data name="ManageMetric_num_model_requests" xml:space="preserve"><value>模型請求數</value></data>
+  <data name="ManageMetric_amount_usd" xml:space="preserve"><value>成本合計（USD）</value></data>
+  <data name="ManageMetric_images" xml:space="preserve"><value>圖片數</value></data>
+  <data name="ManageMetric_characters" xml:space="preserve"><value>字元數</value></data>
+  <data name="ManageMetric_seconds" xml:space="preserve"><value>音檔秒數</value></data>
+  <data name="ManageMetric_usage_bytes" xml:space="preserve"><value>每日儲存用量（Bytes；不跨日加總）</value></data>
+  <data name="ManageMetric_num_sessions" xml:space="preserve"><value>工作階段數</value></data>
+  <data name="ManageMetric_num_requests" xml:space="preserve"><value>工具呼叫數</value></data>
+  <data name="ManageLimit_max_requests_per_1_minute" xml:space="preserve"><value>每分鐘請求數</value></data>
+  <data name="ManageLimit_max_tokens_per_1_minute" xml:space="preserve"><value>每分鐘 Token</value></data>
+  <data name="ManageLimit_max_requests_per_1_day" xml:space="preserve"><value>每日請求數</value></data>
+  <data name="ManageLimit_max_images_per_1_minute" xml:space="preserve"><value>每分鐘圖片數</value></data>
+  <data name="ManageLimit_max_audio_megabytes_per_1_minute" xml:space="preserve"><value>每分鐘音訊 MB</value></data>
+  <data name="ManageLimit_batch_1_day_max_input_tokens" xml:space="preserve"><value>每日 Batch 輸入 Token</value></data>
+  <data name="ManageIssue.Label" xml:space="preserve"><value>簽發 API 權杖</value></data>
+  <data name="ManageIssueTitle" xml:space="preserve"><value>簽發 API 權杖</value></data>
+  <data name="ManageIssueAction" xml:space="preserve"><value>簽發</value></data>
+  <data name="ManageIssueName" xml:space="preserve"><value>名稱（新增服務帳戶時亦作為帳戶名稱）</value></data>
+  <data name="ManageIssueDays" xml:space="preserve"><value>有效天數（1–365；留空依伺服器政策）</value></data>
+  <data name="ManageIssueAdminHint" xml:space="preserve"><value>在目前組織簽發新的 Admin Key，具有管理用途；不替換設定頁既有權杖。</value></data>
+  <data name="ManageIssueOwner" xml:space="preserve"><value>專案服務帳戶</value></data>
+  <data name="ManageIssueNewAccount" xml:space="preserve"><value>建立新服務帳戶與初始權杖</value></data>
+  <data name="ManageIssueExistingAccount" xml:space="preserve"><value>為既有服務帳戶簽發權杖</value></data>
+  <data name="ManageIssueAccountId" xml:space="preserve"><value>既有服務帳戶 ID</value></data>
+  <data name="ManageIssueProjectHint" xml:space="preserve"><value>此處簽發服務帳戶權杖，並非個人使用者金鑰。新建時亦建立專案 member 服務帳戶。初始權限依帳戶與專案政策，簽發後可在金鑰清單調整權限或撤銷。</value></data>
+  <data name="ManageIssueOnceHint" xml:space="preserve"><value>只送出一次簽發請求。成功後僅在一次性彈窗提供複製；不自動儲存至設定或檔案。</value></data>
+  <data name="ManageIssueWorking" xml:space="preserve"><value>正在簽發權杖。停止等待不保證取消伺服器上的建立操作，請勿重複簽發。</value></data>
+  <data name="ManageIssueCreated" xml:space="preserve"><value>權杖已簽發，請立即妥善保存</value></data>
+  <data name="ManageIssueCopy" xml:space="preserve"><value>複製權杖</value></data>
+  <data name="ManageIssueClose" xml:space="preserve"><value>關閉並清除</value></data>
+  <data name="ManageIssueDisclosureHint" xml:space="preserve"><value>為保護權杖，此處只顯示尾碼。請複製後貼入可信任的安全位置；關閉後會安全清除程式的權杖緩衝區及仍屬於本彈窗的剪貼簿項目，無法再次取得。關閉不會撤銷權杖，也無法清除其他程式已保存的副本。</value></data>
+  <data name="ManageIssueCopied" xml:space="preserve"><value>已複製。請先貼入安全位置再關閉；已要求 Windows 排除剪貼簿歷程與雲端同步。</value></data>
+  <data name="ManageIssueCopyFailed" xml:space="preserve"><value>無法複製，剪貼簿可能正由其他程式使用。請稍後重試。</value></data>
+  <data name="ManageIssueClipboardBusy" xml:space="preserve"><value>程式的權杖緩衝區已清除；剪貼簿仍忙碌，請稍後再次按關閉，以完成清除。</value></data>
 </root>

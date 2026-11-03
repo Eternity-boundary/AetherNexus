@@ -1,6 +1,6 @@
 # 伺服器資料取得
 
-本文件說明 Dashboard 與模型清單的唯讀資料通道。Playground 的生成 POST／Realtime WebSocket 使用獨立的 WindowsGenerationTransport，詳見 [playground.md](playground.md)。
+本文件說明 Dashboard 與模型清單的唯讀資料通道。Playground 的生成 POST／Realtime WebSocket 使用獨立的 WindowsGenerationTransport，詳見 [playground.md](playground.md)。Manage 的組織管理 GET／POST／DELETE 使用獨立的 ManagementClient 與 WindowsManagementTransport，詳見 [manage.md](manage.md)；以下唯讀限制僅適用於 WindowsHttpTransport。
 
 ## 正式程式
 
