@@ -90,12 +90,23 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <Import Project="..\..\build\NativeApp.props" />
+  <PropertyGroup>
+    <!-- Generated projections are external code, including headers included with quotes. -->
+    <ExternalIncludePath>$(GeneratedFilesDir);$(ExternalIncludePath)</ExternalIncludePath>
+    <GeneratedSourceRoot>$([MSBuild]::NormalizeDirectory('$(GeneratedFilesDir)'))</GeneratedSourceRoot>
+    <ExternalPackageSourceRoot>$([MSBuild]::NormalizeDirectory('$(RepositoryRoot)packages'))</ExternalPackageSourceRoot>
+  </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
-      <WarningLevel>Level4</WarningLevel>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <TreatAngleIncludeAsExternal>true</TreatAngleIncludeAsExternal>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <!-- Normal ABI padding, unused inline removal and noncopyable WinRT bases are intentional.
+           C5045 is an informational report about optional /Qspectre instrumentation. -->
+      <DisableSpecificWarnings>4514;4625;4626;4820;5026;5027;5045;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <LanguageStandard Condition="'$(VisualStudioVersion)' &gt;= '18.0'">stdcpp20</LanguageStandard>
       <LanguageStandard Condition="'$(VisualStudioVersion)' &lt; '18.0'">stdcpp17</LanguageStandard>
       <AdditionalOptions>%(AdditionalOptions) /bigobj</AdditionalOptions>
@@ -104,11 +115,13 @@
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
     <ClCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</TreatWarningAsError>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
     <ClCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -129,9 +142,17 @@
     <ClInclude Include="Services\BudgetService.h" />
     <ClInclude Include="Services\PlatformApiClient.h" />
     <ClInclude Include="Services\WindowsHttpTransport.h" />
+    <ClInclude Include="Services\GenerationClient.h" />
+    <ClInclude Include="Services\WindowsGenerationTransport.h" />
+    <ClInclude Include="Services\WorkflowService.h" />
+    <ClInclude Include="Views\PlaygroundPage.xaml.h">
+      <DependentUpon>PlaygroundPage.xaml</DependentUpon>
+    </ClInclude>
     <ClInclude Include="Infrastructure\CredentialStore.h" />
     <ClInclude Include="Services\ThemeService.h" />
-    <ClInclude Include="Views\SettingsPage.xaml.h"><DependentUpon>SettingsPage.xaml</DependentUpon></ClInclude>
+    <ClInclude Include="Views\SettingsPage.xaml.h">
+      <DependentUpon>SettingsPage.xaml</DependentUpon>
+    </ClInclude>
     <ClInclude Include="Models\UsageSnapshot.h" />
     <ClInclude Include="ViewModels\DashboardViewModel.h" />
     <ClInclude Include="Views\Charts.h" />
@@ -152,6 +173,7 @@
     <ApplicationDefinition Include="App.xaml" />
     <Page Include="Views\MainWindow.xaml" />
     <Page Include="Views\SettingsPage.xaml" />
+    <Page Include="Views\PlaygroundPage.xaml" />
     <Page Include="Views\DashboardPage.xaml" />
     <Page Include="Views\PlaceholderPage.xaml" />
     <Page Include="Resources\Styles\DashboardStyles.xaml" />
@@ -168,14 +190,38 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </ClCompile>
     <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
-    <ClCompile Include="ViewModels\DashboardViewModel.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
-    <ClCompile Include="Infrastructure\CredentialStore.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
+    <ClCompile Include="ViewModels\DashboardViewModel.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Infrastructure\CredentialStore.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Services\ThemeService.cpp" />
     <ClCompile Include="Services\BudgetService.cpp" />
-    <ClCompile Include="Services\ApiTypes.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
-    <ClCompile Include="Services\PlatformApiClient.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
-    <ClCompile Include="Services\WindowsHttpTransport.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
-    <ClCompile Include="Views\SettingsPage.xaml.cpp"><DependentUpon>SettingsPage.xaml</DependentUpon></ClCompile>
+    <ClCompile Include="Services\ApiTypes.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Services\PlatformApiClient.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Services\WindowsHttpTransport.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Services\GenerationClient.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Services\WindowsGenerationTransport.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Services\WorkflowService.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Views\PlaygroundPage.xaml.cpp">
+      <DependentUpon>PlaygroundPage.xaml</DependentUpon>
+    </ClCompile>
+    <ClCompile Include="Views\SettingsPage.xaml.cpp">
+      <DependentUpon>SettingsPage.xaml</DependentUpon>
+    </ClCompile>
     <ClCompile Include="Views\Charts.cpp" />
     <ClCompile Include="Views\DashboardPage.xaml.cpp">
       <DependentUpon>DashboardPage.xaml</DependentUpon>
@@ -189,7 +235,12 @@
       <SubType>Code</SubType>
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Midl>
-    <Midl Include="Views\SettingsPage.idl"><DependentUpon>SettingsPage.xaml</DependentUpon></Midl>
+    <Midl Include="Views\SettingsPage.idl">
+      <DependentUpon>SettingsPage.xaml</DependentUpon>
+    </Midl>
+    <Midl Include="Views\PlaygroundPage.idl">
+      <DependentUpon>PlaygroundPage.xaml</DependentUpon>
+    </Midl>
     <Midl Include="Views\DashboardPage.idl">
       <DependentUpon>DashboardPage.xaml</DependentUpon>
     </Midl>
@@ -285,6 +336,17 @@
     <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <Target Name="ConfigureExternalSourceWarnings" BeforeTargets="ClCompile">
+    <ItemGroup>
+      <!-- WinUI and NuGet add generated/SDK implementation sources dynamically.
+           Keep /Wall and /WX on handwritten sources, including sources that do not use the PCH. -->
+      <ClCompile Update="@(ClCompile)" Condition="'%(ClCompile.CompilerIteration)'=='XamlGenerated' Or $([System.String]::Copy('%(ClCompile.FullPath)').StartsWith('$(GeneratedSourceRoot)')) Or $([System.String]::Copy('%(ClCompile.FullPath)').StartsWith('$(ExternalPackageSourceRoot)'))">
+        <WarningLevel>TurnOffAllWarnings</WarningLevel>
+        <!-- A PCH also restores its saved warning state; compile external sources independently. -->
+        <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      </ClCompile>
+    </ItemGroup>
+  </Target>
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\..\packages\Microsoft.Web.WebView2.1.0.3719.77\build\native\Microsoft.Web.WebView2.targets" Condition="Exists('..\..\packages\Microsoft.Web.WebView2.1.0.3719.77\build\native\Microsoft.Web.WebView2.targets')" />
     <Import Project="..\..\packages\Microsoft.Windows.AI.MachineLearning.2.4.89\build\native\Microsoft.Windows.AI.MachineLearning.targets" Condition="Exists('..\..\packages\Microsoft.Windows.AI.MachineLearning.2.4.89\build\native\Microsoft.Windows.AI.MachineLearning.targets')" />

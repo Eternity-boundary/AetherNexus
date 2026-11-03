@@ -16,8 +16,9 @@ namespace AetherNexus::Services
     {
     public:
         explicit PlatformApiClient(std::shared_ptr<IApiTransport> transport);
-        DashboardResult LoadDashboard(int days, std::chrono::sys_seconds now, std::stop_token stop = {});
+        DashboardResult LoadDashboard(int days, std::chrono::sys_seconds now, std::stop_token stop = {}, std::wstring const& projectId = {});
         std::vector<ModelInfo> ListModels(std::stop_token stop = {});
+        std::vector<ProjectInfo> ListProjects(std::stop_token stop = {});
     private:
         std::shared_ptr<IApiTransport> m_transport;
     };

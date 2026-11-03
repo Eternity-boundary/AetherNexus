@@ -25,7 +25,7 @@ namespace AetherNexus::Models
         std::optional<double> cacheRatio() const noexcept
         {
             if (!cacheAvailable || inputTokens == 0) return {};
-            return static_cast<double>(cachedInputTokens) / inputTokens;
+            return static_cast<double>(cachedInputTokens) / static_cast<double>(inputTokens);
         }
     };
 
@@ -44,7 +44,7 @@ namespace AetherNexus::Models
         std::optional<double> cacheRatio() const noexcept
         {
             if (!usageAvailable || !cacheAvailable || inputTokens == 0) return {};
-            return static_cast<double>(cachedInputTokens) / inputTokens;
+            return static_cast<double>(cachedInputTokens) / static_cast<double>(inputTokens);
         }
     };
 }

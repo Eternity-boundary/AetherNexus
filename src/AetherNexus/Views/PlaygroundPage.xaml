@@ -1,0 +1,624 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+Copyright (c) 2026 Skylight Software Organization.
+Created by Eternity-boundary on 11,3 2026.
+All rights reserved.
+SPDX-License-Identifier: GPL-3.0-only
+
+File: PlaygroundPage.xaml
+Project: AetherNexus
+ -->
+
+<Page
+    x:Class="AetherNexus.PlaygroundPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    ActualThemeChanged="OnThemeChanged"
+    Loaded="OnLoaded"
+    Unloaded="OnUnloaded">
+    <Page.Resources>
+        <Style
+            x:Key="FormLabel"
+            BasedOn="{StaticResource CaptionTextBlockStyle}"
+            TargetType="TextBlock">
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Foreground" Value="{ThemeResource TextFillColorSecondaryBrush}" />
+        </Style>
+    </Page.Resources>
+    <Grid Margin="24,20,24,20" RowSpacing="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid ColumnSpacing="12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Spacing="4">
+                <TextBlock x:Name="PageTitle" Style="{StaticResource TitleTextBlockStyle}" />
+                <TextBlock x:Uid="PlaygroundIntro" Style="{StaticResource FormLabel}" />
+            </StackPanel>
+            <Button
+                x:Name="ParametersButton"
+                x:Uid="PlaygroundParameters"
+                Grid.Column="1"
+                AutomationProperties.AutomationId="PlaygroundParameters"
+                Click="OnParameters" />
+        </Grid>
+        <InfoBar
+            x:Name="ProductNotice"
+            Grid.Row="1"
+            IsClosable="False"
+            IsOpen="False">
+            <InfoBar.ActionButton>
+                <HyperlinkButton x:Uid="PlaygroundOfficialDocs" NavigateUri="https://developers.openai.com/api/docs/deprecations" />
+            </InfoBar.ActionButton>
+        </InfoBar>
+        <StackPanel Grid.Row="2" Spacing="8">
+            <InfoBar
+                x:Name="Notice"
+                AutomationProperties.LiveSetting="Polite"
+                IsClosable="False"
+                IsOpen="False" />
+            <Button
+                x:Name="SettingsLink"
+                x:Uid="PlaygroundSettings"
+                HorizontalAlignment="Left"
+                AutomationProperties.AutomationId="PlaygroundSettings"
+                Click="OnSettings"
+                Visibility="Collapsed" />
+        </StackPanel>
+        <SplitView
+            x:Name="WorkspaceSplit"
+            Grid.Row="3"
+            DisplayMode="Inline"
+            IsPaneOpen="True"
+            OpenPaneLength="320"
+            PaneBackground="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+            PanePlacement="Right"
+            SizeChanged="OnWorkspaceSizeChanged">
+            <SplitView.Pane>
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled" HorizontalScrollMode="Disabled">
+                    <StackPanel
+                        x:Name="ParametersPanel"
+                        Padding="20"
+                        Spacing="16">
+                        <ComboBox
+                            x:Name="ModelPicker"
+                            x:Uid="PlaygroundModel"
+                            HorizontalAlignment="Stretch"
+                            AutomationProperties.AutomationId="PlaygroundModel"
+                            IsEditable="True"
+                            IsTextSearchEnabled="True" />
+                        <Button
+                            x:Name="RefreshModels"
+                            x:Uid="PlaygroundRefreshModels"
+                            AutomationProperties.AutomationId="PlaygroundRefreshModels"
+                            Click="OnRefreshModels" />
+                        <TextBlock x:Uid="PlaygroundKeyScope" Style="{StaticResource FormLabel}" />
+                        <StackPanel x:Name="ChatParameters" Spacing="12">
+                            <TextBox
+                                x:Name="InstructionsBox"
+                                x:Uid="PlaygroundInstructions"
+                                MinHeight="140"
+                                AcceptsReturn="True"
+                                AutomationProperties.AutomationId="PlaygroundInstructions"
+                                MaxLength="1048576"
+                                TextWrapping="Wrap" />
+                            <NumberBox
+                                x:Name="MaxTokens"
+                                x:Uid="PlaygroundMaxTokens"
+                                AutomationProperties.AutomationId="PlaygroundMaxTokens"
+                                Maximum="128000"
+                                Minimum="16"
+                                SpinButtonPlacementMode="Compact"
+                                Value="4096" />
+                            <NumberBox
+                                x:Name="TemperatureBox"
+                                x:Uid="PlaygroundTemperature"
+                                AutomationProperties.AutomationId="PlaygroundTemperature"
+                                Maximum="2"
+                                Minimum="0"
+                                SpinButtonPlacementMode="Compact" />
+                            <ComboBox
+                                x:Name="ReasoningPicker"
+                                x:Uid="PlaygroundReasoning"
+                                HorizontalAlignment="Stretch"
+                                AutomationProperties.AutomationId="PlaygroundReasoning"
+                                SelectedIndex="0">
+                                <ComboBoxItem x:Uid="PlaygroundDefault" />
+                                <ComboBoxItem Content="none" />
+                                <ComboBoxItem Content="low" />
+                                <ComboBoxItem Content="medium" />
+                                <ComboBoxItem Content="high" />
+                                <ComboBoxItem Content="xhigh" />
+                            </ComboBox>
+                            <CheckBox
+                                x:Name="WebSearchBox"
+                                x:Uid="PlaygroundWebSearch"
+                                AutomationProperties.AutomationId="PlaygroundWebSearch" />
+                        </StackPanel>
+                        <StackPanel
+                            x:Name="ImageParameters"
+                            Spacing="12"
+                            Visibility="Collapsed">
+                            <ComboBox
+                                x:Name="SizePicker"
+                                x:Uid="PlaygroundImageSize"
+                                HorizontalAlignment="Stretch"
+                                AutomationProperties.AutomationId="PlaygroundImageSize"
+                                IsEditable="True"
+                                SelectedIndex="0">
+                                <ComboBoxItem Content="1024x1024" />
+                                <ComboBoxItem Content="1536x1024" />
+                                <ComboBoxItem Content="1024x1536" />
+                            </ComboBox>
+                            <ComboBox
+                                x:Name="QualityPicker"
+                                x:Uid="PlaygroundQuality"
+                                HorizontalAlignment="Stretch"
+                                AutomationProperties.AutomationId="PlaygroundQuality"
+                                SelectedIndex="1">
+                                <ComboBoxItem Content="low" />
+                                <ComboBoxItem Content="medium" />
+                                <ComboBoxItem Content="high" />
+                                <ComboBoxItem Content="xhigh" />
+                                <ComboBoxItem Content="max" />
+                            </ComboBox>
+                            <ComboBox
+                                x:Name="BackgroundPicker"
+                                x:Uid="PlaygroundBackground"
+                                HorizontalAlignment="Stretch"
+                                AutomationProperties.AutomationId="PlaygroundBackground"
+                                SelectedIndex="0">
+                                <ComboBoxItem Content="auto" />
+                                <ComboBoxItem Content="opaque" />
+                                <ComboBoxItem Content="transparent" />
+                            </ComboBox>
+                            <ComboBox
+                                x:Name="ImageFormatPicker"
+                                x:Uid="PlaygroundFormat"
+                                HorizontalAlignment="Stretch"
+                                AutomationProperties.AutomationId="PlaygroundImageFormat"
+                                SelectedIndex="0">
+                                <ComboBoxItem Content="png" />
+                                <ComboBoxItem Content="webp" />
+                                <ComboBoxItem Content="jpeg" />
+                            </ComboBox>
+                            <NumberBox
+                                x:Name="ImageCount"
+                                x:Uid="PlaygroundImageCount"
+                                AutomationProperties.AutomationId="PlaygroundImageCount"
+                                Maximum="10"
+                                Minimum="1"
+                                SpinButtonPlacementMode="Compact"
+                                Value="1" />
+                            <TextBlock x:Uid="PlaygroundImageReferences" Style="{StaticResource FormLabel}" />
+                        </StackPanel>
+                        <StackPanel
+                            x:Name="AudioParameters"
+                            Spacing="12"
+                            Visibility="Collapsed">
+                            <ComboBox
+                                x:Name="AudioModePicker"
+                                x:Uid="PlaygroundAudioMode"
+                                HorizontalAlignment="Stretch"
+                                AutomationProperties.AutomationId="PlaygroundAudioMode"
+                                SelectedIndex="0"
+                                SelectionChanged="OnAudioModeChanged">
+                                <ComboBoxItem x:Uid="PlaygroundRealtimeSpeech" />
+                                <ComboBoxItem x:Uid="PlaygroundTranscribe" />
+                                <ComboBoxItem x:Uid="PlaygroundTranslate" />
+                                <ComboBoxItem x:Uid="PlaygroundLegacySpeech" />
+                            </ComboBox>
+                            <ComboBox
+                                x:Name="VoicePicker"
+                                x:Uid="PlaygroundVoice"
+                                HorizontalAlignment="Stretch"
+                                AutomationProperties.AutomationId="PlaygroundVoice"
+                                IsEditable="True"
+                                SelectedIndex="0">
+                                <ComboBoxItem Content="marin" />
+                                <ComboBoxItem Content="cedar" />
+                                <ComboBoxItem Content="alloy" />
+                                <ComboBoxItem Content="ash" />
+                                <ComboBoxItem Content="coral" />
+                                <ComboBoxItem Content="sage" />
+                                <ComboBoxItem Content="shimmer" />
+                            </ComboBox>
+                            <TextBox
+                                x:Name="SpeechInstructions"
+                                x:Uid="PlaygroundSpeechInstructions"
+                                MinHeight="80"
+                                AcceptsReturn="True"
+                                AutomationProperties.AutomationId="PlaygroundSpeechInstructions"
+                                TextWrapping="Wrap" />
+                            <TextBox
+                                x:Name="AudioLanguage"
+                                x:Uid="PlaygroundLanguage"
+                                AutomationProperties.AutomationId="PlaygroundLanguage" />
+                            <TextBlock x:Uid="PlaygroundAudioDisclosure" Style="{StaticResource FormLabel}" />
+                        </StackPanel>
+                        <StackPanel
+                            x:Name="NodeParameters"
+                            Spacing="12"
+                            Visibility="Collapsed">
+                            <ComboBox
+                                x:Name="NodePicker"
+                                x:Uid="PlaygroundNode"
+                                HorizontalAlignment="Stretch"
+                                AutomationProperties.AutomationId="PlaygroundNode"
+                                SelectionChanged="OnNodeSelected" />
+                            <TextBox
+                                x:Name="NodeName"
+                                x:Uid="PlaygroundNodeName"
+                                AutomationProperties.AutomationId="PlaygroundNodeName"
+                                MaxLength="256" />
+                            <TextBox
+                                x:Name="NodeModel"
+                                x:Uid="PlaygroundNodeModel"
+                                AutomationProperties.AutomationId="PlaygroundNodeModel" />
+                            <TextBox
+                                x:Name="NodeInstructions"
+                                x:Uid="PlaygroundNodeInstructions"
+                                MinHeight="120"
+                                AcceptsReturn="True"
+                                AutomationProperties.AutomationId="PlaygroundNodeInstructions"
+                                TextWrapping="Wrap" />
+                            <TextBox
+                                x:Name="NodeNext"
+                                x:Uid="PlaygroundNodeNext"
+                                AutomationProperties.AutomationId="PlaygroundNodeNext" />
+                            <TextBox
+                                x:Name="NodeOtherwise"
+                                x:Uid="PlaygroundNodeOtherwise"
+                                AutomationProperties.AutomationId="PlaygroundNodeOtherwise" />
+                            <TextBox
+                                x:Name="NodeMatch"
+                                x:Uid="PlaygroundNodeMatch"
+                                AutomationProperties.AutomationId="PlaygroundNodeMatch" />
+                            <Button
+                                x:Uid="PlaygroundApplyNode"
+                                AutomationProperties.AutomationId="PlaygroundApplyNode"
+                                Click="OnApplyNode" />
+                            <Button
+                                x:Uid="PlaygroundDeleteNode"
+                                AutomationProperties.AutomationId="PlaygroundDeleteNode"
+                                Click="OnDeleteNode" />
+                            <TextBlock x:Uid="PlaygroundNodeHelp" Style="{StaticResource FormLabel}" />
+                        </StackPanel>
+                        <Expander
+                            x:Name="AdvancedExpander"
+                            x:Uid="PlaygroundAdvanced"
+                            HorizontalAlignment="Stretch">
+                            <StackPanel Spacing="8">
+                                <TextBlock x:Uid="PlaygroundAdvancedHelp" Style="{StaticResource FormLabel}" />
+                                <TextBox
+                                    x:Name="OptionsBox"
+                                    MinHeight="180"
+                                    AcceptsReturn="True"
+                                    AutomationProperties.AutomationId="PlaygroundOptions"
+                                    AutomationProperties.Name="JSON"
+                                    FontFamily="Consolas"
+                                    MaxLength="1048576"
+                                    Text="{}{}"
+                                    TextWrapping="Wrap" />
+                            </StackPanel>
+                        </Expander>
+                    </StackPanel>
+                </ScrollViewer>
+            </SplitView.Pane>
+            <Grid Padding="0,0,16,0" RowSpacing="12">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button
+                        x:Name="ClearButton"
+                        x:Uid="PlaygroundClear"
+                        AutomationProperties.AutomationId="PlaygroundClear"
+                        Click="OnClear" />
+                    <Button
+                        x:Name="ImportButton"
+                        x:Uid="PlaygroundImport"
+                        AutomationProperties.AutomationId="PlaygroundImport"
+                        Click="OnImport" />
+                    <Button
+                        x:Name="ExportButton"
+                        x:Uid="PlaygroundExport"
+                        AutomationProperties.AutomationId="PlaygroundExport"
+                        Click="OnExport" />
+                    <Button
+                        x:Name="CodeButton"
+                        x:Uid="PlaygroundCode"
+                        AutomationProperties.AutomationId="PlaygroundCode"
+                        Click="OnCode" />
+                    <Button
+                        x:Name="AddMessageButton"
+                        x:Uid="PlaygroundAddMessage"
+                        AutomationProperties.AutomationId="PlaygroundAddMessage"
+                        Click="OnAddMessage" />
+                </StackPanel>
+                <TabView
+                    x:Name="ResultTabs"
+                    Grid.Row="1"
+                    AllowDrop="False"
+                    CanDragTabs="False"
+                    CanReorderTabs="False"
+                    IsAddTabButtonVisible="False"
+                    TabWidthMode="Equal">
+                    <TabViewItem
+                        x:Uid="PlaygroundWorkspaceTab"
+                        AutomationProperties.AutomationId="PlaygroundWorkspaceTab"
+                        IsClosable="False">
+                        <Grid>
+                            <ListView
+                                x:Name="ConversationList"
+                                HorizontalContentAlignment="Stretch"
+                                AutomationProperties.AutomationId="PlaygroundMessages"
+                                SelectionMode="None" />
+                            <Grid x:Name="ImageWorkspace" Visibility="Collapsed">
+                                <StackPanel
+                                    MaxWidth="480"
+                                    Padding="24"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Spacing="12">
+                                    <FontIcon Glyph="&#xEB9F;" />
+                                    <TextBlock
+                                        x:Uid="PlaygroundImageEmpty"
+                                        Style="{StaticResource BodyTextBlockStyle}"
+                                        TextWrapping="Wrap" />
+                                </StackPanel>
+                            </Grid>
+                            <Grid
+                                x:Name="WorkflowWorkspace"
+                                RowSpacing="8"
+                                Visibility="Collapsed">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <Button
+                                        x:Uid="PlaygroundAddAgent"
+                                        AutomationProperties.AutomationId="PlaygroundAddAgent"
+                                        Click="OnAddNode"
+                                        Tag="agent" />
+                                    <Button
+                                        x:Uid="PlaygroundAddCondition"
+                                        AutomationProperties.AutomationId="PlaygroundAddCondition"
+                                        Click="OnAddNode"
+                                        Tag="condition" />
+                                    <Button
+                                        x:Uid="PlaygroundAddTransform"
+                                        AutomationProperties.AutomationId="PlaygroundAddTransform"
+                                        Click="OnAddNode"
+                                        Tag="transform" />
+                                </StackPanel>
+                                <ScrollViewer
+                                    Grid.Row="1"
+                                    HorizontalScrollBarVisibility="Auto"
+                                    HorizontalScrollMode="Enabled"
+                                    VerticalScrollBarVisibility="Auto">
+                                    <Canvas
+                                        x:Name="WorkflowCanvas"
+                                        Width="1400"
+                                        Height="900"
+                                        Tag="{ThemeResource TextFillColorSecondaryBrush}">
+                                        <Canvas x:Name="WorkflowEdges" />
+                                        <Canvas x:Name="WorkflowNodes" />
+                                    </Canvas>
+                                </ScrollViewer>
+                                <Expander
+                                    x:Uid="PlaygroundWorkflowJson"
+                                    Grid.Row="2"
+                                    HorizontalAlignment="Stretch">
+                                    <StackPanel Spacing="8">
+                                        <TextBox
+                                            x:Name="WorkflowJson"
+                                            MinHeight="100"
+                                            MaxHeight="200"
+                                            AcceptsReturn="True"
+                                            AutomationProperties.AutomationId="PlaygroundWorkflowJson"
+                                            AutomationProperties.Name="Workflow JSON"
+                                            FontFamily="Consolas"
+                                            TextWrapping="Wrap" />
+                                        <Button
+                                            x:Uid="PlaygroundApplyWorkflow"
+                                            AutomationProperties.AutomationId="PlaygroundApplyWorkflow"
+                                            Click="OnApplyWorkflow" />
+                                    </StackPanel>
+                                </Expander>
+                            </Grid>
+                            <Grid
+                                x:Name="VideoWorkspace"
+                                RowSpacing="12"
+                                Visibility="Collapsed">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <Button
+                                        x:Uid="PlaygroundAddShot"
+                                        AutomationProperties.AutomationId="PlaygroundAddShot"
+                                        Click="OnAddShot" />
+                                    <Button
+                                        x:Uid="PlaygroundOpenVideo"
+                                        AutomationProperties.AutomationId="PlaygroundOpenVideo"
+                                        Click="OnOpenVideo" />
+                                </StackPanel>
+                                <TextBox
+                                    x:Name="StoryboardJson"
+                                    x:Uid="PlaygroundStoryboard"
+                                    Grid.Row="1"
+                                    AcceptsReturn="True"
+                                    AutomationProperties.AutomationId="PlaygroundStoryboard"
+                                    FontFamily="Consolas"
+                                    MaxLength="2097152"
+                                    TextWrapping="Wrap" />
+                                <MediaPlayerElement
+                                    x:Name="VideoPlayer"
+                                    Grid.Row="2"
+                                    Height="240"
+                                    AreTransportControlsEnabled="True"
+                                    AutoPlay="False"
+                                    Visibility="Collapsed" />
+                            </Grid>
+                        </Grid>
+                    </TabViewItem>
+                    <TabViewItem
+                        x:Name="OutputTab"
+                        x:Uid="PlaygroundOutputTab"
+                        AutomationProperties.AutomationId="PlaygroundOutputTab"
+                        IsClosable="False">
+                        <Grid RowSpacing="12">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <Button
+                                    x:Uid="PlaygroundCopy"
+                                    AutomationProperties.AutomationId="PlaygroundCopy"
+                                    Click="OnCopy" />
+                                <Button
+                                    x:Name="SaveOutputButton"
+                                    x:Uid="PlaygroundSaveOutput"
+                                    AutomationProperties.AutomationId="PlaygroundSaveOutput"
+                                    Click="OnSaveOutput" />
+                                <ComboBox
+                                    x:Name="AssetPicker"
+                                    MinWidth="80"
+                                    AutomationProperties.AutomationId="PlaygroundAsset"
+                                    AutomationProperties.Name="Output asset" />
+                            </StackPanel>
+                            <Grid Grid.Row="1">
+                                <TextBox
+                                    x:Name="OutputText"
+                                    AcceptsReturn="True"
+                                    AutomationProperties.AutomationId="PlaygroundOutput"
+                                    AutomationProperties.Name="Output"
+                                    BorderThickness="0"
+                                    IsReadOnly="True"
+                                    TextWrapping="Wrap" />
+                                <GridView
+                                    x:Name="ImageGallery"
+                                    AutomationProperties.AutomationId="PlaygroundImageGallery"
+                                    SelectionMode="None"
+                                    Visibility="Collapsed" />
+                                <MediaPlayerElement
+                                    x:Name="AudioPlayer"
+                                    Height="120"
+                                    VerticalAlignment="Bottom"
+                                    AreTransportControlsEnabled="True"
+                                    AutoPlay="False"
+                                    Visibility="Collapsed" />
+                            </Grid>
+                        </Grid>
+                    </TabViewItem>
+                    <TabViewItem
+                        x:Name="DetailsTab"
+                        x:Uid="PlaygroundDetailsTab"
+                        AutomationProperties.AutomationId="PlaygroundDetailsTab"
+                        IsClosable="False">
+                        <TextBox
+                            x:Name="DetailsText"
+                            AcceptsReturn="True"
+                            AutomationProperties.AutomationId="PlaygroundDetails"
+                            AutomationProperties.Name="Response JSON"
+                            FontFamily="Consolas"
+                            IsReadOnly="True"
+                            TextWrapping="Wrap" />
+                    </TabViewItem>
+                    <TabViewItem
+                        x:Name="CodeTab"
+                        x:Uid="PlaygroundCodeTab"
+                        AutomationProperties.AutomationId="PlaygroundCodeTab"
+                        IsClosable="False">
+                        <TextBox
+                            x:Name="CodeText"
+                            AcceptsReturn="True"
+                            AutomationProperties.AutomationId="PlaygroundCodeText"
+                            AutomationProperties.Name="Code"
+                            FontFamily="Consolas"
+                            IsReadOnly="True"
+                            TextWrapping="Wrap" />
+                    </TabViewItem>
+                </TabView>
+                <StackPanel Grid.Row="2" Spacing="8">
+                    <TextBlock
+                        x:Name="AttachmentLabel"
+                        Style="{StaticResource FormLabel}"
+                        TextWrapping="Wrap" />
+                    <TextBox
+                        x:Name="InputBox"
+                        x:Uid="PlaygroundInput"
+                        MinHeight="80"
+                        MaxHeight="180"
+                        AcceptsReturn="True"
+                        AutomationProperties.AutomationId="PlaygroundInput"
+                        MaxLength="1048576"
+                        TextWrapping="Wrap" />
+                    <Grid ColumnSpacing="8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Button
+                            x:Name="AttachButton"
+                            x:Uid="PlaygroundAttach"
+                            AutomationProperties.AutomationId="PlaygroundAttach"
+                            Click="OnAttach" />
+                        <Button
+                            x:Name="RemoveAttachments"
+                            x:Uid="PlaygroundRemoveAttachments"
+                            Grid.Column="1"
+                            AutomationProperties.AutomationId="PlaygroundRemoveAttachments"
+                            Click="OnRemoveAttachments" />
+                        <Button
+                            x:Name="RecordButton"
+                            x:Uid="PlaygroundRecord"
+                            Grid.Column="2"
+                            AutomationProperties.AutomationId="PlaygroundRecord"
+                            Click="OnRecord"
+                            Visibility="Collapsed" />
+                        <Button
+                            x:Name="StopButton"
+                            x:Uid="PlaygroundStop"
+                            Grid.Column="4"
+                            AutomationProperties.AutomationId="PlaygroundStop"
+                            Click="OnStop"
+                            IsEnabled="False" />
+                        <Button
+                            x:Name="RunButton"
+                            x:Uid="PlaygroundRun"
+                            Grid.Column="5"
+                            AutomationProperties.AutomationId="PlaygroundRun"
+                            Click="OnRun"
+                            Style="{StaticResource AccentButtonStyle}" />
+                    </Grid>
+                </StackPanel>
+            </Grid>
+        </SplitView>
+        <ProgressBar
+            x:Name="BusyProgress"
+            Grid.Row="4"
+            AutomationProperties.AutomationId="PlaygroundBusy"
+            IsIndeterminate="True"
+            Visibility="Collapsed" />
+    </Grid>
+</Page>

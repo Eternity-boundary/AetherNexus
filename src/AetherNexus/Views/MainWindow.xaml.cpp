@@ -10,6 +10,9 @@
 #include "DashboardPage.xaml.h"
 #include "PlaceholderPage.xaml.h"
 #include "SettingsPage.xaml.h"
+#include "PlaygroundPage.xaml.h"
+#include "Services/WindowsHttpTransport.h"
+#include "Services/WindowsGenerationTransport.h"
 #include "Services/ThemeService.h"
 #include <microsoft.ui.xaml.window.h>
 #include <winrt/Microsoft.UI.Windowing.h>
@@ -107,8 +110,20 @@ namespace winrt::AetherNexus::implementation
         }
         else if (auto const item = args.SelectedItem().try_as<Controls::NavigationViewItem>())
         {
-            if (unbox_value<hstring>(item.Tag()) == L"dashboard")
+            auto const route = std::wstring{unbox_value<hstring>(item.Tag())};
+            if (route == L"dashboard")
                 ContentFrame().Navigate(xaml_typename<AetherNexus::DashboardPage>());
+            else if (route == L"chat" || route == L"images" || route == L"audio" || route == L"video" || route == L"agent-builder")
+            {
+                auto found = m_playgrounds.find(route);
+                if (found == m_playgrounds.end())
+                {
+                    AetherNexus::PlaygroundPage page;
+                    get_self<PlaygroundPage>(page)->Configure(hstring{route},std::make_shared<::AetherNexus::Services::WindowsHttpTransport>(),std::make_shared<::AetherNexus::Services::WindowsGenerationTransport>());
+                    found = m_playgrounds.emplace(route, page).first;
+                }
+                ContentFrame().Content(found->second);
+            }
             else
                 ContentFrame().Navigate(xaml_typename<AetherNexus::PlaceholderPage>(), item.Content());
         }

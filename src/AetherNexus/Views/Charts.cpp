@@ -82,7 +82,7 @@ namespace AetherNexus::Views::Charts
         auto const height = canvas.ActualHeight();
         if (values.empty() || width < 16) return;
         auto const maximum = std::max(1.0, *std::max_element(values.begin(), values.end()) * 1.12);
-        auto const step = width / values.size();
+        auto const step = width / static_cast<double>(values.size());
         for (size_t i = 0; i < values.size(); ++i)
         {
             if (!std::isfinite(values[i]) || values[i] <= 0) continue;
@@ -92,7 +92,7 @@ namespace AetherNexus::Views::Charts
             bar.RadiusX(3);
             bar.RadiusY(3);
             bar.Fill(brush);
-            Canvas::SetLeft(bar, i * step + step * 0.19);
+            Canvas::SetLeft(bar, static_cast<double>(i) * step + step * 0.19);
             Canvas::SetTop(bar, height - bar.Height());
             canvas.Children().Append(bar);
         }

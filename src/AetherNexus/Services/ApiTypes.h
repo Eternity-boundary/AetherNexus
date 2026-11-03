@@ -15,7 +15,7 @@
 
 namespace AetherNexus::Services
 {
-    enum class Endpoint { CompletionsUsage, Costs, Models };
+    enum class Endpoint { CompletionsUsage, Costs, Models, Projects };
     enum class CredentialRole { Model, Admin };
     enum class ApiErrorCode { MissingCredential, CredentialUnavailable, Unauthorized, Forbidden, RateLimited, Server,
         Network, Timeout, InvalidResponse, Cancelled };
@@ -31,6 +31,7 @@ namespace AetherNexus::Services
         int64_t startTime{};
         int64_t endTime{};
         std::wstring page;
+        std::wstring projectId; // Empty means all projects; only usage/costs accept this filter.
     };
     struct ApiResponse
     {
@@ -44,6 +45,7 @@ namespace AetherNexus::Services
         std::optional<ApiErrorCode> costsError;
     };
     struct ModelInfo { std::wstring id; std::wstring ownedBy; };
+    struct ProjectInfo { std::wstring id; std::wstring name; bool archived{}; };
     CredentialRole RequiredCredential(Endpoint endpoint);
     std::wstring BuildRequestPath(ApiRequest const& request);
     void CheckCancelled(std::stop_token stop);

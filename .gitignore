@@ -8,6 +8,8 @@
 # Dependencies and build output
 packages/
 artifacts/
+tests/PlaygroundHarness/Playground.UI.Tests.vcxproj
+tests/PlaygroundHarness/Package.appxmanifest
 **/Generated Files/
 **/x64/
 **/ARM64/

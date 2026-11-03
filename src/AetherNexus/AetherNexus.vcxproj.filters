@@ -21,6 +21,16 @@
     <ClInclude Include="Services\BudgetService.h"><Filter>Services</Filter></ClInclude>
     <ClInclude Include="Services\PlatformApiClient.h"><Filter>Services</Filter></ClInclude>
     <ClInclude Include="Services\WindowsHttpTransport.h"><Filter>Services</Filter></ClInclude>
+    <ClInclude Include="Services\GenerationClient.h"><Filter>Services</Filter></ClInclude>
+    <ClInclude Include="Services\WindowsGenerationTransport.h"><Filter>Services</Filter></ClInclude>
+    <ClInclude Include="Services\WorkflowService.h"><Filter>Services</Filter></ClInclude>
+    <ClCompile Include="Services\GenerationClient.cpp"><Filter>Services</Filter></ClCompile>
+    <ClCompile Include="Services\WindowsGenerationTransport.cpp"><Filter>Services</Filter></ClCompile>
+    <ClCompile Include="Services\WorkflowService.cpp"><Filter>Services</Filter></ClCompile>
+    <ClInclude Include="Views\PlaygroundPage.xaml.h"><Filter>Views</Filter></ClInclude>
+    <ClCompile Include="Views\PlaygroundPage.xaml.cpp"><Filter>Views</Filter></ClCompile>
+    <Page Include="Views\PlaygroundPage.xaml"><Filter>Views</Filter></Page>
+    <Midl Include="Views\PlaygroundPage.idl"><Filter>Views</Filter></Midl>
     <ClCompile Include="Services\ApiTypes.cpp"><Filter>Services</Filter></ClCompile>
     <ClCompile Include="Services\BudgetService.cpp"><Filter>Services</Filter></ClCompile>
     <ClCompile Include="Services\PlatformApiClient.cpp"><Filter>Services</Filter></ClCompile>
