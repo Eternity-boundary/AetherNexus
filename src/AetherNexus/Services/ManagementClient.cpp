@@ -89,8 +89,9 @@ namespace AetherNexus::Services
         }
         JsonObject Parse(ApiResponse const &response)
         {
-            if (response.status == 400 || response.status == 404 || response.status == 409 || response.status == 422)
-                throw std::invalid_argument("Server rejected management operation");
+            if (response.status >= 400 && response.status < 500 && response.status != 401 &&
+                response.status != 403 && response.status != 429)
+                throw ManagementHttpError(response.status, response.requestId, response.diagnostics);
             CheckStatus(response.status);
             JsonObject object;
             if (response.body.size() > 8 * 1024 * 1024 || !JsonObject::TryParse(response.body, object))
@@ -110,7 +111,9 @@ namespace AetherNexus::Services
                             : type == ManagementResource::Members || type == ManagementResource::Member
                                 ? L"organization.project.user"
                                 : L"project.rate_limit";
-            if (objectType != expected)
+            // Allow explicit project objects in a mixed organization directory.
+            bool projectInDirectory = type == ManagementResource::AdminKeys && objectType == L"organization.project.api_key";
+            if (objectType != expected && !projectInDirectory)
                 Invalid();
             ManagementRecord record;
             record.id = String(obj, L"id");
@@ -139,6 +142,10 @@ namespace AetherNexus::Services
             {
                 // Never retain a returned secret or a raw server object, even if a future API adds fields.
                 auto redacted = String(obj, L"redacted_value");
+                // The documented object type is the discriminator. A redacted value is display-only;
+                // neither a missing nor a misleading prefix may change the API resource's type.
+                record.keyKind = objectType == L"organization.admin_api_key" ? ManagementKeyKind::Admin
+                                                                            : ManagementKeyKind::Api;
                 record.keyHint =
                     redacted.empty() ? L"—" : L"…" + redacted.substr(redacted.size() > 4 ? redacted.size() - 4 : 0);
                 if (obj.HasKey(L"owner") && obj.GetNamedValue(L"owner").ValueType() == JsonValueType::Object)
@@ -283,7 +290,9 @@ namespace AetherNexus::Services
             break;
         case ManagementResource::AdminKey:
             Identifier(r.item);
-            Require(r.method == ManagementMethod::Delete);
+            Require(r.method == ManagementMethod::Delete || r.method == ManagementMethod::Get);
+            if (r.keyKind != ManagementKeyKind::Admin) throw ManagementKeyTypeError{};
+            Require(r.project.empty());
             path += L"admin_api_keys/" + r.item;
             break;
         case ManagementResource::Usage:
@@ -347,6 +356,31 @@ namespace AetherNexus::Services
         else
             Require(r.page.empty());
         return path;
+    }
+    std::wstring ManagementRequestId(std::wstring_view value)
+    {
+        if (value.empty() || value.size() > 128 || value.starts_with(L"sk-") ||
+            !std::all_of(value.begin(), value.end(), [](wchar_t c) {
+                return (c >= L'a' && c <= L'z') || (c >= L'A' && c <= L'Z') ||
+                       (c >= L'0' && c <= L'9') || c == L'_' || c == L'-';
+            }))
+            return {};
+        return std::wstring{value};
+    }
+    ManagementWireRequest BuildManagementWireRequest(ManagementRequest const &request)
+    {
+        return {ManagementPath(request), ManagementVerb(request.method), request.body};
+    }
+    ManagementRequest RevokeAdminKeyRequest(ManagementRecord const &key)
+    {
+        if (key.keyKind != ManagementKeyKind::Admin) throw ManagementKeyTypeError{};
+        ManagementRequest request;
+        request.resource = ManagementResource::AdminKey;
+        request.method = ManagementMethod::Delete;
+        request.item = key.id;
+        request.keyKind = key.keyKind;
+        (void)ManagementPath(request);
+        return request;
     }
     std::wstring ProjectNameBody(std::wstring const &name)
     {
@@ -453,15 +487,98 @@ namespace AetherNexus::Services
         }
         Invalid();
     }
+    ManagementKeyDirectory ManagementClient::OrganizationKeys(std::vector<ManagementRecord> const &projects,
+                                                              std::stop_token stop)
+    {
+        ManagementKeyDirectory directory{List(ManagementResource::AdminKeys, {}, stop)};
+        if (directory.records.empty())
+            return directory;
+        // The list is described as including organization and project keys. Match project IDs using
+        // their authoritative endpoint rather than guessing from masks, names, owners, or ID prefixes.
+        std::set<std::wstring> directoryIds;
+        for (auto const &record : directory.records)
+            directoryIds.insert(record.id);
+        std::set<std::wstring> projectKeyIds;
+        constexpr size_t maximumProjectLookups = 128;
+        size_t lookups{};
+        for (auto const &project : projects)
+        {
+            CheckCancelled(stop);
+            if (lookups++ == maximumProjectLookups)
+            {
+                directory.projectLookupIncomplete = true;
+                break;
+            }
+            try
+            {
+                for (auto const &key : List(ManagementResource::ProjectKeys, project.id, stop))
+                    if (directoryIds.contains(key.id))
+                        projectKeyIds.insert(key.id);
+            }
+            catch (ApiError const &error)
+            {
+                if (error.code != ApiErrorCode::Forbidden)
+                    throw;
+                directory.projectLookupIncomplete = true;
+            }
+            catch (ManagementHttpError const &error)
+            {
+                if (error.status != 404)
+                    throw;
+                directory.projectLookupIncomplete = true;
+            }
+        }
+        CheckCancelled(stop);
+        for (auto &record : directory.records)
+            if (projectKeyIds.contains(record.id))
+                record.keyKind = ManagementKeyKind::Api;
+        return directory;
+    }
     ManagementRecord ManagementClient::Change(ManagementRequest const &request, std::stop_token stop)
     {
         Require(request.method != ManagementMethod::Get);
         (void)ManagementPath(request);
         CheckCancelled(stop);
-        auto result = Parse(m_transport->Send(request, stop));
+        if (request.resource == ManagementResource::AdminKey)
+        {
+            auto verification = request;
+            verification.method = ManagementMethod::Get;
+            ManagementRecord current;
+            try
+            {
+                current = Record(Parse(m_transport->Send(verification, stop)), ManagementResource::AdminKey);
+            }
+            catch (ManagementHttpError &error)
+            {
+                error.operation = ManagementOperation::AdminVerification;
+                throw;
+            }
+            CheckCancelled(stop);
+            if (current.id != request.item) Invalid();
+            if (current.keyKind != ManagementKeyKind::Admin) throw ManagementKeyTypeError{};
+        }
+        JsonObject result;
+        try
+        {
+            result = Parse(m_transport->Send(request, stop));
+        }
+        catch (ManagementHttpError &error)
+        {
+            if (request.method == ManagementMethod::Delete)
+                error.operation = request.resource == ManagementResource::AdminKey ? ManagementOperation::AdminRevocation
+                    : request.resource == ManagementResource::ProjectKey ? ManagementOperation::ProjectRevocation
+                                                                         : ManagementOperation::Other;
+            throw;
+        }
         CheckCancelled(stop);
         if (request.method == ManagementMethod::Delete)
         {
+            if (request.resource == ManagementResource::AdminKey &&
+                String(result, L"object") != L"organization.admin_api_key.deleted")
+                Invalid();
+            if (request.resource == ManagementResource::ProjectKey &&
+                String(result, L"object") != L"organization.project.api_key.deleted")
+                Invalid();
             if (!result.GetNamedBoolean(L"deleted") || String(result, L"id") != request.item)
                 Invalid();
             ManagementRecord deleted;

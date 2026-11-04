@@ -9,5 +9,7 @@
   <PropertyGroup><OutDir>$(MSBuildThisFileDirectory)..\artifacts\tests\management\</OutDir><IntDir>$(OutDir)obj\</IntDir></PropertyGroup>
   <ItemDefinitionGroup><ClCompile><LanguageStandard>stdcpp20</LanguageStandard><WarningLevel>Level4</WarningLevel><PrecompiledHeader>NotUsing</PrecompiledHeader><AdditionalIncludeDirectories>$(MSBuildThisFileDirectory)..\src\AetherNexus;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories><PreprocessorDefinitions>NOMINMAX;UNICODE;_UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions><AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions></ClCompile><Link><SubSystem>Console</SubSystem><AdditionalDependencies>windowsapp.lib;%(AdditionalDependencies)</AdditionalDependencies></Link></ItemDefinitionGroup>
   <ItemGroup><ClCompile Include="Management.Tests.cpp"/><ClCompile Include="KeyIssuance.Tests.cpp"/><ClCompile Include="..\src\AetherNexus\Services\KeyIssuance.cpp"/><ClCompile Include="..\src\AetherNexus\Services\ApiTypes.cpp"/><ClCompile Include="..\src\AetherNexus\Services\ManagementClient.cpp"/></ItemGroup>
+  <ItemGroup><ClCompile Include="AdminKeyRevocation.Tests.cpp"/></ItemGroup>
+  <ItemGroup><ClCompile Include="HttpResponseDiagnostics.Tests.cpp"/></ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>

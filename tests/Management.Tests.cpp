@@ -10,6 +10,8 @@ using namespace AetherNexus::Services;
 using namespace winrt;
 using namespace Windows::Data::Json;
 void RunKeyIssuanceTests();
+void RunAdminKeyRevocationTests();
+void RunHttpResponseDiagnosticsTests();
 namespace
 {
     void Check(bool value, char const *message)
@@ -68,6 +70,8 @@ int main()
     try
     {
         RunKeyIssuanceTests();
+        RunAdminKeyRevocationTests();
+        RunHttpResponseDiagnosticsTests();
         ManagementRequest r;
         Check(ManagementPath(r) == L"/v1/organization/projects?limit=100&include_archived=true", "Project catalog");
         r.resource = ManagementResource::ProjectKeys;
@@ -136,7 +140,8 @@ int main()
             LR"({"object":"organization.project.api_key","id":"key_test","name":"Offline","redacted_value":"offline-secret-1234","value":"must-not-retain","owner":{"type":"user","user":{"id":"user_test","name":"Owner"}},"scopes":["api.all.read"],"expires_at":null})";
         transport->responses = {{200, List(key)}};
         auto keys = client.List(ManagementResource::ProjectKeys, L"proj_test");
-        Check(keys.size() == 1 && keys[0].keyHint == L"…1234" && keys[0].owner == L"Owner" && keys[0].scopesKnown,
+        Check(keys.size() == 1 && keys[0].keyHint == L"…1234" && keys[0].owner == L"Owner" && keys[0].scopesKnown &&
+                  keys[0].keyKind == ManagementKeyKind::Api,
               "Redacted metadata only");
         transport->responses = {{200, List(project)}};
         Reject([&] { client.List(ManagementResource::AdminKeys); });
@@ -160,7 +165,7 @@ int main()
         r.item = L"key_test";
         r.method = ManagementMethod::Delete;
         r.body.clear();
-        transport->responses = {{200, LR"({"id":"key_test","deleted":true})"}};
+        transport->responses = {{200, LR"({"id":"key_test","object":"organization.project.api_key.deleted","deleted":true})"}};
         Check(client.Change(r).id == L"key_test", "Revoke key");
         transport->responses = {{200, LR"({"id":"wrong","deleted":true})"}};
         Reject([&] { client.Change(r); });

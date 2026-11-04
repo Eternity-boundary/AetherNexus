@@ -7,6 +7,7 @@
 // Project: AetherNexus
 #pragma once
 #include "Models/UsageSnapshot.h"
+#include "HttpResponseDiagnostics.h"
 #include <optional>
 #include <stdexcept>
 #include <stop_token>
@@ -33,10 +34,22 @@ namespace AetherNexus::Services
         std::wstring page;
         std::wstring projectId; // Empty means all projects; only usage/costs accept this filter.
     };
+    enum class ResponseContentKind { Unknown, Json, Html, Other };
+    enum class ResponseRequestIdState { NotRead, Missing, Valid, Rejected, TooLong, ReadFailed };
+    struct HttpResponseDiagnostics
+    {
+        ResponseContentKind content{ResponseContentKind::Unknown};
+        ResponseRequestIdState requestIdState{ResponseRequestIdState::NotRead};
+        ResponseBodyFacts body{};
+        bool openAiMetadata{}; // Presence only; not proof of the response's origin.
+        std::wstring clientRequestId{};
+    };
     struct ApiResponse
     {
         unsigned status{200};
         std::wstring body;
+        std::wstring requestId{}; // Optional response correlation ID; never credentials or request contents.
+        HttpResponseDiagnostics diagnostics{};
     };
     struct DashboardResult
     {

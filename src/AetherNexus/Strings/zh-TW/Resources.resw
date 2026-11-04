@@ -771,10 +771,10 @@
   <data name="ManageSearch.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve"><value>搜尋管理清單</value></data>
   <data name="ManageDetails.Header" xml:space="preserve"><value>選取項目詳細資料</value></data>
   <data name="ManageCategory" xml:space="preserve"><value>用量類型</value></data>
-  <data name="ManageKeyKind" xml:space="preserve"><value>金鑰類型</value></data>
+  <data name="ManageKeyKind" xml:space="preserve"><value>金鑰檢視</value></data>
   <data name="ManageProjectView" xml:space="preserve"><value>專案檢視</value></data>
   <data name="ManageProjectKeys" xml:space="preserve"><value>專案 API keys</value></data>
-  <data name="ManageAdminKeys" xml:space="preserve"><value>組織管理金鑰目錄</value></data>
+  <data name="ManageAdminKeys" xml:space="preserve"><value>組織金鑰目錄（全部）</value></data>
   <data name="ManageProjectOverview" xml:space="preserve"><value>專案總覽</value></data>
   <data name="ManageMembers" xml:space="preserve"><value>專案成員</value></data>
   <data name="ManageRateLimits" xml:space="preserve"><value>模型速率限制</value></data>
@@ -797,13 +797,59 @@
   <data name="ManageForbidden" xml:space="preserve"><value>Admin Key 沒有執行此操作的權限。請確認組織、專案及管理金鑰權限。</value></data>
   <data name="ManageRateLimited" xml:space="preserve"><value>伺服器限制請求頻率，請稍後手動重新整理。</value></data>
   <data name="ManageInvalidResponse" xml:space="preserve"><value>伺服器回應格式、分頁或數值無法辨識，未顯示不可靠的結果。</value></data>
-  <data name="ManageInvalidInput" xml:space="preserve"><value>輸入無效，或伺服器不接受此名稱、ID、權限、期限或限制值。請檢查內容、帳戶政策及項目狀態後重試。</value></data>
+  <data name="ManageInvalidInput" xml:space="preserve"><value>輸入未通過檢查，或簽發參數未被接受。請確認名稱、ID、權限、期限及限制值。</value></data>
+  <data name="ManageRemoteRejected" xml:space="preserve"><value>伺服器拒絕這次管理操作。請先重新整理，確認項目 ID、帳戶政策與狀態後再決定是否重試。</value></data>
+  <data name="ManageRemoteNotFound" xml:space="preserve"><value>伺服器回傳 Not Found。請依下列失敗階段確認項目與存取權限，再重新整理。</value></data>
+  <data name="ManageAdminRevocationNotFound" xml:space="preserve"><value>Admin 權杖撤銷 API 回傳 404，可能與已回報的服務問題有關。請前往官方 Platform 確認並撤銷權杖。程式會在下次撤銷時繼續嘗試 API；服務恢復後即可正常運作。</value></data>
+  <data name="ManageAdminOfficialLink.Content" xml:space="preserve"><value>開啟官方 Admin keys</value></data>
+  <data name="ManageAdminBugReportLink.Content" xml:space="preserve"><value>查看撤銷 API 問題回報</value></data>
+  <data name="ManageAdminVerificationFailed" xml:space="preserve"><value>失敗階段：撤銷前讀取核對。尚未送出 DELETE 撤銷請求。</value></data>
+  <data name="ManageAdminRevocationFailed" xml:space="preserve"><value>失敗階段：Admin 權杖的 DELETE 撤銷請求。未將此錯誤視為撤銷成功。</value></data>
+  <data name="ManageProjectRevocationFailed" xml:space="preserve"><value>失敗階段：專案 API 權杖的 DELETE 撤銷請求。未將此錯誤視為撤銷成功。</value></data>
+  <data name="ManageRequestIdUnavailable" xml:space="preserve"><value>伺服器未提供可用的 Request ID。</value></data>
+  <data name="ManageRequestIdMissing" xml:space="preserve"><value>Request ID 標頭：未回傳。</value></data>
+  <data name="ManageRequestIdTooLong" xml:space="preserve"><value>Request ID 標頭過長，已省略。</value></data>
+  <data name="ManageRequestIdRejected" xml:space="preserve"><value>Request ID 標頭格式無法安全顯示，已省略。</value></data>
+  <data name="ManageRequestIdReadFailed" xml:space="preserve"><value>Request ID 標頭讀取失敗。</value></data>
+  <data name="ManageResponseJson" xml:space="preserve"><value>回應格式：JSON</value></data>
+  <data name="ManageResponseHtml" xml:space="preserve"><value>回應格式：HTML</value></data>
+  <data name="ManageResponseOther" xml:space="preserve"><value>回應格式：其他</value></data>
+  <data name="ManageResponseUnknown" xml:space="preserve"><value>回應格式：未提供或無法辨識</value></data>
+  <data name="ManageBodyEmpty" xml:space="preserve"><value>本文：空</value></data>
+  <data name="ManageBodyJsonError" xml:space="preserve"><value>本文：JSON 錯誤物件</value></data>
+  <data name="ManageBodyJsonOther" xml:space="preserve"><value>本文：其他 JSON</value></data>
+  <data name="ManageBodyHtml" xml:space="preserve"><value>本文：HTML 樣式</value></data>
+  <data name="ManageBodyOther" xml:space="preserve"><value>本文：其他格式</value></data>
+  <data name="ManageBodyInvalidJson" xml:space="preserve"><value>本文：JSON 格式無法辨識</value></data>
+  <data name="ManageBodyTruncated" xml:space="preserve"><value>本文：超出診斷範圍</value></data>
+  <data name="ManageBodyReadFailed" xml:space="preserve"><value>本文：診斷讀取失敗</value></data>
+  <data name="ManageBodyNotRead" xml:space="preserve"><value>本文：未讀取</value></data>
+  <data name="ManageErrorTypeInvalidRequest" xml:space="preserve"><value>API 類型：invalid_request_error</value></data>
+  <data name="ManageErrorTypeAuthentication" xml:space="preserve"><value>API 類型：authentication_error</value></data>
+  <data name="ManageErrorTypePermission" xml:space="preserve"><value>API 類型：permission_error</value></data>
+  <data name="ManageErrorTypeNotFound" xml:space="preserve"><value>API 類型：not_found_error</value></data>
+  <data name="ManageErrorTypeRateLimit" xml:space="preserve"><value>API 類型：rate_limit_error</value></data>
+  <data name="ManageErrorTypeServer" xml:space="preserve"><value>API 類型：server_error</value></data>
+  <data name="ManageErrorTypeUnknown" xml:space="preserve"><value>API 類型：未辨識</value></data>
+  <data name="ManageApiMetadataPresent" xml:space="preserve"><value>OpenAI 中繼標頭：有回傳。</value></data>
+  <data name="ManageApiMetadataAbsent" xml:space="preserve"><value>OpenAI 中繼標頭：未見；此資訊不代表回應來源。</value></data>
+  <data name="ManageResponseInvalidRoute" xml:space="preserve"><value>回應指出路由無效（Invalid URL／route_not_found），請保留 Client Request ID 供服務支援查詢。</value></data>
+  <data name="ManageResponseResourceMissing" xml:space="preserve"><value>回應的已知錯誤代碼指出資源不存在。</value></data>
+  <data name="ManageResponseAccessDenied" xml:space="preserve"><value>回應的已知錯誤代碼指出存取遭拒。</value></data>
+  <data name="ManageRemoteConflict" xml:space="preserve"><value>伺服器回報項目狀態衝突。請先重新整理確認目前狀態，再決定是否重試。</value></data>
+  <data name="ManageRemoteFormat" xml:space="preserve"><value>伺服器不接受本次請求的內容格式。請更新程式並重新整理後再確認操作。</value></data>
   <data name="ManageCatalogFailed" xml:space="preserve"><value>無法更新專案清單；已保留目前範圍。其他資料可能仍可取得。</value></data>
   <data name="ManageCancelled" xml:space="preserve"><value>已停止等待；未繼續讀取後續分頁。</value></data>
   <data name="ManageCancelling" xml:space="preserve"><value>正在停止等待…</value></data>
   <data name="ManageWriting" xml:space="preserve"><value>正在將已確認的變更送往伺服器…</value></data>
   <data name="ManageMutationUncertain" xml:space="preserve"><value>操作的最終狀態可能尚未確認。停止等待或連線中斷不代表伺服器已取消變更；請先重新整理確認，再決定是否重試。</value></data>
-  <data name="ManageOrganizationKeysScope" xml:space="preserve"><value>組織金鑰目錄；以伺服器回傳的項目與權限為準。</value></data>
+  <data name="ManageOrganizationKeysScope" xml:space="preserve"><value>組織與專案金鑰目錄。Admin 權杖可在此撤銷；專案 API 權杖請至所屬專案編輯或撤銷。</value></data>
+  <data name="ManageAdminEmpty" xml:space="preserve"><value>伺服器未回傳任何組織金鑰。</value></data>
+  <data name="ManageKeyTypeAdmin" xml:space="preserve"><value>Admin 權杖</value></data>
+  <data name="ManageKeyTypeApi" xml:space="preserve"><value>專案 API 權杖（請至專案檢視管理）</value></data>
+  <data name="ManageKeyTypeUnknown" xml:space="preserve"><value>類型待確認（僅供檢視）</value></data>
+  <data name="ManageKeyDirectoryPartial" xml:space="preserve"><value>目錄已載入，但部分專案金鑰無法讀取，尚未完成全部專案的交叉核對。請確認權限並重新整理，或至官方 Platform 確認。</value></data>
+  <data name="ManageKeyTypeMismatch" xml:space="preserve"><value>無法確認所選項目是 Admin 權杖，已停止撤銷。請重新整理；一般 API 權杖應由所屬專案清單管理。</value></data>
   <data name="ManageOrganization" xml:space="preserve"><value>在目前 Admin Key 所屬組織建立專案。</value></data>
   <data name="ManageNoChanges" xml:space="preserve"><value>沒有變更，未送出更新請求。</value></data>
   <data name="ManageUngrouped" xml:space="preserve"><value>彙總</value></data>

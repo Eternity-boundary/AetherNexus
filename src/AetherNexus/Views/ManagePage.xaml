@@ -36,6 +36,8 @@ Project: AetherNexus
     <StackPanel Grid.Row="1" Spacing="8">
       <InfoBar x:Name="Notice" IsOpen="False" IsClosable="False" AutomationProperties.LiveSetting="Polite" AutomationProperties.AutomationId="ManageNotice"/>
       <Button x:Name="SettingsLink" x:Uid="ManageSettings" Click="OnSettings" Visibility="Collapsed" AutomationProperties.AutomationId="ManageSettings" HorizontalAlignment="Left"/>
+      <HyperlinkButton x:Name="OfficialAdminLink" x:Uid="ManageAdminOfficialLink" NavigateUri="https://platform.openai.com/settings/organization/admin-keys" Visibility="Collapsed" AutomationProperties.AutomationId="ManageAdminOfficialLink" HorizontalAlignment="Left"/>
+      <HyperlinkButton x:Name="AdminBugReportLink" x:Uid="ManageAdminBugReportLink" NavigateUri="https://community.openai.com/t/delete-v1-organization-admin-api-keys-key-id-returns-404-with-empty-body-get-on-the-same-id-returns-200/1411757" Visibility="Collapsed" AutomationProperties.AutomationId="ManageAdminBugReportLink" HorizontalAlignment="Left"/>
     </StackPanel>
     <StackPanel x:Name="Filters" Grid.Row="2" Spacing="10">
       <Grid ColumnSpacing="12">

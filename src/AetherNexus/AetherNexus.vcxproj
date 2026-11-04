@@ -142,6 +142,7 @@
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="Services\ApiTypes.h" />
+    <ClInclude Include="Services\HttpResponseDiagnostics.h" />
     <ClInclude Include="Services\ManagementClient.h" />
     <ClInclude Include="Services\KeyIssuance.h" />
     <ClInclude Include="Infrastructure\SecureBuffer.h" />

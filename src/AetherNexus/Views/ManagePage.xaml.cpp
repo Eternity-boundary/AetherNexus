@@ -33,6 +33,61 @@ namespace winrt::AetherNexus::implementation
     using namespace std::chrono;
     namespace
     {
+        wchar_t const *ContentKindResource(ResponseContentKind value)
+        {
+            switch (value)
+            {
+            case ResponseContentKind::Json: return L"ManageResponseJson";
+            case ResponseContentKind::Html: return L"ManageResponseHtml";
+            case ResponseContentKind::Other: return L"ManageResponseOther";
+            case ResponseContentKind::Unknown: return L"ManageResponseUnknown";
+            }
+            return L"ManageResponseUnknown";
+        }
+        wchar_t const *BodyKindResource(ResponseBodyKind value)
+        {
+            switch (value)
+            {
+            case ResponseBodyKind::Empty: return L"ManageBodyEmpty";
+            case ResponseBodyKind::JsonError: return L"ManageBodyJsonError";
+            case ResponseBodyKind::JsonOther: return L"ManageBodyJsonOther";
+            case ResponseBodyKind::HtmlLike: return L"ManageBodyHtml";
+            case ResponseBodyKind::Other: return L"ManageBodyOther";
+            case ResponseBodyKind::InvalidJson: return L"ManageBodyInvalidJson";
+            case ResponseBodyKind::Truncated: return L"ManageBodyTruncated";
+            case ResponseBodyKind::ReadFailed: return L"ManageBodyReadFailed";
+            case ResponseBodyKind::NotRead: return L"ManageBodyNotRead";
+            }
+            return L"ManageBodyNotRead";
+        }
+        wchar_t const *ErrorTypeResource(ResponseErrorType value)
+        {
+            switch (value)
+            {
+            case ResponseErrorType::InvalidRequest: return L"ManageErrorTypeInvalidRequest";
+            case ResponseErrorType::Authentication: return L"ManageErrorTypeAuthentication";
+            case ResponseErrorType::Permission: return L"ManageErrorTypePermission";
+            case ResponseErrorType::NotFound: return L"ManageErrorTypeNotFound";
+            case ResponseErrorType::RateLimit: return L"ManageErrorTypeRateLimit";
+            case ResponseErrorType::Server: return L"ManageErrorTypeServer";
+            case ResponseErrorType::Unknown: return L"ManageErrorTypeUnknown";
+            case ResponseErrorType::None: return L"ManageErrorTypeUnknown";
+            }
+            return L"ManageErrorTypeUnknown";
+        }
+        wchar_t const *RequestIdStateResource(ResponseRequestIdState value)
+        {
+            switch (value)
+            {
+            case ResponseRequestIdState::Missing: return L"ManageRequestIdMissing";
+            case ResponseRequestIdState::TooLong: return L"ManageRequestIdTooLong";
+            case ResponseRequestIdState::Rejected: return L"ManageRequestIdRejected";
+            case ResponseRequestIdState::ReadFailed: return L"ManageRequestIdReadFailed";
+            case ResponseRequestIdState::Valid:
+            case ResponseRequestIdState::NotRead: return L"ManageRequestIdUnavailable";
+            }
+            return L"ManageRequestIdUnavailable";
+        }
         void Require(bool value)
         {
             if (!value)
@@ -122,6 +177,8 @@ namespace winrt::AetherNexus::implementation
     }
     void ManagePage::Notify(wchar_t const *key, InfoBarSeverity severity)
     {
+        OfficialAdminLink().Visibility(Visibility::Collapsed);
+        AdminBugReportLink().Visibility(Visibility::Collapsed);
         Notice().Message(Text(key));
         Notice().Severity(severity);
         Notice().IsOpen(true);
@@ -240,6 +297,57 @@ namespace winrt::AetherNexus::implementation
                 break;
             }
         }
+        catch (ManagementKeyTypeError const &)
+        {
+            key = L"ManageKeyTypeMismatch";
+        }
+        catch (ManagementHttpError const &error)
+        {
+            auto const &facts = error.diagnostics;
+            // Response-only guidance: never cache an unsupported capability or skip the API.
+            // A later successful DELETE follows the existing Mutate/Load success path.
+            bool adminRevocation404 = error.status == 404 && error.operation == ManagementOperation::AdminRevocation;
+            key = adminRevocation404 ? L"ManageAdminRevocationNotFound"
+                : error.status == 404 ? L"ManageRemoteNotFound"
+                : error.status == 409 ? L"ManageRemoteConflict"
+                : error.status == 415 ? L"ManageRemoteFormat"
+                                     : L"ManageRemoteRejected";
+            SettingsLink().Visibility(Visibility::Collapsed);
+            Notify(key, InfoBarSeverity::Warning);
+            OfficialAdminLink().Visibility(Visible(adminRevocation404));
+            AdminBugReportLink().Visibility(Visible(adminRevocation404));
+            auto message = Text(key) + L" (HTTP " + hstring{std::to_wstring(error.status)} + L")";
+            if (error.operation == ManagementOperation::AdminVerification)
+                message = message + L"\n" + Text(L"ManageAdminVerificationFailed") +
+                          L"\nGET /v1/organization/admin_api_keys/{key_id}";
+            else if (error.operation == ManagementOperation::AdminRevocation)
+                message = message + L"\n" + Text(L"ManageAdminRevocationFailed") +
+                          L"\nDELETE /v1/organization/admin_api_keys/{key_id}";
+            else if (error.operation == ManagementOperation::ProjectRevocation)
+                message = message + L"\n" + Text(L"ManageProjectRevocationFailed") +
+                          L"\nDELETE /v1/organization/projects/{project_id}/api_keys/{api_key_id}";
+            if (!error.requestId.empty())
+                message = message + L"\nRequest ID: " + hstring{error.requestId};
+            else if (error.operation != ManagementOperation::Other)
+                message = message + L"\n" + Text(RequestIdStateResource(error.diagnostics.requestIdState));
+            if (!facts.clientRequestId.empty())
+                message = message + L"\nClient Request ID: " + hstring{facts.clientRequestId};
+            if (facts.requestIdState != ResponseRequestIdState::NotRead || facts.body.kind != ResponseBodyKind::NotRead)
+            {
+                message = message + L"\n" + Text(ContentKindResource(facts.content)) + L" · " + Text(BodyKindResource(facts.body.kind));
+                if (facts.body.type != ResponseErrorType::None)
+                    message = message + L" · " + Text(ErrorTypeResource(facts.body.type));
+                message = message + L"\n" + Text(facts.openAiMetadata ? L"ManageApiMetadataPresent" : L"ManageApiMetadataAbsent");
+                if (facts.body.hint == ResponseErrorHint::InvalidRoute)
+                    message = message + L"\n" + Text(L"ManageResponseInvalidRoute");
+                else if (facts.body.hint == ResponseErrorHint::ResourceMissing)
+                    message = message + L"\n" + Text(L"ManageResponseResourceMissing");
+                else if (facts.body.hint == ResponseErrorHint::AccessDenied)
+                    message = message + L"\n" + Text(L"ManageResponseAccessDenied");
+            }
+            Notice().Message(message);
+            return;
+        }
         catch (std::invalid_argument const &)
         {
             key = L"ManageInvalidInput";
@@ -253,7 +361,11 @@ namespace winrt::AetherNexus::implementation
     void ManagePage::Busy(bool value)
     {
         m_busy = value;
-        ProjectPicker().IsEnabled(!value && !(m_mode == L"keys" && ViewPicker().SelectedIndex() == 1));
+        bool admin = m_mode == L"keys" && ViewPicker().SelectedIndex() == 1;
+        ProjectPicker().Visibility(Visible(!admin));
+        Grid::SetColumn(ViewPicker(), admin ? 0 : 1);
+        Grid::SetColumnSpan(ViewPicker(), admin ? 2 : 1);
+        ProjectPicker().IsEnabled(!value && !admin);
         ViewPicker().IsEnabled(!value);
         StartDate().IsEnabled(!value);
         EndDate().IsEnabled(!value);
@@ -299,7 +411,8 @@ namespace winrt::AetherNexus::implementation
         EditButton().IsEnabled(usable && selected && (project ? selected->status == L"active" : !archived) &&
                                m_resource != ManagementResource::AdminKeys);
         RemoveButton().IsEnabled(usable && selected && (project ? selected->status == L"active" : !archived) &&
-                                 m_resource != ManagementResource::RateLimits);
+                                 m_resource != ManagementResource::RateLimits &&
+                                 (m_resource != ManagementResource::AdminKeys || selected->keyKind == ManagementKeyKind::Admin));
         RemoveButton().Label(Text(project ? L"ManageArchive" : members ? L"ManageRemoveMember" : L"ManageRevoke"));
         ExportButton().IsEnabled(usable && m_report.has_value());
     }
@@ -324,7 +437,13 @@ namespace winrt::AetherNexus::implementation
     {
         if (!m_initialized || m_editing || m_busy)
             return;
-        ProjectPicker().IsEnabled(!(m_mode == L"keys" && ViewPicker().SelectedIndex() == 1));
+        OfficialAdminLink().Visibility(Visibility::Collapsed);
+        AdminBugReportLink().Visibility(Visibility::Collapsed);
+        bool admin = m_mode == L"keys" && ViewPicker().SelectedIndex() == 1;
+        ProjectPicker().Visibility(Visible(!admin));
+        Grid::SetColumn(ViewPicker(), admin ? 0 : 1);
+        Grid::SetColumnSpan(ViewPicker(), admin ? 2 : 1);
+        ProjectPicker().IsEnabled(!admin);
         m_valid = false;
         m_report.reset();
         UsageSummary().Visibility(Visibility::Collapsed);
@@ -493,6 +612,7 @@ namespace winrt::AetherNexus::implementation
             co_return;
         }
         std::vector<ManagementRecord> records;
+        bool projectLookupIncomplete = false;
         std::optional<UsageReport> report;
         auto resource = m_resource;
         auto projectRecords = m_projects;
@@ -510,6 +630,12 @@ namespace winrt::AetherNexus::implementation
                 records = std::move(projectRecords);
                 if (!selectedProject.empty())
                     std::erase_if(records, [&](auto const &record) { return record.id != selectedProject; });
+            }
+            else if (resource == ManagementResource::AdminKeys)
+            {
+                auto directory = client.OrganizationKeys(projectRecords, stop);
+                records = std::move(directory.records);
+                projectLookupIncomplete = directory.projectLookupIncomplete;
             }
             else
                 records = client.List(resource, selectedProject, stop);
@@ -542,6 +668,8 @@ namespace winrt::AetherNexus::implementation
         Render();
         if (catalogFailure)
             Notify(L"ManageCatalogFailed", InfoBarSeverity::Warning);
+        else if (projectLookupIncomplete)
+            Notify(L"ManageKeyDirectoryPartial", InfoBarSeverity::Warning);
         else
             Notify(L"ManageUpdated", InfoBarSeverity::Success);
     }
@@ -583,6 +711,10 @@ namespace winrt::AetherNexus::implementation
             {
                 auto title = record.name.empty() ? record.id : record.name;
                 auto subtitle = record.id + (record.owner.empty() ? L"" : L" · " + record.owner);
+                if (m_resource == ManagementResource::AdminKeys)
+                    subtitle += L" · " + std::wstring{Text(record.keyKind == ManagementKeyKind::Admin ? L"ManageKeyTypeAdmin"
+                                                         : record.keyKind == ManagementKeyKind::Api ? L"ManageKeyTypeApi"
+                                                                                                   : L"ManageKeyTypeUnknown")};
                 if (!needle.empty() &&
                     Fold(title + L" " + subtitle + L" " + record.status).find(needle) == std::wstring::npos)
                     continue;
@@ -593,7 +725,9 @@ namespace winrt::AetherNexus::implementation
             }
         }
         EmptyState().Visibility(Visible(RecordsList().Items().Size() == 0));
-        EmptyText().Text(Text(!needle.empty() ? L"ManageNoMatch" : L"ManageEmpty"));
+        EmptyText().Text(Text(!needle.empty() ? L"ManageNoMatch"
+                             : m_mode == L"keys" && m_resource == ManagementResource::AdminKeys ? L"ManageAdminEmpty"
+                                                                                             : L"ManageEmpty"));
         Actions();
     }
     void ManagePage::DrawChart()
@@ -674,6 +808,10 @@ namespace winrt::AetherNexus::implementation
             else if (auto record = Selected())
             {
                 detail = record->id + L"\n" + record->name + L"\n" + record->status + L"\n" + record->owner;
+                if (m_resource == ManagementResource::AdminKeys)
+                    detail += L"\n" + std::wstring{Text(record->keyKind == ManagementKeyKind::Admin ? L"ManageKeyTypeAdmin"
+                                                      : record->keyKind == ManagementKeyKind::Api ? L"ManageKeyTypeApi"
+                                                                                                 : L"ManageKeyTypeUnknown")};
                 detail += L"\n" + std::wstring{Text(L"ManageCreated")} + L": " + Time(record->created);
                 if (!record->keyHint.empty())
                 {
@@ -1167,7 +1305,7 @@ namespace winrt::AetherNexus::implementation
             else if (m_resource == ManagementResource::ProjectKeys)
                 request.resource = ManagementResource::ProjectKey;
             else if (m_resource == ManagementResource::AdminKeys)
-                request.resource = ManagementResource::AdminKey;
+                request = RevokeAdminKeyRequest(record);
             else
                 co_return;
             co_await Mutate(std::move(request));
@@ -1214,7 +1352,9 @@ namespace winrt::AetherNexus::implementation
         try
         {
             co_await Windows::System::Launcher::LaunchUriAsync(Windows::Foundation::Uri{
-                m_mode == L"keys"       ? L"https://platform.openai.com/api-keys"
+                m_mode == L"keys"       ? ViewPicker().SelectedIndex() == 1
+                                             ? L"https://platform.openai.com/settings/organization/admin-keys"
+                                             : L"https://platform.openai.com/api-keys"
                 : m_mode == L"projects" ? L"https://platform.openai.com/settings/organization/projects"
                                         : L"https://platform.openai.com/usage"});
         }

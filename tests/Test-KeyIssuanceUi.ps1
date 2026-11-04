@@ -51,7 +51,7 @@ Test-Ui 'Existing service account token' {
     Wait-Ready
 }
 Test-Ui 'Admin token issuance and disclosure close' {
-    Choose ManageView '組織管理金鑰目錄'
+    Choose ManageView '組織金鑰目錄（全部）'
     Ui invoke ManageRefresh
     Wait-Ready
     Open-Issue

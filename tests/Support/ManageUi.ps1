@@ -47,7 +47,15 @@ function Invoke-Item {
     # WinUI's typed ListView containers may have no Name; the visible labels are descendants.
     $items = @(Get-UiElements $TargetWindow | Where-Object { $_.type -eq 'ListItem' -and -not $_.isOffscreen -and (Test-ItemText $_) } | Sort-Object selector -Unique)
     if ($items.Count -ne 1) { throw "Expected one list item for '$Name', found $($items.Count)." }
-    $output = & winapp.exe ui invoke $items[0].selector -w $TargetWindow 2>&1
+    # Runtime-generated slugs vary with inspection depth. Use the observed accessible
+    # name for ComboBox items; anonymous typed ListView rows expose their title as text.
+    if ($items[0].name) {
+        $output = & winapp.exe ui invoke $items[0].name -w $TargetWindow 2>&1
+    } else {
+        $labels = @(Get-UiElements $TargetWindow | Where-Object { $_.type -eq 'Text' -and $_.name -eq $Name -and -not $_.isOffscreen })
+        if ($labels.Count -ne 1) { throw "Expected one visible label for '$Name', found $($labels.Count)." }
+        $output = & winapp.exe ui click $Name -w $TargetWindow 2>&1
+    }
     if ($LASTEXITCODE -ne 0) { throw ($output -join [Environment]::NewLine) }
 }
 function Get-UiElements {

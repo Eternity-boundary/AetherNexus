@@ -9,6 +9,7 @@
 #include "ApiTypes.h"
 #include <map>
 #include <memory>
+#include <string_view>
 
 namespace AetherNexus::Services
 {
@@ -33,15 +34,46 @@ namespace AetherNexus::Services
         Post,
         Delete
     };
+    enum class ManagementKeyKind { Unknown, Admin, Api };
+    enum class ManagementOperation { Other, AdminVerification, AdminRevocation, ProjectRevocation };
+    std::wstring ManagementRequestId(std::wstring_view value);
     struct ManagementRequest
     {
         ManagementResource resource{ManagementResource::Projects};
         ManagementMethod method{ManagementMethod::Get};
         std::wstring project, item, page, category, group, body;
         int64_t start{}, end{};
+        ManagementKeyKind keyKind{ManagementKeyKind::Unknown}; // Local classification; never sent as an API parameter.
     };
     std::wstring ManagementPath(ManagementRequest const &);
     wchar_t const *ManagementVerb(ManagementMethod);
+    struct ManagementWireRequest
+    {
+        std::wstring path, method, body;
+        std::wstring headers{L"Accept: application/json\r\nContent-Type: application/json\r\n"};
+    };
+    ManagementWireRequest BuildManagementWireRequest(ManagementRequest const &);
+    struct ManagementRecord;
+    ManagementRequest RevokeAdminKeyRequest(ManagementRecord const &);
+    class ManagementKeyTypeError final : public std::runtime_error
+    {
+      public:
+        ManagementKeyTypeError() : std::runtime_error("Key is not a confirmed Admin key") {}
+    };
+    class ManagementHttpError final : public std::runtime_error
+    {
+      public:
+        explicit ManagementHttpError(unsigned status, std::wstring_view requestId = {}, HttpResponseDiagnostics diagnostics = {})
+            : std::runtime_error("Management API rejected request"), status(status), requestId(ManagementRequestId(requestId)),
+              diagnostics(std::move(diagnostics))
+        {
+            this->diagnostics.clientRequestId = ManagementRequestId(this->diagnostics.clientRequestId);
+        }
+        unsigned status;
+        ManagementOperation operation{ManagementOperation::Other};
+        std::wstring requestId;
+        HttpResponseDiagnostics diagnostics;
+    };
     class IManagementTransport
     {
       public:
@@ -54,7 +86,13 @@ namespace AetherNexus::Services
         std::optional<int64_t> created, expires, lastUsed;
         std::vector<std::wstring> scopes;
         bool scopesKnown{};
+        ManagementKeyKind keyKind{ManagementKeyKind::Unknown};
         std::map<std::wstring, int64_t> limits;
+    };
+    struct ManagementKeyDirectory
+    {
+        std::vector<ManagementRecord> records;
+        bool projectLookupIncomplete{};
     };
     struct UsageQuery
     {
@@ -89,6 +127,7 @@ namespace AetherNexus::Services
       public:
         explicit ManagementClient(std::shared_ptr<IManagementTransport> transport);
         std::vector<ManagementRecord> List(ManagementResource, std::wstring const &project = {}, std::stop_token = {});
+        ManagementKeyDirectory OrganizationKeys(std::vector<ManagementRecord> const &projects, std::stop_token = {});
         ManagementRecord Change(ManagementRequest const &, std::stop_token = {});
         UsageReport Usage(UsageQuery const &, std::stop_token = {});
 

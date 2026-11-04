@@ -20,10 +20,14 @@ namespace
     {
       public:
         std::atomic<bool> missing{};
+        std::atomic<unsigned> adminDeleteStatus{200};
+        std::atomic<bool> missingAdminVerification{};
+        bool adminIssued{}, adminRevoked{};
         SensitiveApiResponse Issue(KeyIssueRequest const &request, std::stop_token stop) override
         {
             CheckCancelled(stop);
             if (missing) throw ApiError{ApiErrorCode::MissingCredential};
+            if (request.kind == KeyIssueKind::Admin) { adminIssued = true; adminRevoked = false; }
             std::string_view json = request.kind == KeyIssueKind::Admin
                 ? R"({"object":"organization.admin_api_key","id":"key_new","value":"offline-issued-never-valid-5678"})"
                 : request.kind == KeyIssueKind::ServiceAccount
@@ -39,6 +43,16 @@ namespace
             CheckCancelled(stop);
             if (missing)
                 throw ApiError{ApiErrorCode::MissingCredential};
+            if (request.resource == ManagementResource::AdminKey && request.method == ManagementMethod::Get)
+            {
+                if (request.item == L"admin_offline")
+                    return {200, LR"({"object":"organization.admin_api_key","id":"admin_offline","name":"Offline admin","redacted_value":"…9876"})"};
+                if (request.item == L"key_generic_admin")
+                    return {200, LR"({"object":"organization.admin_api_key","id":"key_generic_admin","name":"Offline generic-mask admin","redacted_value":"sk-...3333"})"};
+                if (missingAdminVerification || !adminIssued || adminRevoked || request.item != L"key_new")
+                    return {404, L"private verification failure", L"req_offline_verify_404"};
+                return {200, LR"({"object":"organization.admin_api_key","id":"key_new","name":"Offline newly issued admin","redacted_value":"****5678"})"};
+            }
             std::wstring row;
             if (request.resource == ManagementResource::Usage)
             {
@@ -90,12 +104,20 @@ namespace
             }
             else if (request.resource == ManagementResource::ProjectKeys ||
                      request.resource == ManagementResource::ProjectKey)
+            {
                 row =
                     LR"({"object":"organization.project.api_key","id":"key_offline","name":"Offline key","redacted_value":"not-a-real-key-1234","value":"offline-secret-never-render","created_at":1700000000,"scopes":["api.all.read"],"owner":{"type":"user","user":{"id":"user_offline","name":"Offline owner"}}})";
+                if (request.resource == ManagementResource::ProjectKeys)
+                    row += LR"(,{"object":"organization.project.api_key","id":"key_project_mixed","name":"Mixed project API key","redacted_value":"…1111"},{"object":"organization.project.api_key","id":"key_legacy_mixed","name":"Mixed legacy API key","redacted_value":"sk-admin...2222"})";
+            }
             else if (request.resource == ManagementResource::AdminKeys ||
                      request.resource == ManagementResource::AdminKey)
+            {
                 row =
-                    LR"({"object":"organization.admin_api_key","id":"admin_offline","name":"Offline admin","redacted_value":"not-a-real-key-9876","created_at":1700000000})";
+                    LR"({"object":"organization.admin_api_key","id":"admin_offline","name":"Offline admin","redacted_value":"…9876","created_at":1700000000},{"object":"organization.admin_api_key","id":"key_project_mixed","name":"Mixed project API key","redacted_value":"…1111"},{"object":"organization.admin_api_key","id":"key_legacy_mixed","name":"Mixed legacy API key","redacted_value":"sk-...2222"},{"object":"organization.admin_api_key","id":"key_generic_admin","name":"Offline generic-mask admin","redacted_value":"sk-...3333"})";
+                if (adminIssued && !adminRevoked)
+                    row += LR"(,{"object":"organization.admin_api_key","id":"key_new","name":"Offline newly issued admin","redacted_value":"…5678","created_at":1700000001})";
+            }
             else if (request.resource == ManagementResource::Members || request.resource == ManagementResource::Member)
                 row =
                     LR"({"object":"organization.project.user","id":"user_offline","name":"Offline member","role":"member","added_at":1700000000})";
@@ -104,7 +126,36 @@ namespace
                 row =
                     LR"({"object":"project.rate_limit","id":"rl_offline","model":"offline-model","max_requests_per_1_minute":100,"max_tokens_per_1_minute":1000})";
             if (request.method == ManagementMethod::Delete)
-                return {200, L"{\"id\":\"" + request.item + L"\",\"deleted\":true}"};
+            {
+                if (request.resource == ManagementResource::AdminKey)
+                {
+                    auto statusCode = adminDeleteStatus.load();
+                    if (statusCode == 1404) // Tests-only variant: ordinary JSON 404 with response metadata.
+                    {
+                        ApiResponse response{404, {}, L"req_offline_delete_json_404"};
+                        response.diagnostics.content = ResponseContentKind::Json;
+                        response.diagnostics.requestIdState = ResponseRequestIdState::Valid;
+                        response.diagnostics.openAiMetadata = true;
+                        response.diagnostics.body = InspectErrorResponse(R"({"error":{"type":"not_found_error","code":"resource_not_found","message":"private rejection text"}})");
+                        return response;
+                    }
+                    if (statusCode == 404)
+                    {
+                        ApiResponse response{404, {}};
+                        response.diagnostics.content = ResponseContentKind::Unknown;
+                        response.diagnostics.requestIdState = ResponseRequestIdState::Missing;
+                        response.diagnostics.clientRequestId = L"550e8400-e29b-41d4-a716-446655440000";
+                        response.diagnostics.body = InspectErrorResponse("");
+                        return response;
+                    }
+                    if (statusCode != 200)
+                        return {statusCode, L"private rejection text", L"req_offline_delete_" + std::to_wstring(statusCode)};
+                    if (request.item != L"key_new") return {404, L"Not an issued fixture key"};
+                    adminRevoked = true;
+                    return {200, LR"({"id":"key_new","object":"organization.admin_api_key.deleted","deleted":true})"};
+                }
+                return {200, L"{\"id\":\"" + request.item + L"\",\"object\":\"organization.project.api_key.deleted\",\"deleted\":true}"};
+            }
             if (request.method == ManagementMethod::Post)
                 return {200, row};
             return {200, L"{\"object\":\"list\",\"data\":[" + row + L"],\"has_more\":false}"};
@@ -167,7 +218,7 @@ namespace winrt::AetherNexus::implementation
         }
         Controls::StackPanel footer;
         footer.Spacing(8);
-        for (auto value : {L"Light", L"Dark", L"Narrow", L"Wide", L"MissingKey", L"RestoreKey"})
+        for (auto value : {L"Light", L"Dark", L"Narrow", L"Wide", L"MissingKey", L"RestoreKey", L"RejectAdminDelete", L"MissingAdminDelete", L"JsonAdminDelete", L"RestoreAdminDelete", L"MissingAdminVerification", L"RestoreAdminVerification"})
         {
             Controls::Button button;
             button.Content(box_value(value));
@@ -178,6 +229,10 @@ namespace winrt::AetherNexus::implementation
                     navigation.RequestedTheme(choice == L"Light" ? ElementTheme::Light : ElementTheme::Dark);
                 else if (choice == L"MissingKey" || choice == L"RestoreKey")
                     transport->missing = choice == L"MissingKey";
+                else if (choice == L"MissingAdminVerification" || choice == L"RestoreAdminVerification")
+                    transport->missingAdminVerification = choice == L"MissingAdminVerification";
+                else if (choice == L"RejectAdminDelete" || choice == L"MissingAdminDelete" || choice == L"JsonAdminDelete" || choice == L"RestoreAdminDelete")
+                    transport->adminDeleteStatus = choice == L"RejectAdminDelete" ? 400u : choice == L"MissingAdminDelete" ? 404u : choice == L"JsonAdminDelete" ? 1404u : 200u;
                 else
                     window.AppWindow().Resize({static_cast<int32_t>((choice == L"Narrow" ? 760 : 1280) * scale),
                                                static_cast<int32_t>(900 * scale)});
