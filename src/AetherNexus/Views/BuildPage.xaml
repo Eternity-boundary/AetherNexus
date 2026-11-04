@@ -1,0 +1,82 @@
+<!--
+Copyright (c) 2026 Skylight Software Organization.
+Created by Eternity-boundary on 11,5 2026.
+All rights reserved.
+SPDX-License-Identifier: GPL-3.0-only
+
+File: BuildPage.xaml
+Project: AetherNexus
+ -->
+
+<Page x:Class="AetherNexus.BuildPage"
+ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+ xmlns:local="using:AetherNexus" Loaded="OnLoaded" Unloaded="OnUnloaded" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+ <Grid Padding="24" RowSpacing="12">
+  <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+  <StackPanel Spacing="6"><TextBlock x:Name="Heading" Style="{ThemeResource TitleTextBlockStyle}"/>
+   <TextBlock x:Name="Description" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+   <HyperlinkButton x:Name="DocsLink" Content="官方文件與遷移說明" HorizontalAlignment="Left"/>
+  </StackPanel>
+  <InfoBar Grid.Row="1" x:Name="Notice" IsOpen="False" IsClosable="True" AutomationProperties.AutomationId="BuildNotice">
+   <InfoBar.ActionButton><Button x:Name="SettingsButton" Content="前往設定" Click="OnSettings" Visibility="Collapsed"/></InfoBar.ActionButton>
+  </InfoBar>
+  <Grid Grid.Row="2" ColumnSpacing="12" x:Name="Filters">
+   <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+   <ComboBox x:Name="ViewPicker" Header="檢視" HorizontalAlignment="Stretch" SelectionChanged="OnView" AutomationProperties.AutomationId="BuildView"/>
+   <TextBox Grid.Column="1" x:Name="ParentBox" Header="上層項目 ID" MaxLength="256" TextChanged="OnScope" AutomationProperties.AutomationId="BuildParent"/>
+   <TextBox Grid.Column="2" x:Name="ProjectBox" Header="專案 ID（選填）" ToolTipService.ToolTip="留空使用權杖的預設專案範圍；指定其他專案須具有對應權限。" MaxLength="256" TextChanged="OnScope" AutomationProperties.AutomationId="BuildProject"/>
+  </Grid>
+  <CommandBar Grid.Row="3" Background="Transparent" DefaultLabelPosition="Right" IsOpen="False">
+   <AppBarButton x:Name="RefreshButton" Label="套用 / 重新整理" Icon="Refresh" Click="OnRefresh" AutomationProperties.AutomationId="BuildRefresh"/>
+   <AppBarButton x:Name="CreateButton" Label="新增" Icon="Add" Click="OnCreate" AutomationProperties.AutomationId="BuildCreate"/>
+   <AppBarButton x:Name="RemoveButton" Label="刪除" Icon="Delete" Click="OnRemove" AutomationProperties.AutomationId="BuildRemove"/>
+   <AppBarButton x:Name="ChildrenButton" Label="檢視子項目" Icon="OpenFile" Click="OnChildren" AutomationProperties.AutomationId="BuildChildren"/>
+   <AppBarButton x:Name="StopButton" Label="停止等待" Icon="Cancel" Click="OnStop" AutomationProperties.AutomationId="BuildStop"/>
+   <CommandBar.SecondaryCommands>
+    <AppBarButton x:Name="MoreButton" Label="載入更多" Icon="More" Click="OnMore" AutomationProperties.AutomationId="BuildMore"/>
+    <AppBarButton x:Name="DownloadButton" Label="下載檔案" Icon="Download" Click="OnDownload" AutomationProperties.AutomationId="BuildDownload"/>
+    <AppBarButton x:Name="ExportButton" Label="匯出 JSON" Icon="Save" Click="OnExport" AutomationProperties.AutomationId="BuildExport"/>
+    <AppBarButton x:Name="ImportButton" Label="匯入 JSON" Click="OnImport" AutomationProperties.AutomationId="BuildImport"/>
+    <AppBarButton x:Name="InspectButton" Label="依 ID 取得詳細資料" Click="OnInspect" AutomationProperties.AutomationId="BuildInspect"/>
+    <AppBarButton x:Name="SearchStoreButton" Label="搜尋向量庫" Click="OnStoreSearch" AutomationProperties.AutomationId="BuildStoreSearch"/>
+   </CommandBar.SecondaryCommands>
+  </CommandBar>
+  <Grid Grid.Row="4" x:Name="Workspace" ColumnSpacing="16" RowSpacing="12" SizeChanged="OnSize">
+   <Grid.ColumnDefinitions><ColumnDefinition x:Name="ListColumn" Width="340"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+   <Grid.RowDefinitions><RowDefinition x:Name="ListRow" Height="*"/><RowDefinition x:Name="DetailRow" Height="0"/></Grid.RowDefinitions>
+   <Grid x:Name="ListPane" RowSpacing="8">
+    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+    <AutoSuggestBox x:Name="SearchBox" PlaceholderText="搜尋已載入項目" AutomationProperties.Name="搜尋已載入項目" TextChanged="OnSearch" AutomationProperties.AutomationId="BuildSearch"/>
+    <ListView Grid.Row="1" x:Name="Records" SelectionMode="Single" SelectionChanged="OnSelection" ContainerContentChanging="OnContainer" AutomationProperties.AutomationId="BuildRecords">
+     <ListView.ItemContainerStyle><Style TargetType="ListViewItem"><Setter Property="HorizontalContentAlignment" Value="Stretch"/></Style></ListView.ItemContainerStyle>
+     <ListView.ItemTemplate><DataTemplate x:DataType="local:ManageItem"><StackPanel Padding="8" Spacing="4">
+      <TextBlock Text="{x:Bind Title}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+      <TextBlock Text="{x:Bind Subtitle}" FontSize="12" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+     </StackPanel></DataTemplate></ListView.ItemTemplate>
+    </ListView>
+    <TextBlock Grid.Row="2" x:Name="ListStatus" TextWrapping="Wrap" AutomationProperties.AutomationId="BuildListStatus"/>
+   </Grid>
+   <ScrollViewer Grid.Column="1" x:Name="DetailPane" HorizontalScrollBarVisibility="Disabled">
+    <StackPanel Spacing="12">
+     <TextBlock x:Name="DetailTitle" Text="選取項目查看詳細資料" Style="{ThemeResource SubtitleTextBlockStyle}" TextWrapping="Wrap"/>
+     <TextBlock x:Name="DetailSummary" TextWrapping="Wrap" AutomationProperties.AutomationId="BuildDetailSummary"/>
+     <StackPanel x:Name="PromptEditor" Spacing="12" Visibility="Collapsed">
+      <ComboBox x:Name="VersionPicker" Header="已儲存版本" HorizontalAlignment="Stretch" SelectionChanged="OnVersion" AutomationProperties.AutomationId="PromptVersion"/>
+      <TextBox x:Name="NameBox" Header="Prompt 名稱" MaxLength="200" AutomationProperties.AutomationId="PromptName"/>
+      <TextBox x:Name="ModelBox" Header="模型 ID" MaxLength="256" AutomationProperties.AutomationId="PromptModel"/>
+      <TextBox x:Name="InstructionsBox" Header="Instructions" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="90" MaxHeight="240" MaxLength="65536" AutomationProperties.AutomationId="PromptInstructions"/>
+      <TextBox x:Name="InputBox" Header="輸入範本（變數格式 {{name}}）" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="90" MaxHeight="240" MaxLength="65536" AutomationProperties.AutomationId="PromptInput"/>
+      <TextBox x:Name="VariablesBox" Header="變數值（JSON 字串物件）" Text="{}" AcceptsReturn="True" TextWrapping="Wrap" MaxLength="65536" AutomationProperties.AutomationId="PromptVariables"/>
+      <TextBox x:Name="OptionsBox" Header="Responses 選項（JSON：temperature、top_p、reasoning、text、max_output_tokens）" Text="{}" AcceptsReturn="True" TextWrapping="Wrap" MaxLength="65536" AutomationProperties.AutomationId="PromptOptions"/>
+      <StackPanel Orientation="Horizontal" Spacing="8"><Button Content="儲存新版本" Click="OnSavePrompt" AutomationProperties.AutomationId="PromptSave"/>
+       <Button Content="執行 Responses 測試" Click="OnRunPrompt" AutomationProperties.AutomationId="PromptRun"/></StackPanel>
+      <TextBlock Text="儲存於本機；執行測試才會將目前輸入傳至 OpenAI，並可能產生費用。測試設定 store: false。" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+     </StackPanel>
+     <TreeView x:Name="SpanTree" Visibility="Collapsed" Height="280" AutomationProperties.AutomationId="BuildSpanTree"/>
+     <Expander Header="JSON 詳細資料" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsExpanded="True"><TextBox x:Name="JsonBox" IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap" FontFamily="Cascadia Mono, Consolas" MinHeight="180" MaxHeight="620" AutomationProperties.AutomationId="BuildJson"/></Expander>
+    </StackPanel>
+   </ScrollViewer>
+  </Grid>
+ </Grid>
+</Page>

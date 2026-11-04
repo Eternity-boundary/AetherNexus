@@ -2,7 +2,7 @@
 
 Playground 已提供 Chat、Images、Audio 與本機 Agent Builder；Video 頁依官方 API 停用狀態提供本機分鏡與影片預覽。功能範圍、官方停用日期、安全設計及離線驗證方式見 [docs/playground.md](docs/playground.md)。
 
-使用 **WinUI 3 + C++/WinRT + C++23** 的 Windows 原生用戶端。Dashboard 從伺服器讀取用量與成本，可選擇所有專案或指定專案（含已封存專案）；設定頁可切換主題、管理權杖與本機參考預算。Playground 提供五個原生工作頁面；Manage 的 Usage、API keys、Projects 已接上正式管理 API，支援用量圖表與匯出、金鑰權限／撤銷、專案與成員及模型速率限制。其餘 Build 頁面保留佔位。正式程式沒有內建示範資料或假值備援。
+使用 **WinUI 3 + C++/WinRT + C++23** 的 Windows 原生用戶端。Dashboard 從伺服器讀取用量與成本，可選擇所有專案或指定專案（含已封存專案）；設定頁可切換主題、管理權杖與本機參考預算。Playground 提供五個原生工作頁面；Manage 的 Usage、API keys、Projects 已接上正式管理 API。BUILD 的八個頁面提供本機 Prompt 版本管理、Logs／Traces、批次、微調與儲存管理，以及依官方停用時程調整的 Assistants 遷移與 Evals 唯讀檢視，詳見 [docs/build.md](docs/build.md)。正式程式沒有內建示範資料或假值備援。
 
 ## 目錄
 

@@ -29,3 +29,6 @@ tests/PlaygroundHarness/Package.appxmanifest
 
 tests/ManageHarness/Manage.UI.Tests.vcxproj
 tests/ManageHarness/Package.appxmanifest
+
+tests/BuildHarness/Build.UI.Tests.vcxproj
+tests/BuildHarness/Package.appxmanifest
