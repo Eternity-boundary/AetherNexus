@@ -1,0 +1,12 @@
+// Copyright (c) 2026 Skylight Software Organization.
+// Created by EternityBoundary on 11,5 2026.
+// All rights reserved.
+// SPDX-License-Identifier: GPL-3.0-only
+//
+// File: BuildPage.idl
+// Project: AetherNexus
+namespace AetherNexus
+{
+    [default_interface]
+    runtimeclass BuildPage : Microsoft.UI.Xaml.Controls.Page { BuildPage(); }
+}

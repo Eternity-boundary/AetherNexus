@@ -142,6 +142,10 @@
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="Services\ApiTypes.h" />
+    <ClInclude Include="Services\BuildClient.h" />
+    <ClInclude Include="Services\WindowsBuildTransport.h" />
+    <ClInclude Include="Services\PromptStore.h" />
+    <ClInclude Include="Views\BuildPage.xaml.h"><DependentUpon>BuildPage.xaml</DependentUpon></ClInclude>
     <ClInclude Include="Services\HttpResponseDiagnostics.h" />
     <ClInclude Include="Services\ManagementClient.h" />
     <ClInclude Include="Services\KeyIssuance.h" />
@@ -186,6 +190,7 @@
     <Page Include="Views\SettingsPage.xaml" />
     <Page Include="Views\PlaygroundPage.xaml" />
     <Page Include="Views\ManagePage.xaml" />
+    <Page Include="Views\BuildPage.xaml" />
     <Page Include="Views\DashboardPage.xaml" />
     <Page Include="Views\PlaceholderPage.xaml" />
     <Page Include="Resources\Styles\DashboardStyles.xaml" />
@@ -214,6 +219,10 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Services\ManagementClient.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
+    <ClCompile Include="Services\BuildClient.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
+    <ClCompile Include="Services\WindowsBuildTransport.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
+    <ClCompile Include="Services\PromptStore.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
+    <ClCompile Include="Views\BuildPage.xaml.cpp"><DependentUpon>BuildPage.xaml</DependentUpon></ClCompile>
     <ClCompile Include="Services\KeyIssuance.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
     <ClCompile Include="Infrastructure\SecretClipboard.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
     <ClCompile Include="Services\WindowsManagementTransport.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
@@ -260,6 +269,7 @@
       <DependentUpon>PlaygroundPage.xaml</DependentUpon>
     </Midl>
     <Midl Include="Models\ManageItem.idl" />
+    <Midl Include="Views\BuildPage.idl"><DependentUpon>BuildPage.xaml</DependentUpon></Midl>
     <Midl Include="Views\ManagePage.idl"><DependentUpon>ManagePage.xaml</DependentUpon></Midl>
     <Midl Include="Views\DashboardPage.idl">
       <DependentUpon>DashboardPage.xaml</DependentUpon>

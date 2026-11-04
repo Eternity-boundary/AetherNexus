@@ -1,5 +1,7 @@
 # Tests
 
+`Test-Build.ps1` 執行 BUILD 的合約與本機 Prompt 版本庫測試；`WindowsBuildTransport.Tests.vcxproj` 攔截正式傳輸的全部 WinHTTP 與權杖讀取，檢查串流上傳、原子下載與錯誤／取消行為，不建立網路連線。`New-BuildUiHarness.ps1` 產生隔離宿主，`Test-BuildUi.ps1 -AppPid <離線宿主 PID>` 驗證八個頁面，只接受固定離線標題。操作方式及 API 停用語義見 [BUILD 說明](../docs/build.md)。
+
 `Test-Management.ps1` 編譯並執行 Manage 的獨立合約測試，涵蓋端點與方法限制、UTC／專案／分組篩選、分頁與錯誤回應、金鑰遮罩、權限與期限語義、管理寫入不重試、取消、各類用量與 CSV 安全。此執行檔不連結 CredentialStore 或真實 HTTP 通道。
 
 AdminKeyRevocation.Tests 核對官方物件型別、專案 key ID 交叉核對、部分專案無權讀取的警告、不依遮罩前綴限制 Admin 撤銷、原始分頁游標、Admin GET 核對後才 DELETE、錯誤物件／ID 停止操作、官方回應及安全 HTTP 診斷。`Test-AdminRevocationUi.ps1 -AppPid <離線宿主 PID>` 驗證只有尾碼／通用遮罩的 Admin 仍能辨識並啟用撤銷、相同專案 ID 分流為 API key、隱藏專案範圍、ID 確認、驗證失敗停止及撤銷結果；不操作真實帳戶。

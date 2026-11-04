@@ -1,5 +1,5 @@
 // Copyright (c) 2026 Skylight Software Organization.
-// Created by EternityBoundary on 11,4 2026.
+// Created by EternityBoundary on 11,5 2026.
 // All rights reserved.
 // SPDX-License-Identifier: GPL-3.0-only
 //
@@ -9,6 +9,9 @@
 #include "MainWindow.xaml.h"
 #include "Views/ManagePage.xaml.h"
 #include "Services/WindowsManagementTransport.h"
+#include "BuildPage.xaml.h"
+#include "Services/WindowsBuildTransport.h"
+#include <winrt/Windows.Storage.h>
 #include "DashboardPage.xaml.h"
 #include "PlaceholderPage.xaml.h"
 #include "SettingsPage.xaml.h"
@@ -143,6 +146,20 @@ namespace winrt::AetherNexus::implementation
                     auto transport = std::make_shared<::AetherNexus::Services::WindowsManagementTransport>();
                     get_self<ManagePage>(page)->Configure(hstring{route}, transport, transport);
                     found = m_management.emplace(route, page).first;
+                }
+                ContentFrame().Content(found->second);
+            }
+            else if (route == L"prompts" || route == L"logs" || route == L"traces" || route == L"assistants" ||
+                     route == L"batches" || route == L"evaluations" || route == L"fine-tuning" || route == L"storage")
+            {
+                auto found = m_builds.find(route);
+                if (found == m_builds.end())
+                {
+                    AetherNexus::BuildPage page;
+                    auto path = std::filesystem::path{Windows::Storage::ApplicationData::Current().LocalFolder().Path().c_str()} / L"Prompts" / L"catalog.json";
+                    get_self<BuildPage>(page)->Configure(hstring{route}, std::make_shared<::AetherNexus::Services::WindowsBuildTransport>(),
+                        std::make_shared<::AetherNexus::Services::PromptStore>(std::move(path)));
+                    found = m_builds.emplace(route, page).first;
                 }
                 ContentFrame().Content(found->second);
             }
