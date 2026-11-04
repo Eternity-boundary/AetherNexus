@@ -9,6 +9,7 @@
 #include "PlaygroundPage.xaml.h"
 #include "PlaygroundPage.g.cpp"
 #include "Services/PlatformApiClient.h"
+#include "MigrationGuide.h"
 #include <algorithm>
 #include <cmath>
 #include <filesystem>
@@ -114,6 +115,10 @@ namespace winrt::AetherNexus::implementation
         m_apiTransport = std::move(api);
         m_generationTransport = std::move(generation);
         m_mode = mode;
+        auto guide = ::AetherNexus::Views::GuideFor(m_mode);
+        MigrationButton().Visibility(guide.title.empty() ? Visibility::Collapsed : Visibility::Visible);
+        TextBlock migrationLabel; migrationLabel.Text(L"遷移指南 · " + guide.status); migrationLabel.TextWrapping(TextWrapping::Wrap);
+        MigrationButton().Content(migrationLabel);
         PageTitle().Text(mode == L"agent-builder" ? L"Agent Builder"
                          : mode == L"images"      ? L"Images"
                          : mode == L"audio"       ? L"Audio"
@@ -241,8 +246,15 @@ namespace winrt::AetherNexus::implementation
         }
     }
     void PlaygroundPage::OnParameters(Windows::Foundation::IInspectable const &, RoutedEventArgs const &)
+    { WorkspaceSplit().IsPaneOpen(!WorkspaceSplit().IsPaneOpen()); }
+    fire_and_forget PlaygroundPage::OnMigration(Windows::Foundation::IInspectable const &, RoutedEventArgs const &)
     {
-        WorkspaceSplit().IsPaneOpen(!WorkspaceSplit().IsPaneOpen());
+        auto lifetime = get_strong();
+        if (m_migrationOpen || m_busy || m_recording) co_return;
+        m_migrationOpen = true;
+        try { co_await ::AetherNexus::Views::ShowMigrationGuide(XamlRoot(), m_mode); }
+        catch (...) { Notice().Message(L"無法開啟遷移指南，請參閱官方文件。"); Notice().IsOpen(true); }
+        m_migrationOpen = false;
     }
     void PlaygroundPage::SetBusy(bool busy)
     {

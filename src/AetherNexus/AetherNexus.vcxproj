@@ -143,6 +143,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="Services\ApiTypes.h" />
     <ClInclude Include="Services\BuildClient.h" />
+    <ClInclude Include="Views\MigrationGuide.h" />
     <ClInclude Include="Services\WindowsBuildTransport.h" />
     <ClInclude Include="Services\PromptStore.h" />
     <ClInclude Include="Views\BuildPage.xaml.h"><DependentUpon>BuildPage.xaml</DependentUpon></ClInclude>

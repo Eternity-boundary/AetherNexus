@@ -41,6 +41,7 @@ Project: AetherNexus
             <StackPanel Spacing="4">
                 <TextBlock x:Name="PageTitle" Style="{StaticResource TitleTextBlockStyle}" />
                 <TextBlock x:Uid="PlaygroundIntro" Style="{StaticResource FormLabel}" />
+                <Button x:Name="MigrationButton" Content="遷移指南" Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Left" Click="OnMigration" AutomationProperties.AutomationId="PlaygroundMigration" Visibility="Collapsed"/>
             </StackPanel>
             <Button
                 x:Name="ParametersButton"

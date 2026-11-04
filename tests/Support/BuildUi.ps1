@@ -1,12 +1,12 @@
 [CmdletBinding()]
-param([Parameter(Mandatory)][int]$AppPid,[string]$OutputName='build-ui')
+param([Parameter(Mandatory)][int]$AppPid,[string]$OutputName='build-ui',[string]$WindowTitle='AetherNexus OFFLINE Build Tests')
 $ErrorActionPreference = 'Stop'
 $repoRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 $outputRoot = Join-Path $repoRoot ('artifacts\tests\' + $OutputName)
 [void](New-Item -ItemType Directory -Path $outputRoot -Force)
 $results = [System.Collections.Generic.List[object]]::new()
 $windows = & winapp.exe ui list-windows -a "$AppPid" --json | ConvertFrom-Json
-$mainWindow = @($windows | Where-Object title -eq 'AetherNexus OFFLINE Build Tests')
+$mainWindow = @($windows | Where-Object title -eq $WindowTitle)
 if ($mainWindow.Count -ne 1) { throw 'Expected exactly one offline Build window.' }
 $windowHandle = "$($mainWindow[0].hwnd)"
 function Ui {

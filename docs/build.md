@@ -1,5 +1,7 @@
 # BUILD 工作區
 
+受官方停用影響的 Prompts、Assistants、Evaluations 與 Fine-tuning，在標題下方提供醒目的「遷移指南」按鈕。指南在本機彈窗展示影響範圍、三個步驟、核對日期與官方連結；不會自動讀取權杖或執行遷移。Playground 的 Agent Builder／Audio／Video 及部分模型更替也有相應指南。維護指南時請同步更新 `Views/MigrationGuide.h`、README 與官方時程政策。
+
 八個 BUILD 入口已接上原生 WinUI 頁面。正式程式沒有示範記錄或假值備援；所有遠端操作使用設定頁儲存的**一般 API 權杖**，不使用 Admin 權杖。專案 ID 留空時使用權杖的預設專案；指定其他專案仍須具有相應權限。
 
 | 頁面 | 已實作功能 |

@@ -14,6 +14,7 @@ namespace winrt::AetherNexus::implementation
 struct BuildPage : BuildPageT<BuildPage>
 {
     BuildPage() = default;
+    fire_and_forget OnMigration(Windows::Foundation::IInspectable const &, Microsoft::UI::Xaml::RoutedEventArgs const &);
     void Configure(hstring const &, std::shared_ptr<::AetherNexus::Services::IBuildTransport>,
                    std::shared_ptr<::AetherNexus::Services::IPromptStore>);
     fire_and_forget OnLoaded(Windows::Foundation::IInspectable const &, Microsoft::UI::Xaml::RoutedEventArgs const &);

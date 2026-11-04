@@ -16,7 +16,8 @@ Project: AetherNexus
   <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
   <StackPanel Spacing="6"><TextBlock x:Name="Heading" Style="{ThemeResource TitleTextBlockStyle}"/>
    <TextBlock x:Name="Description" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-   <HyperlinkButton x:Name="DocsLink" Content="官方文件與遷移說明" HorizontalAlignment="Left"/>
+   <Button x:Name="MigrationButton" Content="遷移指南" Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Left" Click="OnMigration" Visibility="Collapsed" AutomationProperties.AutomationId="BuildMigration"/>
+   <HyperlinkButton x:Name="DocsLink" Content="官方文件" HorizontalAlignment="Left"/>
   </StackPanel>
   <InfoBar Grid.Row="1" x:Name="Notice" IsOpen="False" IsClosable="True" AutomationProperties.AutomationId="BuildNotice">
    <InfoBar.ActionButton><Button x:Name="SettingsButton" Content="前往設定" Click="OnSettings" Visibility="Collapsed"/></InfoBar.ActionButton>

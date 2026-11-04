@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 Skylight Software Organization.
+// Copyright (c) 2026 Skylight Software Organization.
 // Created by EternityBoundary on 11,5 2026.
 // All rights reserved.
 // SPDX-License-Identifier: GPL-3.0-only
@@ -8,6 +8,7 @@
 #include "pch.h"
 #include "BuildPage.xaml.h"
 #include "Models/ManageItem.h"
+#include "MigrationGuide.h"
 #include <algorithm>
 #include <chrono>
 #include <map>
@@ -97,6 +98,15 @@ int64_t Now()
         .count();
 }
 } // namespace
+fire_and_forget BuildPage::OnMigration(IInspectable const &, RoutedEventArgs const &)
+{
+    auto lifetime = get_strong();
+    if (m_dialog || m_busy) co_return;
+    m_dialog = true;
+    try { co_await ::AetherNexus::Views::ShowMigrationGuide(XamlRoot(), m_mode); }
+    catch (...) { NoticeText(L"無法開啟遷移指南，請參閱官方文件。", InfoBarSeverity::Warning); }
+    m_dialog = false;
+}
 bool BuildPage::Local() const
 {
     return m_mode == L"prompts" || m_mode == L"assistants";
@@ -105,6 +115,10 @@ void BuildPage::Configure(hstring const &mode, std::shared_ptr<IBuildTransport> 
                           std::shared_ptr<IPromptStore> store)
 {
     m_mode = mode;
+    auto guide = ::AetherNexus::Views::GuideFor(m_mode);
+    MigrationButton().Visibility(guide.title.empty() ? Visibility::Collapsed : Visibility::Visible);
+    TextBlock migrationLabel; migrationLabel.Text(L"遷移指南 · " + guide.status); migrationLabel.TextWrapping(TextWrapping::Wrap);
+    MigrationButton().Content(migrationLabel);
     m_transport = std::move(transport);
     m_store = std::move(store);
     std::wstring title, description, doc = L"https://developers.openai.com/api/docs/";

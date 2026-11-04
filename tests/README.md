@@ -1,5 +1,7 @@
 # Tests
 
+`Test-MigrationUi.ps1 -AppPid <離線宿主 PID> -Area Build` 驗證四個 BUILD 遷移指南，`-Area Playground` 驗證五個 Playground 指南。只使用相應的隔離 UI 宿主，確認入口、三步說明、來源日期與關閉行為，不開啟外部連結或呼叫真實 API。
+
 `Test-Build.ps1` 執行 BUILD 的合約與本機 Prompt 版本庫測試；`WindowsBuildTransport.Tests.vcxproj` 攔截正式傳輸的全部 WinHTTP 與權杖讀取，檢查串流上傳、原子下載與錯誤／取消行為，不建立網路連線。`New-BuildUiHarness.ps1` 產生隔離宿主，`Test-BuildUi.ps1 -AppPid <離線宿主 PID>` 驗證八個頁面，只接受固定離線標題。操作方式及 API 停用語義見 [BUILD 說明](../docs/build.md)。
 
 `Test-Management.ps1` 編譯並執行 Manage 的獨立合約測試，涵蓋端點與方法限制、UTC／專案／分組篩選、分頁與錯誤回應、金鑰遮罩、權限與期限語義、管理寫入不重試、取消、各類用量與 CSV 安全。此執行檔不連結 CredentialStore 或真實 HTTP 通道。

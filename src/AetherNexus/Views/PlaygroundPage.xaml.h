@@ -28,6 +28,7 @@ namespace winrt::AetherNexus::implementation
         void OnWorkspaceSizeChanged(Windows::Foundation::IInspectable const &,
                                     Microsoft::UI::Xaml::SizeChangedEventArgs const &);
         void OnParameters(Windows::Foundation::IInspectable const &, Microsoft::UI::Xaml::RoutedEventArgs const &);
+        fire_and_forget OnMigration(Windows::Foundation::IInspectable const &, Microsoft::UI::Xaml::RoutedEventArgs const &);
         fire_and_forget OnRefreshModels(Windows::Foundation::IInspectable const &,
                                         Microsoft::UI::Xaml::RoutedEventArgs const &);
         fire_and_forget OnRun(Windows::Foundation::IInspectable const &, Microsoft::UI::Xaml::RoutedEventArgs const &);
@@ -82,6 +83,7 @@ namespace winrt::AetherNexus::implementation
         void ResetWorkflow();
         std::wstring m_mode;
         bool m_loaded{}, m_initialized{}, m_busy{}, m_recording{}, m_editingNodes{}, m_narrow{};
+        bool m_migrationOpen{};
         uint64_t m_version{};
         std::stop_source m_stop;
         std::shared_ptr<::AetherNexus::Services::IApiTransport> m_apiTransport;
